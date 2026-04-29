@@ -105,6 +105,7 @@ const AuthScreen = () => {
           showsHorizontalScrollIndicator={false}
           scrollEventThrottle={16}
           onMomentumScrollEnd={handleMomentumScrollEnd}
+          removeClippedSubviews={false}
         >
           <View style={{ width: SCREEN_WIDTH }}>
             <ScrollView>

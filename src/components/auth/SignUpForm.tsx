@@ -9,18 +9,22 @@ import {
   emailPasswordSchema,
 } from "@/schemas/authSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "expo-router";
 import { useForm } from "react-hook-form";
 import { StyleSheet, View } from "react-native";
 
 type FormData = EmailPasswordFormData;
 
 export default function SignUpForm() {
-  const { control, handleSubmit, reset } = useForm<FormData>({
+  const { control, handleSubmit } = useForm<FormData>({
     resolver: zodResolver(emailPasswordSchema),
+    mode: "onChange",
   });
 
+  const router = useRouter();
   const onSubmit = (data: FormData) => {
     console.log(data);
+    router.push("/(auth)/success");
   };
 
   return (
@@ -41,7 +45,11 @@ export default function SignUpForm() {
             <ThemedText size={14} style={styles.label}>
               Email
             </ThemedText>
-            <ThemedText size={14} style={{ color: Colors.primary }}>
+            <ThemedText
+              size={14}
+              style={{ color: Colors.primary }}
+              onPress={() => router.push("/register-mobile")}
+            >
               Register with mobile
             </ThemedText>
           </View>

@@ -7,31 +7,43 @@ import React from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { ThemedText } from "../ThemedText";
 
-const CTA = ({ onPress, page }: { onPress: () => void; page: string }) => {
+const CTA = ({
+  onPress,
+  page,
+}: {
+  onPress: () => void;
+  page: "signin" | "signup" | "mobile" | "verify";
+}) => {
+  const title = {
+    signin: "Sign in",
+    signup: "Sign up",
+    mobile: "Send OTP",
+    verify: "Continue",
+  };
   return (
     <View style={styles.container}>
-      <ThemedButton
-        title={page === "signin" ? "Sign in" : "Sign up"}
-        variant="primary"
-        onPress={onPress}
-      />
-      <ThemedText
-        size={14}
-        letterSpacing={2.64}
-        style={{ color: Colors.textMuted }}
-      >
-        Or {page === "signin" ? "login" : "sign up"} with
-      </ThemedText>
-      <View style={styles.socials}>
-        <TouchableOpacity style={styles.socialButton}>
-          <Facebook style={styles.icon} />
-          <ThemedText>Facebook</ThemedText>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.socialButton}>
-          <Google style={styles.icon} />
-          <ThemedText>Google</ThemedText>
-        </TouchableOpacity>
-      </View>
+      <ThemedButton title={title[page]} variant="primary" onPress={onPress} />
+      {page !== "mobile" && page !== "verify" && (
+        <>
+          <ThemedText
+            size={14}
+            letterSpacing={2.64}
+            style={{ color: Colors.textMuted }}
+          >
+            Or {page === "signin" ? "login" : "sign up"} with
+          </ThemedText>
+          <View style={styles.socials}>
+            <TouchableOpacity style={styles.socialButton}>
+              <Facebook style={styles.icon} />
+              <ThemedText>Facebook</ThemedText>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.socialButton}>
+              <Google style={styles.icon} />
+              <ThemedText>Google</ThemedText>
+            </TouchableOpacity>
+          </View>
+        </>
+      )}
     </View>
   );
 };

@@ -12,6 +12,7 @@ import {
   mobilePasswordSchema,
 } from "@/schemas/authSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "expo-router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { StyleSheet, View } from "react-native";
@@ -20,13 +21,15 @@ type FormData = EmailPasswordFormData | MobilePasswordFormData;
 
 export default function SignInForm() {
   const [isEmail, setIsEmail] = useState(true);
-
+  const router = useRouter();
   const { control, handleSubmit, reset } = useForm<FormData>({
     resolver: zodResolver(isEmail ? emailPasswordSchema : mobilePasswordSchema),
+    mode: "onChange",
   });
 
   const onSubmit = (data: FormData) => {
     console.log(data);
+    router.push("/(auth)/success");
   };
 
   const handleToggle = () => {
