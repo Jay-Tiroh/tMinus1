@@ -1,6 +1,7 @@
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { Pressable, StyleProp, TextStyle, ViewStyle } from "react-native";
+import { SvgProps } from "react-native-svg";
 
 type ButtonVariant = "default" | "primary" | "secondary" | "outline" | "red";
 
@@ -11,6 +12,8 @@ type ThemedButtonProps = {
   style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
   disabled?: boolean;
+  icon?: React.FC<SvgProps> | React.ReactNode;
+  iconComponent?: React.ReactNode;
 };
 
 export const ThemedButton: React.FC<ThemedButtonProps> = ({
@@ -20,6 +23,8 @@ export const ThemedButton: React.FC<ThemedButtonProps> = ({
   style,
   textStyle,
   disabled = false,
+  icon: Icon,
+  iconComponent,
 }) => {
   const styles = getStyles(variant, disabled);
 
@@ -33,7 +38,13 @@ export const ThemedButton: React.FC<ThemedButtonProps> = ({
         style,
       ]}
     >
-      <ThemedText style={[styles.text, textStyle]}>{title}</ThemedText>
+      {iconComponent && iconComponent}
+      {Icon && typeof Icon === "function" ? <Icon /> : Icon}
+      <ThemedText
+        style={[styles.text, textStyle, disabled && { opacity: 0.5 }]}
+      >
+        {title}
+      </ThemedText>
     </Pressable>
   );
 };
@@ -43,14 +54,17 @@ function getStyles(
   disabled: boolean,
 ): { container: ViewStyle; text: TextStyle } {
   const baseContainer: ViewStyle = {
+    flexDirection: "row",
     height: 54,
     width: "100%",
     borderRadius: 16,
     alignItems: "center",
     justifyContent: "center",
+    gap: 8,
   };
 
   const baseText: TextStyle = {
+    // width: "100%",
     fontSize: 18,
     letterSpacing: 0.0264 * 18,
     color: Colors.surfaceDark,

@@ -1,3 +1,9 @@
+import ActivityIcon from "@/assets/icons/activity.svg";
+import HomeIcon from "@/assets/icons/home.svg";
+import MarketsIcon from "@/assets/icons/markets.svg";
+import TradesIcon from "@/assets/icons/trades.svg";
+import WalletsIcon from "@/assets/icons/wallets.svg";
+import { SvgProps } from "react-native-svg";
 import { Colors } from "./Colors";
 
 /**
@@ -9,83 +15,65 @@ import { Colors } from "./Colors";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
-export type TabRoute = "index" | "markets" | "trades" | "activity" | "wallets";
+export type TabRoute = "home" | "markets" | "trades" | "activity" | "wallets";
 
 export interface TabConfig {
-  /** Expo Router screen name (maps to app/(tabs)/<name>.tsx) */
   name: TabRoute;
-  /** Label shown under the tab icon */
   label: string;
-  /** Icon name for your icon library — swap to match whatever you use */
-  icon: {
-    active: string;
-    inactive: string;
-  };
+  icon: React.FC<SvgProps>;
 }
 
 // ─── Global Tab Bar Appearance ───────────────────────────────────────────────
-// Tweak these to restyle the entire tab bar in one place
 
 export const TabBarStyle = {
-  backgroundColor: Colors.surface, // Tab bar background
-  borderTopColor: Colors.border, // Top border line
-  borderTopWidth: 1,
-  height: 64, // Tab bar height
-  paddingBottom: 8,
-  paddingTop: 8,
+  borderColor: "transparent",
+  backgroundColor: Colors.surfaceDark,
+  borderRadius: 20,
+  marginHorizontal: 24,
+  height: 76,
+  paddingTop: 10,
+  placeItems: "center",
+  justifyContent: "center",
+  alignItems: "center",
+  placeContent: "center",
+  alignSelf: "center",
+  position: "absolute",
+  boxShadow: "0px 12px 50px rgba(22, 28, 34, 0.5)",
 } as const;
 
 export const TabBarColors = {
-  active: Colors.primary, // ← active icon + label color
-  inactive: Colors.textMuted, // ← inactive icon + label color
-  indicatorDot: Colors.primaryEmerald, // ← active indicator dot (if used)
-  labelSize: 10, // font size for tab labels
+  active: Colors.textFaint, // ← label color
+  inactive: Colors.textMuted, // ←  label color
+  labelSize: 12,
 } as const;
 
 // ─── Tab Definitions ─────────────────────────────────────────────────────────
-// Add/remove/reorder tabs here. Icons use string names —
-// swap these for your actual icon set (lucide, phosphor, custom SVG, etc.)
 
 export const TABS: TabConfig[] = [
   {
-    name: "index",
+    name: "home",
     label: "Home",
-    icon: {
-      active: "home-filled",
-      inactive: "home-outline",
-    },
+    icon: HomeIcon,
   },
   {
     name: "markets",
     label: "Markets",
-    icon: {
-      active: "chart-bar-filled",
-      inactive: "chart-bar-outline",
-    },
+    icon: MarketsIcon,
   },
   {
     name: "trades",
     label: "Trades",
-    icon: {
-      active: "arrows-exchange-filled",
-      inactive: "arrows-exchange-outline",
-    },
+    icon: TradesIcon,
   },
   {
     name: "activity",
     label: "Activity",
-    icon: {
-      active: "clock-filled",
-      inactive: "clock-outline",
-    },
+    icon: ActivityIcon,
   },
   {
     name: "wallets",
     label: "Wallets",
-    icon: {
-      active: "wallet-filled",
-      inactive: "wallet-outline",
-    },
+    icon: WalletsIcon,
   },
 ];
 

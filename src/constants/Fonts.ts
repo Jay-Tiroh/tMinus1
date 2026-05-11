@@ -7,15 +7,11 @@
  */
 
 export const Fonts = {
-  italic: "NeueMontreal-Italic",
   light: "NeueMontreal-Light",
   regular: "NeueMontreal-Regular",
   medium: "NeueMontreal-Medium",
   bold: "NeueMontreal-Bold",
   /** Italic variants */
-  lightItalic: "NeueMontreal-LightItalic",
-  mediumItalic: "NeueMontreal-MediumItalic",
-  boldItalic: "NeueMontreal-BoldItalic",
 } as const;
 
 export type FontKey = keyof typeof Fonts;

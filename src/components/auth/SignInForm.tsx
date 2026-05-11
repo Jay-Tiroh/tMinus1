@@ -7,34 +7,34 @@ import { Colors } from "@/constants/Colors";
 import { Spacing } from "@/constants/Spacing";
 import {
   EmailPasswordFormData,
-  MobilePasswordFormData,
   emailPasswordSchema,
-  mobilePasswordSchema,
 } from "@/schemas/authSchemas";
+import { useAppDispatch } from "@/store/hooks";
+import { useLoginMutation } from "@/store/services/baseApi";
+import { setCredentials } from "@/store/slices/authSlice";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { StyleSheet, View } from "react-native";
 
-type FormData = EmailPasswordFormData | MobilePasswordFormData;
+type FormData = EmailPasswordFormData;
 
 export default function SignInForm() {
-  const [isEmail, setIsEmail] = useState(true);
+  const dispatch = useAppDispatch();
   const router = useRouter();
-  const { control, handleSubmit, reset } = useForm<FormData>({
-    resolver: zodResolver(isEmail ? emailPasswordSchema : mobilePasswordSchema),
+  const { control, handleSubmit } = useForm<FormData>({
+    resolver: zodResolver(emailPasswordSchema),
     mode: "onChange",
   });
 
-  const onSubmit = (data: FormData) => {
-    console.log(data);
-    router.push("/(auth)/success");
-  };
+  const [login, { isLoading, isError, error }] = useLoginMutation();
 
-  const handleToggle = () => {
-    reset();
-    setIsEmail((prev) => !prev);
+  const onSubmit = async (data: FormData) => {
+    const result = await login(data);
+    if ("data" in result && result.data) {
+      dispatch(setCredentials(result.data));
+      router.push("/(tabs)/home");
+    }
   };
 
   return (
@@ -47,40 +47,29 @@ export default function SignInForm() {
         Sign In
       </ThemedText>
 
+      <Spacer size={14} />
+      {isError && (
+        <ThemedText color={Colors.lossAlt} style={{ width: "100%" }}>
+          {(error as any)?.data?.message ?? "Something went wrong"}
+        </ThemedText>
+      )}
       <Spacer size={44} />
 
       <View style={{ gap: Spacing.lg, width: "100%" }}>
         <View style={styles.inputContainer}>
           <View style={styles.labelRow}>
             <ThemedText size={14} style={styles.label}>
-              {isEmail ? "Email" : "Mobile Number"}
-            </ThemedText>
-            <ThemedText
-              size={14}
-              style={{ color: Colors.primary }}
-              onPress={handleToggle}
-            >
-              {isEmail ? "Sign in with mobile" : "Sign in with email"}
+              Email
             </ThemedText>
           </View>
 
-          {isEmail ? (
-            <ThemedTextInput
-              control={control}
-              name="email"
-              placeholder="Enter your email"
-              keyboardType="email-address"
-              autoCapitalize="none"
-            />
-          ) : (
-            <ThemedTextInput
-              control={control}
-              name="mobileNumber"
-              placeholder="Enter your mobile number"
-              keyboardType="phone-pad"
-              autoCapitalize="none"
-            />
-          )}
+          <ThemedTextInput
+            control={control}
+            name="email"
+            placeholder="Enter your email"
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
         </View>
 
         <View style={styles.inputContainer}>
@@ -99,7 +88,11 @@ export default function SignInForm() {
       </View>
 
       <Spacer size={40} />
-      <CTA page="signin" onPress={handleSubmit(onSubmit)} />
+      <CTA
+        page="signin"
+        onPress={handleSubmit(onSubmit)}
+        isLoading={isLoading}
+      />
       <Spacer size={55} />
 
       <View style={{ gap: 20, alignItems: "center" }}>

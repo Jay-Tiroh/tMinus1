@@ -32,12 +32,13 @@ export default function RootLayout() {
             headerShown: false,
             animation: "slide_from_right", // smooth horizontal slide
             animationDuration: 200,
-            contentStyle: { backgroundColor: Colors.surfaceDark },
+            contentStyle: { backgroundColor: Colors.surface },
           }}
         >
           <Stack.Screen name="index" />
           <Stack.Screen name="(auth)" />
           <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="user" />
         </Stack>
       </SafeAreaProvider>
     </Provider>

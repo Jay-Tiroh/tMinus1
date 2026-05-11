@@ -44,7 +44,7 @@ export default function Success() {
             title="Get Started"
             variant="primary"
             style={styles.button}
-            onPress={() => navigation.push("/")}
+            onPress={() => navigation.push("/(tabs)/home")}
           />
         </View>
         <Spacer size={41} />

@@ -4,27 +4,35 @@ import { Spacer } from "@/components/Spacer";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { Spacing } from "@/constants/Spacing";
-import {
-  EmailPasswordFormData,
-  emailPasswordSchema,
-} from "@/schemas/authSchemas";
+import { SignupFormData, signupSchema } from "@/schemas/authSchemas";
+import { useAppDispatch } from "@/store/hooks";
+import { useRegisterMutation } from "@/store/services/baseApi";
+import { setCredentials } from "@/store/slices/authSlice";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
 import { useForm } from "react-hook-form";
 import { StyleSheet, View } from "react-native";
 
-type FormData = EmailPasswordFormData;
+type FormData = SignupFormData;
 
 export default function SignUpForm() {
+  const dispatch = useAppDispatch();
+
   const { control, handleSubmit } = useForm<FormData>({
-    resolver: zodResolver(emailPasswordSchema),
+    resolver: zodResolver(signupSchema),
     mode: "onChange",
   });
 
+  const [register, { isLoading, isError, isSuccess, error }] =
+    useRegisterMutation();
+
   const router = useRouter();
-  const onSubmit = (data: FormData) => {
-    console.log(data);
-    router.push("/(auth)/success");
+  const onSubmit = async (data: FormData) => {
+    const result = await register(data);
+    if ("data" in result && result.data) {
+      dispatch(setCredentials(result.data));
+      router.push("/(auth)/success");
+    }
   };
 
   return (
@@ -37,6 +45,12 @@ export default function SignUpForm() {
         Sign up
       </ThemedText>
 
+      <Spacer size={14} />
+      {isError && (
+        <ThemedText color={Colors.lossAlt} style={{ width: "100%" }}>
+          {(error as any)?.data?.message ?? "Something went wrong"}
+        </ThemedText>
+      )}
       <Spacer size={44} />
 
       <View style={{ gap: Spacing.lg, width: "100%" }}>
@@ -44,13 +58,6 @@ export default function SignUpForm() {
           <View style={styles.labelRow}>
             <ThemedText size={14} style={styles.label}>
               Email
-            </ThemedText>
-            <ThemedText
-              size={14}
-              style={{ color: Colors.primary }}
-              onPress={() => router.push("/register-mobile")}
-            >
-              Register with mobile
             </ThemedText>
           </View>
           <ThemedTextInput
@@ -64,6 +71,28 @@ export default function SignUpForm() {
 
         <View style={styles.inputContainer}>
           <ThemedText size={14} style={styles.label}>
+            Fullname
+          </ThemedText>
+          <ThemedTextInput
+            control={control}
+            name="fullName"
+            placeholder="Enter your fullname"
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <ThemedText size={14} style={styles.label}>
+            Mobile Number
+          </ThemedText>
+          <ThemedTextInput
+            control={control}
+            name="phone"
+            placeholder="Enter your phone number"
+            keyboardType="phone-pad"
+            autoCapitalize="none"
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <ThemedText size={14} style={styles.label}>
             Password
           </ThemedText>
           <ThemedTextInput
@@ -75,7 +104,11 @@ export default function SignUpForm() {
       </View>
 
       <Spacer size={40} />
-      <CTA page="signup" onPress={handleSubmit(onSubmit)} />
+      <CTA
+        page="signup"
+        onPress={handleSubmit(onSubmit)}
+        isLoading={isLoading}
+      />
     </View>
   );
 }

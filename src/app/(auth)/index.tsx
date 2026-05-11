@@ -6,11 +6,11 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { Colors } from "@/constants/Colors";
 import { Spacing } from "@/constants/Spacing";
-import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import React, { useRef } from "react";
 import {
   Dimensions,
+  ImageBackground,
   NativeScrollEvent,
   NativeSyntheticEvent,
   Pressable,
@@ -44,27 +44,23 @@ const AuthScreen = () => {
 
   const navigation = useRouter();
   return (
-    <ThemedView
+    <ImageBackground
+      source={require("@/assets/images/auth-bg.png")}
       style={[
         styles.container,
         {
           paddingTop: insets.top,
           paddingLeft: insets.left,
           paddingRight: insets.right,
+          paddingBottom: insets.bottom,
         },
       ]}
     >
-      <LinearGradient
-        colors={["transparent", Colors.surfaceCard]}
-        locations={[0, 0.9]}
-        style={{ width: "100%", flex: 1, paddingBottom: insets.bottom }}
-      >
+      <ThemedView avoiding>
         <View style={{ padding: Spacing.lg }}>
           <Cross color={Colors.textMuted} onPress={() => navigation.back()} />
         </View>
-
         <Spacer size={34} />
-
         {/* Tabs */}
         <View style={{ paddingHorizontal: Spacing.lg }}>
           <View style={styles.tabContainer}>
@@ -94,9 +90,7 @@ const AuthScreen = () => {
             </Pressable>
           </View>
         </View>
-
         <Spacer size={40} />
-
         {/* Paged horizontal scroll */}
         <ScrollView
           ref={scrollRef}
@@ -106,20 +100,33 @@ const AuthScreen = () => {
           scrollEventThrottle={16}
           onMomentumScrollEnd={handleMomentumScrollEnd}
           removeClippedSubviews={false}
+          contentContainerStyle={{ flexGrow: 1 }}
         >
           <View style={{ width: SCREEN_WIDTH }}>
-            <ScrollView>
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{
+                paddingBottom: Spacing.lg,
+                flexGrow: 1,
+              }}
+            >
               <SignInForm />
             </ScrollView>
           </View>
           <View style={{ width: SCREEN_WIDTH }}>
-            <ScrollView>
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{
+                paddingBottom: Spacing.lg,
+                flexGrow: 1,
+              }}
+            >
               <SignUpForm />
             </ScrollView>
           </View>
         </ScrollView>
-      </LinearGradient>
-    </ThemedView>
+      </ThemedView>
+    </ImageBackground>
   );
 };
 

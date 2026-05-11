@@ -2,17 +2,23 @@ import Facebook from "@/assets/icons/facebook.svg";
 import Google from "@/assets/icons/google.svg";
 import { ThemedButton } from "@/components/ThemedButton";
 import { Colors } from "@/constants/Colors";
-import { Spacing } from "@/constants/Spacing";
 import React from "react";
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  ActivityIndicator,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { ThemedText } from "../ThemedText";
 
 const CTA = ({
   onPress,
   page,
+  isLoading,
 }: {
   onPress: () => void;
   page: "signin" | "signup" | "mobile" | "verify";
+  isLoading: boolean;
 }) => {
   const title = {
     signin: "Sign in",
@@ -22,7 +28,16 @@ const CTA = ({
   };
   return (
     <View style={styles.container}>
-      <ThemedButton title={title[page]} variant="primary" onPress={onPress} />
+      <ThemedButton
+        title={title[page]}
+        variant="primary"
+        onPress={onPress}
+        disabled={isLoading}
+        icon={
+          isLoading ? <ActivityIndicator color={Colors.surface} /> : undefined
+        }
+      />
+
       {page !== "mobile" && page !== "verify" && (
         <>
           <ThemedText
@@ -56,7 +71,6 @@ const styles = StyleSheet.create({
     // justifyContent: "center",
     width: "100%",
     alignItems: "center",
-    paddingHorizontal: Spacing.md,
     gap: 20,
   },
   socials: {

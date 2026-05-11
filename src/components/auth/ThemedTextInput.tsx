@@ -1,5 +1,6 @@
 import { ThemedText } from "@/components/ThemedText"; // adjust path as needed
 import { Colors } from "@/constants/Colors";
+import { Fonts } from "@/constants/Fonts";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import React, { useState } from "react";
 import { Control, Controller, FieldValues, Path } from "react-hook-form";
@@ -61,7 +62,8 @@ export function ThemedTextInput<T extends FieldValues>({
                 value={value}
                 style={[{ width: "80%", color: Colors.textFaint }, inputStyle]}
                 placeholderTextColor={Colors.textMuted}
-                // secureTextEntry={!isPasswordVisible}
+                secureTextEntry={!isPasswordVisible}
+                autoCapitalize="none"
                 {...rest}
               />
 
@@ -108,6 +110,7 @@ const styles = StyleSheet.create({
     height: 54,
     justifyContent: "center",
     color: Colors.textFaint,
+    fontFamily: Fonts.regular,
   },
   password: {
     flexDirection: "row",
