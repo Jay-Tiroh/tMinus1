@@ -1,6 +1,6 @@
 import Cross from "@/assets/icons/cross.svg";
+import EmailMobile from "@/components/auth/EmailMobilePhase";
 import SignInForm from "@/components/auth/SignInForm";
-import SignUpForm from "@/components/auth/SignUpForm";
 import { Spacer } from "@/components/Spacer";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
@@ -121,7 +121,8 @@ const AuthScreen = () => {
                 flexGrow: 1,
               }}
             >
-              <SignUpForm />
+              {/*<SignUpForm />*/}
+              <EmailMobile />
             </ScrollView>
           </View>
         </ScrollView>

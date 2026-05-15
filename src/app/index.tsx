@@ -71,7 +71,7 @@ export default function Index() {
       });
       setActiveIndex(nextIndex);
     } else {
-      navigation.push("/(auth)");
+      navigation.replace("/(auth)");
     }
   };
 

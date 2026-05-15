@@ -12,8 +12,8 @@ export default function AuthLayout() {
       }}
     >
       <Stack.Screen name="index" />
-      <Stack.Screen name="register-mobile" />
       <Stack.Screen name="verify" />
+      <Stack.Screen name="signUp" />
     </Stack>
   );
 }

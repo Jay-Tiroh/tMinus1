@@ -3,15 +3,13 @@ import Avatar from "@/assets/icons/user/avatar.svg";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import useMisc from "@/constants/misc";
-import { useUser } from "@/hooks/useUser";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 
 const Profile = () => {
-  const { fullName } = useUser();
-  const displayName = fullName ? fullName.split(" ")[0] : "User123";
+  const { displayName } = useMisc();
   const { details } = useMisc();
 
   const router = useRouter();

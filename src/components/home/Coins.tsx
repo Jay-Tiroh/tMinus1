@@ -1,13 +1,31 @@
-import GreenChart from "@/assets/icons/home/green-chart.svg";
-import RedChart from "@/assets/icons/home/red-chart.svg";
+import { CoinCard } from "@/components/home/CoinCard";
+import CoinCardsSkeleton from "@/components/home/CoinCardSkeleton";
 import { ThemedText } from "@/components/ThemedText";
-import { RecentCoins } from "@/constants/CoinLists";
 import { Colors } from "@/constants/Colors";
-import { formatCurrency } from "@/helpers/functions";
+import {
+  useAllAssetsQuery,
+  useTrendingQuery,
+} from "@/store/services/marketsApi";
+import { Asset } from "@/types/assets";
 import React from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 
+const CoinCards = ({ data }: { data: Asset[] | undefined }) => {
+  return (
+    <>
+      {data?.map((coin, index) => (
+        
+        <CoinCard key={coin.symbol ?? index} coin={coin} /> // ✅ each card calls its own hook
+      ))}
+    </>
+  );
+};
+
 const Coins = () => {
+  const dummyArr = [1, 2, 3, 4];
+  const { data: trending, isLoading: trendingLoading } = useTrendingQuery();
+  const { data: coins, isLoading: coinsLoading } = useAllAssetsQuery();
+
   return (
     <View style={styles.container}>
       <View style={styles.wrapper}>
@@ -25,46 +43,16 @@ const Coins = () => {
           contentContainerStyle={styles.scrollContent}
           style={styles.scrollView}
         >
-          {RecentCoins.map((coin, index) => (
-            <View style={styles.card} key={index}>
-              <View style={styles.top}>
-                <ThemedText
-                  weight="bold"
-                  size={16}
-                  letterSpacing={2.64}
-                  style={{
-                    color: coin.change > 0 ? Colors.primary : Colors.loss,
-                  }}
-                >
-                  {formatCurrency(coin.price)}
-                </ThemedText>
-                <coin.symbol />
-              </View>
-              <View style={styles.middle}>
-                <ThemedText
-                  size={14}
-                  letterSpacing={2.64}
-                  style={{ color: Colors.surface }}
-                >
-                  {coin.name}
-                </ThemedText>
-                <ThemedText
-                  size={12}
-                  letterSpacing={2.64}
-                  style={{
-                    color: coin.change > 0 ? Colors.primary : Colors.loss,
-                  }}
-                >
-                  {coin.change}
-                </ThemedText>
-              </View>
-              <View style={styles.bottom}>
-                {coin.change > 0 ? <GreenChart /> : <RedChart />}
-              </View>
-            </View>
-          ))}
+          {coinsLoading && (
+            <>
+              {dummyArr.map((_) => (
+                <CoinCardsSkeleton key={_} />
+              ))}
+            </>
+          )}
+          <CoinCards data={coins} />
         </ScrollView>
-
+{/**/}
         <ThemedText
           weight="bold"
           size={18}
@@ -79,44 +67,14 @@ const Coins = () => {
           contentContainerStyle={styles.scrollContent}
           style={styles.scrollView}
         >
-          {RecentCoins.map((coin, index) => (
-            <View style={styles.card} key={index}>
-              <View style={styles.top}>
-                <ThemedText
-                  weight="bold"
-                  size={16}
-                  letterSpacing={2.64}
-                  style={{
-                    color: coin.change > 0 ? Colors.primary : Colors.loss,
-                  }}
-                >
-                  {formatCurrency(coin.price)}
-                </ThemedText>
-                <coin.symbol />
-              </View>
-              <View style={styles.middle}>
-                <ThemedText
-                  size={14}
-                  letterSpacing={2.64}
-                  style={{ color: Colors.surface }}
-                >
-                  {coin.name}
-                </ThemedText>
-                <ThemedText
-                  size={12}
-                  letterSpacing={2.64}
-                  style={{
-                    color: coin.change > 0 ? Colors.primary : Colors.loss,
-                  }}
-                >
-                  {coin.change}
-                </ThemedText>
-              </View>
-              <View style={styles.bottom}>
-                {coin.change > 0 ? <GreenChart /> : <RedChart />}
-              </View>
-            </View>
-          ))}
+          {trendingLoading && (
+            <>
+              {dummyArr.map((_) => (
+                <CoinCardsSkeleton key={_} />
+              ))}
+            </>
+          )}
+          <CoinCards data={trending} />
         </ScrollView>
       </View>
     </View>
@@ -145,23 +103,6 @@ const styles = StyleSheet.create({
     gap: 20,
     paddingVertical: 20,
   },
-  card: {
-    width: 163,
-    height: 118,
-    boxShadow: "0px 16px 50px rgba(22, 28, 34, 0.08)",
-    borderRadius: 16,
-    padding: 8,
-    justifyContent: "space-between",
-  },
-  top: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  middle: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 4,
-  },
+
   bottom: {},
 });

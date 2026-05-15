@@ -43,8 +43,12 @@ export const mobilePasswordSchema = z.object({
 export const phoneSchema_ = z.object({
   phone: phoneSchema,
 });
+export const emailSchema_ = z.object({
+  email: emailSchema,
+});
 
 export type SignupFormData = z.infer<typeof signupSchema>;
 export type EmailPasswordFormData = z.infer<typeof emailPasswordSchema>;
 export type MobilePasswordFormData = z.infer<typeof mobilePasswordSchema>;
 export type PhoneFormData = z.infer<typeof phoneSchema_>;
+export type EmailFormData = z.infer<typeof emailSchema_>;

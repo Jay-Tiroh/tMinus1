@@ -5,49 +5,58 @@ import { Spacer } from "@/components/Spacer";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { Spacing } from "@/constants/Spacing";
+import { useMaskData } from "@/hooks/useMaskData";
+import { useRequestOtp } from "@/hooks/useRequestOTP";
+import { useTempUser } from "@/hooks/useTempUser";
+import { useVerifyOTPMutation } from "@/store/services/authApi";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { useRouter } from "expo-router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function Verify() {
   const router = useRouter();
-  const [otp, setOtp] = useState("");
   const insets = useSafeAreaInsets();
-  const [countdown, setCountdown] = useState(30);
-  const [isCounting, setIsCounting] = useState(false);
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const [otp, setOtp] = useState("");
+  const [verifyError, setVerifyError] = useState<string | null>(null);
 
-  const handleSubmit = () => {
-    console.log("Submitting OTP:", otp);
-    router.push("/(auth)/success");
-  };
+  const { email, phone } = useTempUser();
+  const payload: { type: "email" | "phone"; value: string } = phone
+    ? { type: "phone", value: phone }
+    : { type: "email", value: email ?? "" };
+  const { maskData } = useMaskData();
+  const maskedData = maskData(payload);
+  const { handleRequestOtp, countdown, error, isLoading } = useRequestOtp();
 
-  const startCountdown = () => {
-    if (timerRef.current) clearInterval(timerRef.current);
+  const [verifyOtp, { isLoading: isVerifying, isError }] =
+    useVerifyOTPMutation();
 
-    setIsCounting(true);
-    setCountdown(30);
+  const handleSubmit = async (code?: string) => {
+    const otpToSubmit = code ?? otp;
+    if (otpToSubmit.length < 6) return;
+    try {
+      const result = await verifyOtp({
+        email: payload.value,
+        code: otpToSubmit,
+      }).unwrap();
 
-    timerRef.current = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          clearInterval(timerRef.current!);
-          timerRef.current = null;
-          setIsCounting(false);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
+      router.replace("/signUp");
+      console.log("Submitting OTP:", otpToSubmit);
+    } catch (err) {
+      const fetchError = err as FetchBaseQueryError;
+      const data = fetchError.data as { error: { message: string } };
+      const message = data?.error?.message ?? "Verification failed. Try again.";
+      setVerifyError(message);
+      console.log(payload, otpToSubmit);
+    }
   };
 
   useEffect(() => {
-    startCountdown();
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-  }, []);
+    if (!payload.value) return;
+    handleRequestOtp(payload.value);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [payload.value]);
 
   return (
     <View style={{ paddingTop: insets.top, flex: 1 }}>
@@ -77,7 +86,7 @@ export default function Verify() {
               weight="regular"
               style={{ color: Colors.primary }}
             >
-              9161186659
+              {maskedData}
             </ThemedText>
           </View>
         </View>
@@ -87,12 +96,21 @@ export default function Verify() {
         <View style={{ gap: Spacing.lg, width: "100%" }}>
           <View style={styles.inputContainer}>
             <OTPInput
-              length={4}
+              length={6}
               onChange={(code) => setOtp(code)}
-              onComplete={(code) => console.log("OTP complete:", code)}
+              onComplete={handleSubmit}
             />
           </View>
         </View>
+
+        {verifyError && (
+          <>
+            <Spacer size={34} />
+            <ThemedText color={Colors.lossAlt} style={styles.errorText}>
+              {verifyError}
+            </ThemedText>
+          </>
+        )}
 
         <Spacer size={34} />
 
@@ -110,16 +128,22 @@ export default function Verify() {
             letterSpacing={2.64}
             weight="regular"
             style={{
-              color: isCounting ? Colors.textSecondary : Colors.primary,
+              color: countdown === 0 ? Colors.primary : Colors.textSecondary,
             }}
-            onPress={isCounting ? undefined : startCountdown}
+            onPress={() => {
+              if (countdown === 0) handleRequestOtp(payload.value);
+            }}
           >
             Resend Link
           </ThemedText>
         </View>
 
         <Spacer size={40} />
-        <CTA page="verify" onPress={handleSubmit} />
+        <CTA
+          page="verify"
+          onPress={() => handleSubmit()}
+          isLoading={isLoading || isVerifying}
+        />
       </View>
     </View>
   );
@@ -134,5 +158,9 @@ const styles = StyleSheet.create({
   inputContainer: {
     width: "100%",
     gap: 12,
+  },
+  errorText: {
+    width: "100%",
+    textAlign: "center",
   },
 });

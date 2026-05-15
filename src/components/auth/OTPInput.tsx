@@ -24,13 +24,12 @@ export function OTPInput({ length = 4, onComplete, onChange }: OTPInputProps) {
     setValues(next);
     const code = next.join("");
     onChange?.(code);
-    if (code.length === length) {
+    if (!next.includes("") && code.length === length) {
       onComplete?.(code);
     }
   };
 
   const handleChangeText = (text: string, index: number) => {
-    // Handle paste: if text length > 1, distribute across fields
     if (text.length > 1) {
       const digits = text.replace(/\D/g, "").slice(0, length).split("");
       const next = [...values];
@@ -38,20 +37,20 @@ export function OTPInput({ length = 4, onComplete, onChange }: OTPInputProps) {
         if (index + i < length) next[index + i] = d;
       });
       updateValues(next);
-      // Focus last filled or end
       const lastIndex = Math.min(index + digits.length - 1, length - 1);
       inputRefs.current[lastIndex]?.focus();
       return;
     }
 
-    // Single character input
-    const digit = text.replace(/\D/g, "").slice(-1); // only digits, take last
+    const digit = text.replace(/\D/g, "").slice(-1);
     const next = [...values];
     next[index] = digit;
     updateValues(next);
 
     if (digit && index < length - 1) {
       inputRefs.current[index + 1]?.focus();
+    } else if (digit && index === length - 1) {
+      inputRefs.current[index]?.blur();
     }
   };
 
@@ -61,12 +60,10 @@ export function OTPInput({ length = 4, onComplete, onChange }: OTPInputProps) {
   ) => {
     if (e.nativeEvent.key === "Backspace") {
       if (values[index]) {
-        // Clear current field
         const next = [...values];
         next[index] = "";
         updateValues(next);
       } else if (index > 0) {
-        // Move back and clear previous
         const next = [...values];
         next[index - 1] = "";
         updateValues(next);
@@ -92,7 +89,7 @@ export function OTPInput({ length = 4, onComplete, onChange }: OTPInputProps) {
             onFocus={() => setFocusedIndex(i)}
             onBlur={() => setFocusedIndex(null)}
             keyboardType="number-pad"
-            maxLength={length} // allows paste of full OTP into first cell
+            maxLength={length}
             textAlign="center"
             caretHidden
             selectTextOnFocus
@@ -106,10 +103,8 @@ export function OTPInput({ length = 4, onComplete, onChange }: OTPInputProps) {
 const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
-    gap: 34,
     width: "100%",
     justifyContent: "space-between",
-    maxWidth: 342,
     alignSelf: "center",
   },
   cell: {
@@ -118,16 +113,16 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     backgroundColor: Colors.surfaceCard,
     fontSize: 32,
-    lineHeight: 34, 
+    lineHeight: 34,
     color: Colors.white,
     borderWidth: 1.5,
     borderColor: "transparent",
     fontFamily: Fonts.bold,
     textAlign: "center",
-    textAlignVertical: "center", // Android vertical centering
-    paddingVertical: 0, // kill default Android input padding
+    textAlignVertical: "center",
+    paddingVertical: 0,
     paddingHorizontal: 0,
-    includeFontPadding: false, // removes Android's extra font spacing
+    includeFontPadding: false,
   },
   cellFocused: {
     borderColor: Colors.primaryForest,

@@ -1,5 +1,6 @@
 import Avatar from "@/assets/icons/user/avatar.svg";
 import Camera from "@/assets/icons/user/camera.svg";
+import { ThemedButton } from "@/components/ThemedButton";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedTextInput } from "@/components/user/ThemedTextInput";
 import { Colors } from "@/constants/Colors";
@@ -15,12 +16,12 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TextInput, View } from "react-native";
 
 const EditProfile = () => {
   const { fullName, email, phone } = useUser();
-  const displayName = fullName?.split(" ")[0] ?? "User123";
 
+  const { displayName } = useMisc();
   const { details } = useMisc();
   const { edit } = useLocalSearchParams<{ edit?: keyof EditProfileFormData }>();
 
@@ -125,9 +126,16 @@ const EditProfile = () => {
 
       {/* Save CTA */}
       <View style={styles.CTA}>
-        <TouchableOpacity onPress={handleSubmit(onSubmit)}>
-          <ThemedText color={Colors.primary}>Save Changes</ThemedText>
-        </TouchableOpacity>
+        <ThemedButton
+          title="Cancel"
+          variant="secondary"
+          style={{ width: "50%" }}
+        />
+        <ThemedButton
+          title="Save Changes"
+          variant="primary"
+          style={{ width: "50%" }}
+        />
       </View>
     </View>
   );
@@ -210,5 +218,12 @@ const styles = StyleSheet.create({
   },
   CTA: {
     paddingBottom: 40,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    width: "100%",
+    paddingHorizontal: 30,
+    gap: 8,
+    flex: 1,
   },
 });

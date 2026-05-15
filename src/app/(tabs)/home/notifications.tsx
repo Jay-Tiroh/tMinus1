@@ -4,7 +4,7 @@ import Notification from "@/components/home/Notification";
 import { Spacer } from "@/components/Spacer";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
-import { useNotificationsQuery } from "@/store/services/baseApi";
+import { useNotificationsQuery } from "@/store/services/notificationsApi";
 import React, { useState } from "react";
 import { FlatList, Modal, Pressable, StyleSheet, View } from "react-native";
 
@@ -22,10 +22,10 @@ const Notifications = () => {
     "Auth",
   ];
 
-
   const { data: notifications, isLoading } = useNotificationsQuery();
 
   const empty = false;
+  console.log(notifications, isLoading);
   return (
     <View style={styles.container}>
       <View style={styles.header}>

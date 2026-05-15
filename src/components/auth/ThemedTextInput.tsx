@@ -1,4 +1,4 @@
-import { ThemedText } from "@/components/ThemedText"; // adjust path as needed
+import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -33,6 +33,7 @@ export function ThemedTextInput<T extends FieldValues>({
   ...rest
 }: ThemedTextInputProps<T>) {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const isEditable = rest.editable !== false;
 
   return (
     <Controller
@@ -49,12 +50,22 @@ export function ThemedTextInput<T extends FieldValues>({
               onChangeText={onChange}
               onBlur={onBlur}
               value={value}
-              style={[styles.input, inputStyle]}
+              style={[
+                styles.input,
+                !isEditable && styles.inputDisabled,
+                inputStyle,
+              ]}
               placeholderTextColor={Colors.textMuted}
               {...rest}
             />
           ) : (
-            <View style={[styles.input, styles.password]}>
+            <View
+              style={[
+                styles.input,
+                styles.password,
+                !isEditable && styles.inputDisabled,
+              ]}
+            >
               <TextInput
                 placeholder={placeholder}
                 onChangeText={onChange}
@@ -66,27 +77,16 @@ export function ThemedTextInput<T extends FieldValues>({
                 autoCapitalize="none"
                 {...rest}
               />
-
               <View style={{ flexDirection: "row", alignItems: "center" }}>
-                {isPasswordVisible ? (
-                  <Ionicons
-                    name="eye-sharp"
-                    size={24}
-                    color={Colors.textMuted}
-                    onPress={() => setIsPasswordVisible(false)}
-                  />
-                ) : (
-                  <Ionicons
-                    name="eye-off-sharp"
-                    size={24}
-                    color={Colors.textMuted}
-                    onPress={() => setIsPasswordVisible(true)}
-                  />
-                )}
+                <Ionicons
+                  name={isPasswordVisible ? "eye-sharp" : "eye-off-sharp"}
+                  size={24}
+                  color={Colors.textMuted}
+                  onPress={() => isEditable && setIsPasswordVisible((v) => !v)}
+                />
               </View>
             </View>
           )}
-
           {error?.message && (
             <ThemedText
               weight="regular"
@@ -111,6 +111,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     color: Colors.textFaint,
     fontFamily: Fonts.regular,
+  },
+  inputDisabled: {
+    opacity: 0.5,
   },
   password: {
     flexDirection: "row",

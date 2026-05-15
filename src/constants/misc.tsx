@@ -2,12 +2,12 @@ import { useUser } from "@/hooks/useUser";
 
 const useMisc = () => {
   const { fullName, email, phone } = useUser();
-
+  const displayName = fullName ? fullName.split(" ")[0] : "User123";
   const details = [
     {
       name: "username",
       label: "Username",
-      value: fullName,
+      value: displayName,
     },
     {
       name: "email",
@@ -21,7 +21,7 @@ const useMisc = () => {
     },
   ] as const;
 
-  return { details };
+  return { details, displayName };
 };
 
 export default useMisc;

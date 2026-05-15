@@ -18,7 +18,7 @@ const CTA = ({
 }: {
   onPress: () => void;
   page: "signin" | "signup" | "mobile" | "verify";
-  isLoading: boolean;
+  isLoading?: boolean;
 }) => {
   const title = {
     signin: "Sign in",

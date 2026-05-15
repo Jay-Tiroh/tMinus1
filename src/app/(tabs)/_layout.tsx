@@ -5,14 +5,6 @@ import { Tabs } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SvgProps } from "react-native-svg";
 
-/**
- * All tab appearance is driven by TabsConfig.ts.
- * The only thing you change here is how icons are rendered —
- * swap the renderIcon() call to match your icon library.
- */
-
-// ── Swap this function for your actual icon component ──────────────────────
-// Example shown uses a placeholder. Replace with Phosphor, Lucide, custom SVG etc.
 function renderIcon(Icon: React.FC<SvgProps>, focused: boolean) {
   return (
     <Icon
