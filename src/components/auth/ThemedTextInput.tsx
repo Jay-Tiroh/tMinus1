@@ -82,7 +82,7 @@ export function ThemedTextInput<T extends FieldValues>({
                   name={isPasswordVisible ? "eye-sharp" : "eye-off-sharp"}
                   size={24}
                   color={Colors.textMuted}
-                  onPress={() => isEditable && setIsPasswordVisible((v) => !v)}
+                  onPress={() => setIsPasswordVisible((v) => !v)}
                 />
               </View>
             </View>

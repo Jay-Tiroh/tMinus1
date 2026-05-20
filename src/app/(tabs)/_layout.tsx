@@ -12,7 +12,7 @@ function renderIcon(Icon: React.FC<SvgProps>, focused: boolean) {
       style={{
         width: 24,
         height: 24,
-        boxShadow: focused ? "0 5px 16px rgba(94, 213, 168, .25)" : undefined,
+        // boxShadow: focused ? "0 5px 16px rgba(94, 213, 168, .25)" : undefined,
       }}
     />
   );

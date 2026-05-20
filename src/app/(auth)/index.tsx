@@ -1,4 +1,3 @@
-import Cross from "@/assets/icons/cross.svg";
 import EmailMobile from "@/components/auth/EmailMobilePhase";
 import SignInForm from "@/components/auth/SignInForm";
 import { Spacer } from "@/components/Spacer";
@@ -57,9 +56,9 @@ const AuthScreen = () => {
       ]}
     >
       <ThemedView avoiding>
-        <View style={{ padding: Spacing.lg }}>
+        {/*<View style={{ padding: Spacing.lg }}>
           <Cross color={Colors.textMuted} onPress={() => navigation.back()} />
-        </View>
+        </View>*/}
         <Spacer size={34} />
         {/* Tabs */}
         <View style={{ paddingHorizontal: Spacing.lg }}>

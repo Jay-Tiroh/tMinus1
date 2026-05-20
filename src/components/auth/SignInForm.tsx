@@ -123,7 +123,6 @@ export default function SignInForm() {
             control={control}
             name="password"
             placeholder="Enter your password"
-            secureTextEntry
           />
           <ThemedText size={14} style={styles.toggleLink}>
             Forgot password?

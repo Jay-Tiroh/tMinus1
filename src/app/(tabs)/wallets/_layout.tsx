@@ -12,7 +12,12 @@ export default function WalletsLayout() {
         header: () => <ThemedHeader avatar headerRight="normal" />,
       }}
     >
-      <Stack.Screen name="index" />
+      <Stack.Screen
+        name="index"
+        options={{
+          headerShown: false,
+        }}
+      />
       <Stack.Screen name="myQr" />
       <Stack.Screen name="scanQr" />
     </Stack>

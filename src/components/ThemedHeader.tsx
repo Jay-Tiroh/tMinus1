@@ -124,10 +124,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingBottom: 0,
     backgroundColor: Colors.surface,
-    // flex: 1,
     justifyContent: "space-between",
     alignItems: "center",
     flexDirection: "row",
+    boxShadow: "0px 12px 10px rgba(0, 0, 0, 0.1)",
   },
   titleContainer: {
     flexDirection: "row",

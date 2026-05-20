@@ -12,6 +12,7 @@ export default function Chart({ data, isPositive }: ChartProps) {
     timestamp: Math.floor(Date.parse(item.time) / 1000),
     value: item.priceUsd,
   }));
+  // console.log("formattedData", formattedData);
   return (
     <LineChart.Provider data={formattedData}>
       <LineChart height={80} width={150}>

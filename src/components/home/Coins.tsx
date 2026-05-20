@@ -7,24 +7,39 @@ import {
   useTrendingQuery,
 } from "@/store/services/marketsApi";
 import { Asset } from "@/types/assets";
-import React from "react";
+import { memo } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 
-const CoinCards = ({ data }: { data: Asset[] | undefined }) => {
+const SKELETON_KEYS = [0, 1, 2, 3];
+
+const SkeletonRow = memo(function SkeletonRow() {
   return (
     <>
-      {data?.map((coin, index) => (
-        
-        <CoinCard key={coin.symbol ?? index} coin={coin} /> // ✅ each card calls its own hook
+      {SKELETON_KEYS.map((k) => (
+        <CoinCardsSkeleton key={k} />
       ))}
     </>
   );
-};
+});
+
+const CoinCards = memo(function CoinCards({
+  data,
+}: {
+  data: Asset[] | undefined;
+}) {
+  if (!data) return null;
+  return (
+    <>
+      {data.map((coin, index) => (
+        <CoinCard key={coin.symbol ?? index} coin={coin} />
+      ))}
+    </>
+  );
+});
 
 const Coins = () => {
-  const dummyArr = [1, 2, 3, 4];
-  const { data: trending, isLoading: trendingLoading } = useTrendingQuery();
   const { data: coins, isLoading: coinsLoading } = useAllAssetsQuery();
+  const { data: trending, isLoading: trendingLoading } = useTrendingQuery();
 
   return (
     <View style={styles.container}>
@@ -43,16 +58,9 @@ const Coins = () => {
           contentContainerStyle={styles.scrollContent}
           style={styles.scrollView}
         >
-          {coinsLoading && (
-            <>
-              {dummyArr.map((_) => (
-                <CoinCardsSkeleton key={_} />
-              ))}
-            </>
-          )}
-          <CoinCards data={coins} />
+          {coinsLoading ? <SkeletonRow /> : <CoinCards data={coins} />}
         </ScrollView>
-{/**/}
+
         <ThemedText
           weight="bold"
           size={18}
@@ -67,14 +75,7 @@ const Coins = () => {
           contentContainerStyle={styles.scrollContent}
           style={styles.scrollView}
         >
-          {trendingLoading && (
-            <>
-              {dummyArr.map((_) => (
-                <CoinCardsSkeleton key={_} />
-              ))}
-            </>
-          )}
-          <CoinCards data={trending} />
+          {trendingLoading ? <SkeletonRow /> : <CoinCards data={trending} />}
         </ScrollView>
       </View>
     </View>
@@ -92,7 +93,6 @@ const styles = StyleSheet.create({
   wrapper: {
     flex: 1,
     justifyContent: "flex-start",
-    // gap: 20,
   },
   scrollView: {
     flexGrow: 0,
@@ -103,6 +103,4 @@ const styles = StyleSheet.create({
     gap: 20,
     paddingVertical: 20,
   },
-
-  bottom: {},
 });
