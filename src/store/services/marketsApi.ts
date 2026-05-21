@@ -1,4 +1,5 @@
 import {
+  AssetDetailsEnvelope,
   AssetDetailsRequest,
   AssetDetailsResponse,
   AssetsResponse,
@@ -19,6 +20,7 @@ const marketsApi = baseApi.injectEndpoints({
 
     getAsset: builder.query<AssetDetailsResponse, AssetDetailsRequest>({
       query: ({ symbol }) => `/market/assets/${symbol}`,
+      transformResponse: (response: AssetDetailsEnvelope) => response.data,
     }),
 
     getAssets: builder.query<Record<string, AssetDetailsResponse>, string[]>({
@@ -39,7 +41,7 @@ const marketsApi = baseApi.injectEndpoints({
 
         const data: Record<string, AssetDetailsResponse> = {};
         results.forEach((r, i) => {
-          data[symbols[i]] = r.data as AssetDetailsResponse;
+          data[symbols[i]] = (r.data as AssetDetailsEnvelope).data;
         });
 
         return { data };

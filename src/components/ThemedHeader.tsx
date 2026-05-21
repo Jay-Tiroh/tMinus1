@@ -4,18 +4,17 @@ import Candle from "@/assets/icons/candle.svg";
 import DollarCircle from "@/assets/icons/dollar-circle.svg";
 import Menu from "@/assets/icons/menu.svg";
 import Scanner from "@/assets/icons/scanner.svg";
-import Search from "@/assets/icons/search.svg";
 import Star from "@/assets/icons/star.svg";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { Colors } from "@/constants/Colors";
 import { useAppDispatch } from "@/store/hooks";
 import { toggleMenu } from "@/store/slices/MenuSlice";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { Href, useRouter } from "expo-router";
 import React from "react";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-
 interface ThemedHeaderProps {
   goBack?: true;
   title?: string;
@@ -23,6 +22,7 @@ interface ThemedHeaderProps {
   onGoBack?: () => void;
   headerLeft?: React.ReactNode;
   headerRight?: "normal" | "trade" | "menu";
+  basic?: boolean;
 }
 
 const ThemedHeader = ({
@@ -32,6 +32,7 @@ const ThemedHeader = ({
   onGoBack,
   headerLeft,
   headerRight,
+  basic,
 }: ThemedHeaderProps) => {
   const insets = useSafeAreaInsets();
   const router = useRouter();
@@ -44,7 +45,16 @@ const ThemedHeader = ({
     dispatch(toggleMenu());
   };
   return (
-    <ThemedView safe style={[styles.container, { paddingTop: 40 }]}>
+    <ThemedView
+      safe
+      style={[
+        styles.container,
+        {
+          paddingTop: 40,
+          boxShadow: basic ? "none" : "0px 12px 10px rgba(0, 0, 0, 0.1)",
+        },
+      ]}
+    >
       {/* headerLeft */}
       {headerLeft && <>{headerLeft}</>}
 
@@ -97,7 +107,13 @@ const NormalRight = () => {
   };
   return (
     <View style={{ flexDirection: "row", alignItems: "center", gap: 34 }}>
-      <Search hitSlop={10} />
+      <Ionicons
+        name="settings-outline"
+        size={24}
+        color={Colors.profit}
+        hitSlop={10}
+        onPress={() => pushTo("/user/settings")}
+      />
       <Scanner onPress={() => pushTo("/wallets/scanQr")} hitSlop={10} />
       <Bell onPress={() => pushTo("/home/notifications")} hitSlop={10} />
     </View>
@@ -127,7 +143,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     flexDirection: "row",
-    boxShadow: "0px 12px 10px rgba(0, 0, 0, 0.1)",
   },
   titleContainer: {
     flexDirection: "row",

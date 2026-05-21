@@ -1,21 +1,28 @@
 import { User } from "@/types/user";
 
+// Expanded to match your new API response containing refresh tokens and expiration
 export interface AuthResponseData {
   user: User;
-  token: string;
+  accessToken: string;
+  token: string; // Often duplicates accessToken depending on backend setup
+  refreshToken: string;
+  tokenType: string;
+  expiresAt: string;
+  expiresInSeconds: number;
+  refreshTokenExpiresAt: string;
 }
 
 export interface AuthResponse {
   data: AuthResponseData;
+  meta?: {
+    requestId: string;
+  };
 }
 
-export interface LoginRequestEmail {
-  email: string;
-  password: string;
-}
-
-export interface LoginRequestMobile {
-  phone: string;
+// Replaced LoginRequestEmail/Mobile with a unified LoginRequest
+export interface LoginRequest {
+  loginType: "email" | "phone";
+  identifier: string;
   password: string;
 }
 
@@ -31,14 +38,14 @@ export interface VerifyOTPRequest {
   email: string;
 }
 
-export interface RequestOTPResponse {
-  data: RequestOTPResponseData;
-}
-
 export interface RequestOTPResponseData {
   message: string;
   demoCode: string;
   expiresInSeconds: number;
+}
+
+export interface RequestOTPResponse {
+  data: RequestOTPResponseData;
 }
 
 export interface VerifyOTPResponseData {
@@ -47,4 +54,32 @@ export interface VerifyOTPResponseData {
 
 export interface VerifyOTPResponse {
   data: VerifyOTPResponseData;
+}
+
+// Session — Can now just extend AuthResponseData or match its shape
+export interface SessionResponseData extends AuthResponseData {
+  authenticated: boolean;
+}
+
+export interface SessionResponse {
+  data: SessionResponseData;
+}
+
+// Logout
+export interface LogoutResponseData {
+  loggedOut: boolean;
+}
+export interface LogoutResponse {
+  data: LogoutResponseData;
+}
+
+// Refresh
+export interface RefreshRequestBody {
+  refreshToken: string;
+}
+
+export interface RefreshResponseData extends AuthResponseData {}
+
+export interface RefreshResponse {
+  data: RefreshResponseData;
 }

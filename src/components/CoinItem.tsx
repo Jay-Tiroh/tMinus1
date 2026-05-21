@@ -1,11 +1,12 @@
-import GreenChart from "@/assets/icons/home/green-chart.svg";
-import RedChart from "@/assets/icons/home/red-chart.svg";
+import Chart from "@/components/LineChart";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { formatCurrency } from "@/helpers/functions";
-import React from "react";
+import { useAssetChart } from "@/hooks/useAssetChart";
+import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { SvgProps } from "react-native-svg";
+
 type CoinItemProps = {
   name: string;
   alias: string;
@@ -29,21 +30,15 @@ const CoinItem = ({
   showChange = false,
   showChart = false,
 }: CoinItemProps) => {
-  const isPositive = change && change > 0;
-  const sign = isPositive ? "+" : "";
-  return (
-    <View style={styles.container}>
-      <View
-        style={{
-          gap: 13,
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <Icon width={40} height={40} />
+  const isPositive = !!change && change > 0;
+  const chartData = useAssetChart(alias, !showChart);
+  const [chartVisible, setChartVisible] = useState(false);
 
-        <View style={{ minWidth: 80 }}>
+  return (
+    <View style={styles.container} onLayout={() => setChartVisible(true)}>
+      <View style={styles.left}>
+        <Icon width={40} height={40} />
+        <View style={styles.nameBlock}>
           <ThemedText weight="bold" size={14} color={Colors.white}>
             {name}
           </ThemedText>
@@ -52,22 +47,27 @@ const CoinItem = ({
           </ThemedText>
         </View>
       </View>
-      {showChart ? isPositive ? <GreenChart /> : <RedChart /> : null}
-      <View style={{ minWidth: 80, alignItems: "flex-end" }}>
+
+      {showChart && chartVisible && chartData.length > 0 && (
+        <Chart isPositive={isPositive} data={chartData} />
+      )}
+
+      <View style={styles.right}>
         <ThemedText weight="bold" size={14} color={Colors.white}>
           {formatCurrency(amount)}
         </ThemedText>
-        {showAmountInUsd && (
+        {showAmountInUsd && amountInUsd != null && (
           <ThemedText size={14} color={Colors.textMuted}>
-            {amountInUsd ? `$${formatCurrency(amountInUsd)}` : null}
+            ${formatCurrency(amountInUsd)}
           </ThemedText>
         )}
-        {showChange && (
+        {showChange && change != null && (
           <ThemedText
             size={14}
             color={isPositive ? Colors.profit : Colors.loss}
           >
-            {sign + change + "%"}
+            {isPositive ? "+" : ""}
+            {change.toFixed(2)}%
           </ThemedText>
         )}
       </View>
@@ -80,15 +80,21 @@ export default CoinItem;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "space-between",
-    alignItems: "center",
     flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     width: "100%",
   },
-  name: {},
-  alias: {},
-  amount: {},
-  price: {},
-  change: {},
-  icon: {},
+  left: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 13,
+  },
+  nameBlock: {
+    minWidth: 80,
+  },
+  right: {
+    minWidth: 80,
+    alignItems: "flex-end",
+  },
 });

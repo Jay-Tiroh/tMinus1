@@ -15,22 +15,21 @@ export default function UserLayout() {
       <Stack.Screen
         name="settings"
         options={{
-          header: () => <ThemedHeader goBack title="Settings" />,
-          contentStyle: { backgroundColor: Colors.surfaceDark },
+          header: () => <ThemedHeader goBack title="Settings" basic />,
         }}
       />
       <Stack.Screen
         name="profile"
         options={{
-          header: () => <ThemedHeader goBack title="Profile" />,
-          contentStyle: { backgroundColor: Colors.surfaceDark },
+          header: () => <ThemedHeader goBack title="Profile" basic />,
+          // contentStyle: { backgroundColor: Colors.surfaceDark },
         }}
       />
       <Stack.Screen
         name="edit-profile"
         options={{
-          header: () => <ThemedHeader goBack title="Edit Profile" />,
-          contentStyle: { backgroundColor: Colors.surfaceDark },
+          header: () => <ThemedHeader goBack title="Edit Profile" basic />,
+          // contentStyle: { backgroundColor: Colors.surfaceDark },
         }}
       />
     </Stack>

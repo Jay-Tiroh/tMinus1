@@ -3,9 +3,9 @@ import { ThemedText } from "@/components/ThemedText";
 import { CoinIcons } from "@/constants/AssetsMap";
 import { Colors } from "@/constants/Colors";
 import { formatCurrency } from "@/helpers/functions";
-import { useGetAssetQuery } from "@/store/services/marketsApi";
+import { useAssetChart } from "@/hooks/useAssetChart";
 import { Asset } from "@/types/assets";
-import { memo } from "react";
+import { memo, useState } from "react";
 import { StyleSheet, View } from "react-native";
 
 interface CoinCardProps {
@@ -13,14 +13,13 @@ interface CoinCardProps {
 }
 
 export const CoinCard = memo(function CoinCard({ coin }: CoinCardProps) {
-  const { data: coinInfo } = useGetAssetQuery({ symbol: coin.symbol });
-  const chartData = coinInfo?.chart ?? [];
+  const chartData = useAssetChart(coin.symbol);
   const Icon = CoinIcons[coin.symbol];
   const isPositive = coin.change24h > 0;
-  // console.log("chartData", chartData);
-  console.log("data", coinInfo);
+  const [chartVisible, setChartVisible] = useState(false);
+
   return (
-    <View style={styles.card}>
+    <View style={styles.card} onLayout={() => setChartVisible(true)}>
       <View style={styles.top}>
         <ThemedText
           weight="bold"
@@ -32,6 +31,7 @@ export const CoinCard = memo(function CoinCard({ coin }: CoinCardProps) {
         </ThemedText>
         {Icon && <Icon width={24} height={24} />}
       </View>
+
       <View style={styles.middle}>
         <ThemedText
           size={14}
@@ -46,11 +46,14 @@ export const CoinCard = memo(function CoinCard({ coin }: CoinCardProps) {
           style={{ color: isPositive ? Colors.primary : Colors.loss }}
         >
           {isPositive ? "+" : ""}
-          {coin.change24h}%
+          {coin.change24h.toFixed(2)}%
         </ThemedText>
       </View>
+
       <View style={styles.bottom}>
-        <Chart isPositive={isPositive} data={chartData} />
+        {chartVisible && chartData.length > 0 && (
+          <Chart isPositive={isPositive} data={chartData} />
+        )}
       </View>
     </View>
   );
@@ -59,12 +62,12 @@ export const CoinCard = memo(function CoinCard({ coin }: CoinCardProps) {
 const styles = StyleSheet.create({
   card: {
     width: 163,
-    height: 118,
-    boxShadow: "0px 16px 50px rgba(22, 28, 34, 0.08)",
+    // height: 118,
     borderRadius: 16,
     padding: 8,
     justifyContent: "space-between",
     overflow: "hidden",
+    boxShadow: "0px 16px 50px rgba(22, 28, 34, 0.08)",
   },
   top: {
     flexDirection: "row",
@@ -77,6 +80,6 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   bottom: {
-    marginBottom: -40,
+    marginTop: 10,
   },
 });

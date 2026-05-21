@@ -12,17 +12,14 @@ import {
   mobilePasswordSchema,
 } from "@/schemas/authSchemas";
 import { useAppDispatch } from "@/store/hooks";
-import {
-  useLoginEmailMutation,
-  useLoginMobileMutation,
-} from "@/store/services/authApi";
+import { useLoginMutation } from "@/store/services/authApi";
 import { setCredentials } from "@/store/slices/authSlice";
+import { LoginRequest } from "@/types/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { StyleSheet, View } from "react-native";
-
 type FormData = EmailPasswordFormData | MobilePasswordFormData;
 
 export default function SignInForm() {
@@ -36,32 +33,31 @@ export default function SignInForm() {
   });
 
   // API Mutations
-  const [
-    loginEmail,
-    { isLoading: isLoadingEmail, isError: isErrorEmail, error: errorEmail },
-  ] = useLoginEmailMutation();
-
-  const [
-    loginMobile,
-    { isLoading: isLoadingMobile, isError: isErrorMobile, error: errorMobile },
-  ] = useLoginMobileMutation();
+  const [login, { isLoading, isError, error }] = useLoginMutation();
 
   const onSubmit = async (data: FormData) => {
-    const result = await (isEmail ? loginEmail(data) : loginMobile(data));
+    const formattedData: LoginRequest = {
+      loginType: isEmail ? "email" : "phone",
+      identifier: "email" in data ? data.email : data.phone,
+      password: data.password,
+    };
+    const result = await login(formattedData);
+
     if ("data" in result && result.data) {
-      dispatch(setCredentials(result.data));
+      dispatch(
+        setCredentials({
+          user: result.data.user,
+          token: result.data.accessToken,
+          refreshToken: result.data.refreshToken,
+        }),
+      );
       router.replace("/(tabs)/home");
     }
   };
-
   const handleToggle = () => {
     reset();
     setIsEmail((prev) => !prev);
   };
-
-  const isLoading = isLoadingEmail || isLoadingMobile;
-  const isError = isErrorEmail || isErrorMobile;
-  const error = errorEmail || errorMobile;
 
   return (
     <View style={styles.container}>

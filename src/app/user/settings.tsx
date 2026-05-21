@@ -1,12 +1,9 @@
+import SettingsScreen from "@/components/screens/user/SettingsScreen";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
 
 const Settings = () => {
-  return (
-    <View style={styles.container}>
-      <Text>Settings</Text>
-    </View>
-  );
+  return <SettingsScreen />;
 };
 
 export default Settings;

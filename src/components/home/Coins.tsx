@@ -7,8 +7,8 @@ import {
   useTrendingQuery,
 } from "@/store/services/marketsApi";
 import { Asset } from "@/types/assets";
-import { memo } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { memo, useCallback } from "react";
+import { FlatList, StyleSheet, View } from "react-native";
 
 const SKELETON_KEYS = [0, 1, 2, 3];
 
@@ -22,18 +22,45 @@ const SkeletonRow = memo(function SkeletonRow() {
   );
 });
 
-const CoinCards = memo(function CoinCards({
+const CoinList = memo(function CoinList({
   data,
+  isLoading,
 }: {
   data: Asset[] | undefined;
+  isLoading: boolean;
 }) {
-  if (!data) return null;
+  const renderItem = useCallback(
+    ({ item }: { item: Asset }) => <CoinCard coin={item} />,
+    [],
+  );
+
+  const keyExtractor = useCallback(
+    (item: Asset, index: number) => item.symbol ?? String(index),
+    [],
+  );
+
+  if (isLoading) {
+    return (
+      <View style={styles.skeletonRow}>
+        <SkeletonRow />
+      </View>
+    );
+  }
+
   return (
-    <>
-      {data.map((coin, index) => (
-        <CoinCard key={coin.symbol ?? index} coin={coin} />
-      ))}
-    </>
+    <FlatList
+      data={data}
+      horizontal
+      renderItem={renderItem}
+      keyExtractor={keyExtractor}
+      showsHorizontalScrollIndicator={false}
+      contentContainerStyle={styles.scrollContent}
+      style={styles.scrollView}
+      removeClippedSubviews={true}
+      maxToRenderPerBatch={4}
+      initialNumToRender={4}
+      windowSize={5}
+    />
   );
 });
 
@@ -52,14 +79,7 @@ const Coins = () => {
         >
           Recent Coins
         </ThemedText>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.scrollContent}
-          style={styles.scrollView}
-        >
-          {coinsLoading ? <SkeletonRow /> : <CoinCards data={coins} />}
-        </ScrollView>
+        <CoinList data={coins} isLoading={coinsLoading} />
 
         <ThemedText
           weight="bold"
@@ -69,14 +89,7 @@ const Coins = () => {
         >
           Top Coins
         </ThemedText>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.scrollContent}
-          style={styles.scrollView}
-        >
-          {trendingLoading ? <SkeletonRow /> : <CoinCards data={trending} />}
-        </ScrollView>
+        <CoinList data={trending} isLoading={trendingLoading} />
       </View>
     </View>
   );
@@ -100,6 +113,11 @@ const styles = StyleSheet.create({
   scrollContent: {
     flexDirection: "row",
     alignItems: "center",
+    gap: 20,
+    paddingVertical: 20,
+  },
+  skeletonRow: {
+    flexDirection: "row",
     gap: 20,
     paddingVertical: 20,
   },
