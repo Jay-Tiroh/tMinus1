@@ -1,4 +1,5 @@
 import Arrow from "@/assets/icons/back.svg";
+import ModalSelector from "@/components/ModalSelector";
 import NoFeedbackSwitch from "@/components/ThemedSwitch";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
@@ -19,6 +20,7 @@ type ItemProps = {
   icon?: React.FC<SvgProps>;
   altIcon?: (props: { color: string; size: number }) => React.ReactNode;
   pushTo?: string;
+  options?: string[];
 };
 
 const Item = ({
@@ -28,25 +30,70 @@ const Item = ({
   icon: Icon,
   altIcon,
   pushTo,
+  options,
 }: ItemProps) => {
   const router = useRouter();
   const [updateSettings, { isLoading }] = useUpdateSettingsMutation();
 
   const isToggle = typeof value === "boolean";
   const [isEnabled, setIsEnabled] = useState(Boolean(value));
+  const [isOptionModalVisible, setOptionModalVisible] = useState(false);
+  const [selectedOption, setSelectedOption] = useState<string | null>(
+    typeof value === "string" ? value : null,
+  );
 
-  // Re-sync local state when server data updates after refetch
+  const handlePushTo = () => {
+    if (pushTo) router.push(`/user/edit-profile?edit=${pushTo}`);
+  };
+
+  // Tracks the last confirmed server value so we can revert on failure
+  const [confirmedOption, setConfirmedOption] = useState<string | null>(
+    typeof value === "string" ? value : null,
+  );
+
+  // Re-sync when server data updates after refetch
   useEffect(() => {
     setIsEnabled(Boolean(value));
   }, [value]);
 
-  const handlePress = () => {
-    if (pushTo) router.push(`/user/edit-profile?edit=${pushTo}`);
-  };
+  useEffect(() => {
+    if (typeof value === "string") {
+      setSelectedOption(value);
+      setConfirmedOption(value);
+    }
+  }, [value]);
+
+  // Fire mutation whenever selectedOption changes (and differs from confirmed)
+  useEffect(() => {
+    if (
+      !settingKey ||
+      selectedOption === null ||
+      selectedOption === confirmedOption
+    )
+      return;
+
+    const run = async () => {
+      const update = {
+        [settingKey]: selectedOption,
+      } as unknown as UpdateSettingsRequest;
+
+      const result = await updateSettings(update);
+
+      if ("error" in result) {
+        console.error("Failed to update setting:", result.error);
+        setSelectedOption(confirmedOption); // Revert to last confirmed value
+      } else {
+        setConfirmedOption(selectedOption); // Commit new value
+        console.log("Update result:", result);
+      }
+    };
+
+    run();
+  }, [selectedOption]);
 
   const toggleSwitch = async () => {
     const nextState = !isEnabled;
-    setIsEnabled(nextState); // Optimistic update
+    setIsEnabled(nextState);
 
     if (settingKey) {
       const update = {
@@ -56,7 +103,6 @@ const Item = ({
       const result = await updateSettings(update);
 
       if ("error" in result) {
-        // Revert only THIS item on failure
         console.error("Failed to update setting:", result.error);
         setIsEnabled(!nextState);
       }
@@ -86,7 +132,7 @@ const Item = ({
       <View style={styles.valueContainer}>
         {!isToggle && (
           <ThemedText size={14} color={Colors.textMuted}>
-            {value as string}
+            {selectedOption ?? (value as string)}
           </ThemedText>
         )}
         {isToggle ? (
@@ -99,11 +145,18 @@ const Item = ({
           <Arrow
             color={Colors.textMuted}
             style={{ transform: [{ rotate: "180deg" }] }}
-            onPress={handlePress}
+            onPress={pushTo ? handlePushTo : () => setOptionModalVisible(true)}
             hitSlop={{ top: 20, bottom: 20, left: 20, right: 20 }}
           />
         )}
       </View>
+      <ModalSelector
+        visible={isOptionModalVisible}
+        setVisible={setOptionModalVisible}
+        options={options}
+        value={selectedOption ?? value}
+        setValue={setSelectedOption}
+      />
     </View>
   );
 };
@@ -118,6 +171,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
     borderBottomColor: Colors.border + "4d",
     height: 62,
+    position: "relative",
   },
   valueContainer: {
     flexDirection: "row",

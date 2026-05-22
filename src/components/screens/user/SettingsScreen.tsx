@@ -1,3 +1,5 @@
+import Loader from "@/components/Loader";
+import { ThemedText } from "@/components/ThemedText";
 import Item from "@/components/user/Item";
 import { Colors } from "@/constants/Colors";
 import { buildSettingsList } from "@/hooks/useSettings";
@@ -5,12 +7,10 @@ import { useSettingsQuery } from "@/store/services/profileApi";
 import { UpdateSettingsRequestData } from "@/types/profile";
 import React from "react";
 import {
-  ActivityIndicator,
   FlatList,
   RefreshControl,
   ScrollView,
   StyleSheet,
-  Text,
   View,
 } from "react-native";
 
@@ -27,7 +27,7 @@ const SettingsScreen = () => {
   if (isLoading) {
     return (
       <View style={styles.centerContainer}>
-        <ActivityIndicator size="large" color={Colors.primary} />
+        <Loader />
       </View>
     );
   }
@@ -46,8 +46,10 @@ const SettingsScreen = () => {
           />
         }
       >
-        <Text style={styles.errorText}>Failed to load settings.</Text>
-        <Text style={styles.subText}>Pull down to try again</Text>
+        <ThemedText style={styles.errorText}>
+          Failed to load settings.
+        </ThemedText>
+        <ThemedText style={styles.subText}>Pull down to try again</ThemedText>
       </ScrollView>
     );
   }
@@ -68,11 +70,12 @@ const SettingsScreen = () => {
           altIcon={item.altIcon}
           value={item.value}
           settingKey={item.settingKey as keyof UpdateSettingsRequestData}
+          options={item.options}
         />
       )}
       refreshControl={
         <RefreshControl
-          refreshing={isFetching}
+          refreshing={false}
           onRefresh={refetch}
           tintColor={Colors.primary}
           colors={[Colors.primary]}

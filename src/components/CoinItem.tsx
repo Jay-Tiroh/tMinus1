@@ -1,3 +1,4 @@
+import { CryptoIcon } from "@/components/CryptoIcon";
 import Chart from "@/components/LineChart";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
@@ -37,7 +38,7 @@ const CoinItem = ({
   return (
     <View style={styles.container} onLayout={() => setChartVisible(true)}>
       <View style={styles.left}>
-        <Icon width={40} height={40} />
+        <CryptoIcon symbol={alias} size={40} />
         <View style={styles.nameBlock}>
           <ThemedText weight="bold" size={14} color={Colors.white}>
             {name}
@@ -91,7 +92,7 @@ const styles = StyleSheet.create({
     gap: 13,
   },
   nameBlock: {
-    minWidth: 80,
+    minWidth: 70,
   },
   right: {
     minWidth: 80,

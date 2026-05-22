@@ -5,6 +5,7 @@ import Balance from "@/components/wallets/Balance";
 import { Colors } from "@/constants/Colors";
 import { useAllAssets } from "@/hooks/useAllAssets";
 import { useSafeBottom } from "@/hooks/useSafeBottom";
+import useWallet from "@/hooks/useWallet";
 import React, { useState } from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
 
@@ -12,7 +13,13 @@ const SCREEN_HEIGHT = Dimensions.get("window").height;
 
 const WalletsScreen = () => {
   const { coins } = useAllAssets();
-  const bottomPadding = useSafeBottom();
+  const { wallet, isLoading, refetch } = useWallet();
+
+  if (!isLoading) {
+    console.log("Wallet data in screen now:", wallet);
+    // refetch(); // Refetch to ensure we have the latest data
+  }
+  const bottomPadding = useSafeBottom() + 20; // Add extra padding for spacing
   const [headerHeight, setHeaderHeight] = useState(0);
 
   const listHeight = SCREEN_HEIGHT - headerHeight;

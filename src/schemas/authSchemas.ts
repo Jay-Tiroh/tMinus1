@@ -20,8 +20,11 @@ const emailSchema = z
 const phoneSchema = z
   .string()
   .min(1, "Mobile number is required")
-  .max(15, "Mobile number must be at most 15 characters")
-  .regex(/^\+?[0-9]{7,15}$/, "Enter a valid mobile number");
+  .max(16, "Mobile number must be at most 16 characters")
+  .regex(
+    /^\+[1-9]\d{6,14}$/,
+    "Enter a valid international mobile number (e.g., +2347059233891)",
+  );
 
 export const signupSchema = z.object({
   fullName: fullNameSchema,

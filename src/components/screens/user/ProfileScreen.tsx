@@ -1,4 +1,5 @@
 import Avatar from "@/assets/icons/user/avatar.svg";
+import LogOutBtn from "@/components/LogOutBtn";
 import { ThemedText } from "@/components/ThemedText";
 import Item from "@/components/user/Item";
 import { Colors } from "@/constants/Colors";
@@ -9,8 +10,7 @@ import React from "react";
 import { StyleSheet, View } from "react-native";
 
 const ProfileScreen = () => {
-  const { displayName } = useMisc();
-  const { details } = useMisc();
+  const { displayName, details } = useMisc();
 
   const router = useRouter();
   return (
@@ -37,11 +37,12 @@ const ProfileScreen = () => {
           <Item
             key={detail.label}
             label={detail.label}
-            value={detail.value}
+            value={detail.value as string}
             pushTo={detail.name}
           />
         ))}
       </View>
+      <LogOutBtn />
     </View>
   );
 };
@@ -75,7 +76,6 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   otherDetails: {
-    flex: 1,
     padding: 30,
     paddingTop: 0,
     width: "100%",

@@ -44,7 +44,7 @@ export default function SuccessScreen() {
             title="Get Started"
             variant="primary"
             style={styles.button}
-            onPress={() => navigation.push("/(tabs)/home")}
+            onPress={() => navigation.replace("/(tabs)/home")}
           />
         </View>
         <Spacer size={41} />

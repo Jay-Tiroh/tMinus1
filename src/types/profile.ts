@@ -26,10 +26,10 @@ export interface User {
 export interface ProfileResponse {
   data: User;
 }
-interface ProfileUpdateRequestData {
+export interface ProfileUpdateRequestData {
   fullName: string;
   phone: string;
-  avatarUrl: string;
+  email: string;
 }
 export type UpdateProfileRequest = RequireAtLeastOne<ProfileUpdateRequestData>;
 

@@ -42,7 +42,10 @@ export default function SignInForm() {
       password: data.password,
     };
     const result = await login(formattedData);
-
+    if (isError) {
+      // console.log(error?.error?.message ?? "Login failed");
+      // console.log("error");
+    }
     if ("data" in result && result.data) {
       dispatch(
         setCredentials({

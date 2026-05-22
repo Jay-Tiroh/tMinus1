@@ -2,13 +2,6 @@ import { Colors } from "@/constants/Colors";
 import React, { useEffect, useRef } from "react";
 import { Animated, Pressable, StyleSheet } from "react-native";
 
-// trackColor={{
-//   false: Colors.textMuted,
-//   true: Colors.profit + "33",
-// }}
-// thumbColor={isEnabled ? Colors.profit : Colors.textSecondary}
-// ios_backgroundColor={Colors.textMuted}
-
 interface NoFeedbackSwitchProps {
   value: boolean;
   onValueChange: (value: boolean) => void;

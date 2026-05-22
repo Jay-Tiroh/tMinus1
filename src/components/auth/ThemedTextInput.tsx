@@ -73,7 +73,7 @@ export function ThemedTextInput<T extends FieldValues>({
                 value={value}
                 style={[{ width: "80%", color: Colors.textFaint }, inputStyle]}
                 placeholderTextColor={Colors.textMuted}
-                secureTextEntry={!isPasswordVisible}
+                // secureTextEntry={!isPasswordVisible}
                 autoCapitalize="none"
                 {...rest}
               />

@@ -41,7 +41,7 @@ export default function SignUpForm() {
     const result = await register(data);
     if ("data" in result && result.data) {
       dispatch(setCredentials(result.data));
-      router.push("/success");
+      router.replace("/success");
     }
   };
 

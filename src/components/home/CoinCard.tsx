@@ -1,6 +1,6 @@
+import { CryptoIcon } from "@/components/CryptoIcon";
 import Chart from "@/components/LineChart";
 import { ThemedText } from "@/components/ThemedText";
-import { CoinIcons } from "@/constants/AssetsMap";
 import { Colors } from "@/constants/Colors";
 import { formatCurrency } from "@/helpers/functions";
 import { useAssetChart } from "@/hooks/useAssetChart";
@@ -14,7 +14,6 @@ interface CoinCardProps {
 
 export const CoinCard = memo(function CoinCard({ coin }: CoinCardProps) {
   const chartData = useAssetChart(coin.symbol);
-  const Icon = CoinIcons[coin.symbol];
   const isPositive = coin.change24h > 0;
   const [chartVisible, setChartVisible] = useState(false);
 
@@ -29,7 +28,7 @@ export const CoinCard = memo(function CoinCard({ coin }: CoinCardProps) {
         >
           {formatCurrency(coin.priceUsd)}
         </ThemedText>
-        {Icon && <Icon width={24} height={24} />}
+        <CryptoIcon symbol={coin.symbol} size={24} fill={Colors.surfaceTeal} />
       </View>
 
       <View style={styles.middle}>

@@ -6,11 +6,15 @@ import { ThemedTextInput } from "@/components/user/ThemedTextInput";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import useMisc from "@/constants/misc";
-import { useUser } from "@/hooks/useUser";
 import {
   EditProfileFormData,
   editProfileSchema,
 } from "@/schemas/profileSchemas";
+import { useUpdateProfileMutation } from "@/store/services/profileApi";
+import {
+  ProfileUpdateRequestData,
+  UpdateProfileRequest,
+} from "@/types/profile";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LinearGradient } from "expo-linear-gradient";
 import { useLocalSearchParams } from "expo-router";
@@ -19,10 +23,9 @@ import { useForm } from "react-hook-form";
 import { StyleSheet, TextInput, View } from "react-native";
 
 const EditProfileScreen = () => {
-  const { fullName, email, phone } = useUser();
+  const { displayName, details, profileData } = useMisc();
+  const { email, phone } = profileData;
 
-  const { displayName } = useMisc();
-  const { details } = useMisc();
   const { edit } = useLocalSearchParams<{ edit?: keyof EditProfileFormData }>();
 
   const inputRefs = useRef<
@@ -33,7 +36,7 @@ const EditProfileScreen = () => {
     keyof EditProfileFormData | null
   >(null);
 
-  const { control, handleSubmit, setValue, watch, clearErrors } =
+  const { control, handleSubmit, setValue, watch, reset, clearErrors } =
     useForm<EditProfileFormData>({
       resolver: zodResolver(editProfileSchema),
       mode: "onChange",
@@ -43,6 +46,15 @@ const EditProfileScreen = () => {
         phone: phone ?? "",
       },
     });
+
+  useEffect(() => {
+    if (!email && !phone) return;
+    reset({
+      username: displayName,
+      email: email ?? "",
+      phone: phone ?? "",
+    });
+  }, [email, phone, displayName]);
 
   // Focus the field that was tapped on the Profile screen
   useEffect(() => {
@@ -66,9 +78,25 @@ const EditProfileScreen = () => {
       clearErrors(fieldName);
     }
   };
+  const [updateProfile, { isLoading, isError, isSuccess, error }] =
+    useUpdateProfileMutation();
 
   const onSubmit = async (data: EditProfileFormData) => {
-    console.log("Data:", data);
+    const payload: Partial<ProfileUpdateRequestData> = {};
+
+    if (data.email && data.email.trim() !== "") payload.email = data.email;
+    if (data.phone && data.phone.trim() !== "") payload.phone = data.phone;
+    if (data.username && data.username.trim() !== "")
+      payload.fullName = data.username;
+
+    if (Object.keys(payload).length === 0) return;
+
+    const result = await updateProfile(payload as UpdateProfileRequest);
+
+    if ("error" in result) {
+      console.error("Failed to update profile:", result.error);
+      return;
+    }
   };
 
   return (
@@ -107,18 +135,26 @@ const EditProfileScreen = () => {
             </ThemedText>
             <ThemedTextInput
               ref={(el) => {
-                inputRefs.current[detail.name] = el;
+                inputRefs.current[detail.name as keyof EditProfileFormData] =
+                  el;
               }}
               control={control}
-              name={detail.name}
+              name={detail.name as keyof EditProfileFormData}
               style={[
                 styles.valueInput,
                 focusedInput === detail.name && {
                   borderBottomColor: Colors.white,
                 },
               ]}
-              onBlurCustom={() => handleBlur(detail.name, detail.value ?? "")}
-              onFocus={() => setFocusedInput(detail.name)}
+              onBlurCustom={() =>
+                handleBlur(
+                  detail.name as keyof EditProfileFormData,
+                  detail.value ?? "",
+                )
+              }
+              onFocus={() =>
+                setFocusedInput(detail.name as keyof EditProfileFormData)
+              }
             />
           </View>
         ))}
@@ -130,11 +166,13 @@ const EditProfileScreen = () => {
           title="Cancel"
           variant="secondary"
           style={{ width: "50%" }}
+          onPress={reset}
         />
         <ThemedButton
           title="Save Changes"
           variant="primary"
           style={{ width: "50%" }}
+          onPress={handleSubmit(onSubmit)}
         />
       </View>
     </View>
