@@ -1,19 +1,14 @@
-import { SvgUri } from "react-native-svg";
+import { SvgCssUri } from "react-native-svg/css";
 
 const BASE_URL = "https://crypto-api-guwm.onrender.com/assets";
 
 type CryptoIconProps = {
   symbol: string;
   size?: number;
-  fill?: string;
 };
 
-export function CryptoIcon({
-  symbol,
-  size = 32,
-  fill = "white",
-}: CryptoIconProps) {
+export function CryptoIcon({ symbol, size = 32 }: CryptoIconProps) {
   const uri = `${BASE_URL}/${symbol.toLowerCase()}.svg`;
 
-  return <SvgUri uri={uri} width={size} height={size} fill={fill} />;
+  return <SvgCssUri uri={uri} width={size} height={size} />;
 }

@@ -1,5 +1,6 @@
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
+import useWallet from "@/hooks/useWallet";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import React from "react";
 import { StyleSheet, View } from "react-native";
@@ -10,8 +11,9 @@ const Balance = () => {
   const toggleVisibility = () => {
     setIsVisible((prev) => !prev);
   };
-
-  const balance = isVisible ? "40,059.83" : "*******";
+  const { wallet, isLoading, isError } = useWallet();
+  console.log(wallet?.data?.wallet?.balances);
+  const balance = isVisible ? wallet?.data?.portfolioValueUsd : "*******";
   const balanceUSD = isVisible ? "$468,554.23" : "*******";
 
   return (

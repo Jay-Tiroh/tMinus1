@@ -33,9 +33,10 @@ const CTA = ({
         variant="primary"
         onPress={onPress}
         disabled={isLoading}
-        icon={
-          isLoading ? <ActivityIndicator color={Colors.surface} /> : undefined
+        iconComponent={
+          isLoading && <ActivityIndicator color={Colors.surface} />
         }
+        textStyle={{ marginLeft: 20 }}
       />
 
       {page !== "mobile" && page !== "verify" && (

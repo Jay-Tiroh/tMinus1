@@ -12,7 +12,7 @@ type ThemedButtonProps = {
   style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
   disabled?: boolean;
-  icon?: React.FC<SvgProps> | React.ReactNode;
+  icon?: React.FC<SvgProps>;
   iconComponent?: React.ReactNode;
 };
 
@@ -39,7 +39,7 @@ export const ThemedButton: React.FC<ThemedButtonProps> = ({
       ]}
     >
       {iconComponent && iconComponent}
-      {Icon && typeof Icon === "function" ? <Icon /> : Icon}
+      {Icon && <Icon />}
       <ThemedText
         style={[styles.text, textStyle, disabled && { opacity: 0.5 }]}
       >

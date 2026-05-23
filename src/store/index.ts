@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { baseApi } from "./services/baseApi";
+import bottomSheetReducer from "./slices/BottomSheetSlice";
 import menuReducer from "./slices/MenuSlice";
 import authReducer from "./slices/authSlice";
 import notificationReducer from "./slices/notificationSlice";
@@ -12,6 +13,7 @@ export const store = configureStore({
     auth: authReducer,
     notifications: notificationReducer,
     tempUser: userReducer,
+    bottomSheet: bottomSheetReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(baseApi.middleware),

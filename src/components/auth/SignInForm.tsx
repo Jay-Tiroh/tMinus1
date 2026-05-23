@@ -33,7 +33,7 @@ export default function SignInForm() {
   });
 
   // API Mutations
-  const [login, { isLoading, isError, error }] = useLoginMutation();
+  const [login, { isLoading, isError, error, isSuccess }] = useLoginMutation();
 
   const onSubmit = async (data: FormData) => {
     const formattedData: LoginRequest = {
@@ -54,7 +54,9 @@ export default function SignInForm() {
           refreshToken: result.data.refreshToken,
         }),
       );
-      router.replace("/(tabs)/home");
+      if (isSuccess) {
+        router.replace("/(tabs)/home");
+      }
     }
   };
   const handleToggle = () => {
