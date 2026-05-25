@@ -25,6 +25,7 @@ type CoinListProps = {
   data: Asset[] | undefined;
   coinItemConfig?: CoinItemConfig;
   contentContainerStyle?: ViewStyle;
+  useHrefs?: boolean;
 };
 
 // ─── Separator ────────────────────────────────────────────────────────────────
@@ -47,6 +48,7 @@ const CoinList = React.memo(function CoinList({
   data,
   coinItemConfig,
   contentContainerStyle,
+  useHrefs = false,
 }: CoinListProps) {
   const [isReady, setIsReady] = useState(false);
 
@@ -76,6 +78,7 @@ const CoinList = React.memo(function CoinList({
           change={item.change24h}
           showChange={showChange}
           showChart={showChart}
+          useHrefs={useHrefs}
         />
       </View>
     ),

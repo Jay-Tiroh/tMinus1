@@ -2,10 +2,8 @@ import { CoinCard } from "@/components/home/CoinCard";
 import CoinCardsSkeleton from "@/components/home/CoinCardSkeleton";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
-import {
-  useAllAssetsQuery,
-  useTrendingQuery,
-} from "@/store/services/marketsApi";
+import { useAllAssets } from "@/hooks/useAllAssets";
+import { useTrendingAssets } from "@/hooks/useTrendingAssets";
 import { Asset } from "@/types/assets";
 import { memo, useCallback } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
@@ -65,8 +63,8 @@ const CoinList = memo(function CoinList({
 });
 
 const Coins = () => {
-  const { data: coins, isLoading: coinsLoading } = useAllAssetsQuery();
-  const { data: trending, isLoading: trendingLoading } = useTrendingQuery();
+  const { coins, isSearching: coinsLoading } = useAllAssets(undefined, 10000);
+  const { trending, isLoading: trendingLoading } = useTrendingAssets(10000);
 
   return (
     <View style={styles.container}>

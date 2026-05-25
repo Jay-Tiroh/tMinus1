@@ -16,7 +16,7 @@ const WalletsScreen = () => {
   const { wallet, isLoading, refetch } = useWallet();
 
   if (!isLoading) {
-    console.log("Wallet data in screen now:", wallet);
+    // console.log("Wallet data in screen now:", wallet);
     // refetch(); // Refetch to ensure we have the latest data
   }
   const bottomPadding = useSafeBottom() + 20; // Add extra padding for spacing

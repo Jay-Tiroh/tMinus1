@@ -1,5 +1,5 @@
 import ThemedBottomSheet from "@/components/ThemedBottomSheet";
-import TradeDetails from "@/components/trades/TradeDetails";
+import TradeSheetContent from "@/components/trades/TradeSheetContent";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { closeSheet } from "@/store/slices/BottomSheetSlice";
 import BottomSheet from "@gorhom/bottom-sheet";
@@ -11,7 +11,7 @@ export default function SheetController() {
 
   // SheetController resolves it
   const sheetRegistry: Record<string, React.ReactNode> = {
-    tradeDetails: <TradeDetails />,
+    tradeSheet: <TradeSheetContent />,
   };
 
   // inside SheetController

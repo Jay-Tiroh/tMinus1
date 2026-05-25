@@ -13,7 +13,7 @@ interface CoinCardProps {
 }
 
 export const CoinCard = memo(function CoinCard({ coin }: CoinCardProps) {
-  const chartData = useAssetChart(coin.symbol);
+  const { chart: chartData } = useAssetChart(coin.symbol);
   const isPositive = coin.change24h > 0;
   const [chartVisible, setChartVisible] = useState(false);
 
@@ -28,7 +28,7 @@ export const CoinCard = memo(function CoinCard({ coin }: CoinCardProps) {
         >
           {formatCurrency(coin.priceUsd)}
         </ThemedText>
-        <CryptoIcon symbol={coin.symbol} size={24} fill={Colors.surfaceTeal} />
+        <CryptoIcon symbol={coin.symbol} size={24} />
       </View>
 
       <View style={styles.middle}>

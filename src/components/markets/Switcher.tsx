@@ -24,7 +24,13 @@ const Switcher = React.memo(function Switcher({
         <Pressable
           key={tab}
           onPress={() => onTabPress(tab)}
-          style={[styles.tabItem, activeTab === tab && styles.activeTabItem]}
+          style={[
+            styles.tabItem,
+            {
+              width: `${100 / tabs.length}%`,
+            },
+            activeTab === tab && styles.activeTabItem,
+          ]}
         >
           <ThemedText
             size={14}
@@ -53,7 +59,6 @@ const styles = StyleSheet.create({
   },
   tabItem: {
     height: TAB_ITEM_HEIGHT,
-    width: "25%",
     justifyContent: "center",
     alignItems: "center",
   },

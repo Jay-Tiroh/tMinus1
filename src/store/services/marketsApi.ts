@@ -1,7 +1,10 @@
 import {
+  Asset,
   AssetDetailsEnvelope,
   AssetDetailsRequest,
   AssetDetailsResponse,
+  AssetsEnvelope,
+  AssetsQueryParams,
   AssetsResponse,
   PricesResponse,
 } from "@/types/assets";
@@ -10,12 +13,23 @@ import { baseApi } from "./baseApi";
 
 const marketsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    allAssets: builder.query<AssetsResponse["data"], string | void>({
-      query: (q) => ({
-        url: `/market/assets`,
-        params: q ? { q } : undefined,
-      }),
+    // Returns just data[] — for screens that don't need pagination meta
+    allAssets: builder.query<AssetsResponse["data"], AssetsQueryParams | void>({
+      query: (params) => {
+        return {
+          url: `/market/assets`,
+          params: params ?? undefined,
+        };
+      },
       transformResponse: (response: AssetsResponse) => response.data,
+    }),
+
+    // Returns full envelope — for screens that need meta (pagination, total, etc.)
+    allAssetsWithMeta: builder.query<AssetsEnvelope, AssetsQueryParams | void>({
+      query: (params) => ({
+        url: `/market/assets`,
+        params: params ?? undefined,
+      }),
     }),
 
     getAsset: builder.query<AssetDetailsResponse, AssetDetailsRequest>({
@@ -23,13 +37,16 @@ const marketsApi = baseApi.injectEndpoints({
       transformResponse: (response: AssetDetailsEnvelope) => response.data,
     }),
 
-    getAssets: builder.query<Record<string, AssetDetailsResponse>, string[]>({
+    getAssets: builder.query<Asset[], string[]>({
       queryFn: async (symbols, _api, _extraOptions, baseQuery) => {
-        if (!symbols.length) return { data: {} };
+        if (!symbols.length) return { data: [] };
 
         const results = await Promise.all(
           symbols.map((symbol) =>
-            baseQuery({ url: `/market/assets/${symbol}` }),
+            baseQuery({
+              url: `/market/assets`,
+              params: { q: symbol },
+            }),
           ),
         );
 
@@ -39,10 +56,7 @@ const marketsApi = baseApi.injectEndpoints({
         );
         if (firstError) return { error: firstError.error };
 
-        const data: Record<string, AssetDetailsResponse> = {};
-        results.forEach((r, i) => {
-          data[symbols[i]] = (r.data as AssetDetailsEnvelope).data;
-        });
+        const data = results.flatMap((r) => (r.data as AssetsResponse).data);
 
         return { data };
       },
@@ -64,6 +78,7 @@ const marketsApi = baseApi.injectEndpoints({
 
 export const {
   useAllAssetsQuery,
+  useAllAssetsWithMetaQuery,
   useGetAssetQuery,
   useGetAssetsQuery,
   useTrendingQuery,

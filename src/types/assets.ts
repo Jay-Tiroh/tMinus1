@@ -6,8 +6,18 @@ export interface Market {
 }
 
 export interface ListMeta {
+  requestId: string;
   count: number;
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
   market: Market;
+  query?: string;
+  sort: string;
+  order: string;
 }
 
 export interface DetailMeta {
@@ -62,7 +72,6 @@ export interface AssetDetailsResponse {
   minSellUsd: number;
   iconUrl: string;
   chart: ChartData[];
-  meta: DetailMeta;
 }
 
 export interface AssetDetailsEnvelope {
@@ -72,4 +81,20 @@ export interface AssetDetailsEnvelope {
 
 export interface AssetDetailsRequest {
   symbol: string;
+}
+
+// For paginated/filtered asset list requests
+export interface AssetsQueryParams {
+  q?: string;
+  search?: string;
+  page?: number;
+  limit?: number;
+  sort?: string;
+  order?: "asc" | "desc";
+}
+
+// Full response including meta, for when you need pagination info
+export interface AssetsEnvelope {
+  data: Asset[];
+  meta: ListMeta;
 }

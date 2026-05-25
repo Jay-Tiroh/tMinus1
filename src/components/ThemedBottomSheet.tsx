@@ -61,8 +61,9 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
-    padding: 36,
     alignItems: "center",
+    width: "100%",
+    padding: 24,
   },
   closeButtonContainer: {
     position: "absolute",

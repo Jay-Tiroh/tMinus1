@@ -1,7 +1,37 @@
 import { useGetAssetQuery } from "@/store/services/marketsApi";
-import { ChartData } from "@/types/assets";
+import { AssetDetailsResponse, ChartData } from "@/types/assets";
 
-export function useAssetChart(symbol: string, skip = false): ChartData[] {
-  const { data: coinInfo } = useGetAssetQuery({ symbol }, { skip });
-  return coinInfo?.chart ?? [];
+interface UseAssetChartReturn {
+  chart: ChartData[];
+  coinInfo: AssetDetailsResponse | undefined;
+  isLoading: boolean;
+  isError: boolean;
+  isSuccess: boolean;
+}
+
+export function useAssetChart(
+  symbol: string,
+  skip = false,
+  pollIntervalMs = 10000,
+): UseAssetChartReturn {
+  const {
+    data: coinInfo,
+    isLoading,
+    isError,
+    isSuccess,
+  } = useGetAssetQuery(
+    { symbol },
+    {
+      skip,
+      pollingInterval: pollIntervalMs,
+    },
+  );
+
+  return {
+    chart: coinInfo?.chart ?? [],
+    coinInfo,
+    isLoading,
+    isError,
+    isSuccess,
+  };
 }
