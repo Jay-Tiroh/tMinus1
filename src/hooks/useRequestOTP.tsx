@@ -31,7 +31,7 @@ export const useRequestOtp = () => {
 
     try {
       const result = await requestOtp(email).unwrap();
-      console.log(result);
+      // console.log(result);
       startCooldown();
     } catch (err) {
       console.error("Failed to dispatch OTP", err);

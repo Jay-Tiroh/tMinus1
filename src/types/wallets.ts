@@ -94,8 +94,13 @@ export interface GetTransactionsQueryParams {
 // Response Models
 export interface WalletResponse {
   data: {
-    wallet: Wallet;
+    portfolioCurrency: string;
+    portfolioValue: number;
     portfolioValueUsd: number;
+    wallet: Wallet;
+  };
+  meta: {
+    requestId: string;
   };
 }
 

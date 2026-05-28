@@ -25,11 +25,17 @@ export const Colors = {
   primaryPale: "#518173", // Pale Teal
   primaryPaleAlt: "#518273", // Pale Teal Alt
   primarySpark: "#64EDB2", // Spark / electric mint
+  primaryClean: "#5CD6A5", // Clean Mint — slight blue-shift variant
+  primaryCyan: "#4ADBB3", // Cyan Mint — cooler tint
+  primaryMist: "#9AF2CB", // Mist Mint — very light
+  primaryFrost: "#DFFBED", // Frost — near-white mint tint
 
   // ─── Surface / Background ──────────────────────────────────────────
   background: "#07060B", // True Black — main background
   backgroundAlt: "#08080E", // Near Black Alt
   backgroundDeep: "#01010B", // Deepest Black
+  backgroundInk: "#080C11", // Ink Black — blue-tinted near black
+  backgroundDark: "#141820", // Dark Navy Background
   surface: "#1B232A", // Dark Card Surface
   surfaceAlt: "#212931", // Dark Surface Alt
   surfaceCard: "#161C22", // Card Background
@@ -40,6 +46,23 @@ export const Colors = {
   surfaceTeal: "#28383B", // Teal-tinted Surface
   surfaceDim: "#203234", // Dim Teal Surface
   surfaceNight: "#090C0E", // Near-black Teal
+  surfaceNavy: "#1B1F27", // Navy Surface
+  surfaceSlate: "#1B2028", // Slate Surface
+  surfaceCharcoal: "#2A3039", // Charcoal Surface
+  surfaceStorm: "#29333D", // Storm Surface
+  surfaceObsidian: "#151F24", // Obsidian — deepest teal-black
+  surfaceCave: "#222830", // Cave — blue-dark surface
+  surfaceGunmetal: "#29333D", // Gunmetal — slightly lighter dark (alias of surfaceStorm)
+
+  // ─── Surface / Dark Green Tints ────────────────────────────────────
+  surfaceGreenDeep: "#083D2B", // Deep Green Surface
+  surfaceGreenDark: "#0D4F36", // Dark Green Surface
+  surfaceGreenMid: "#115C3C", // Mid Green Surface
+  surfaceGreenRich: "#126843", // Rich Green Surface
+  surfaceGreenTeal: "#123239", // Green-Teal Dark Surface
+  surfaceGreenNight: "#14231F", // Green Night Surface
+  surfaceGreenForest: "#23362F", // Forest Green Surface
+  surfaceGreenBrown: "#2B2416", // Dark Brown-Green Surface
 
   // ─── Text ──────────────────────────────────────────────────────────
   textPrimary: "#FFFFFF", // White — primary text
@@ -48,6 +71,11 @@ export const Colors = {
   textDim: "#747E87", // Dimmer text
   textFaint: "#C1C7CD", // Faint — disabled labels
   textOnDark: "#C4C4C4", // Gray on dark
+  textMidGray: "#8594A6", // Mid Gray — secondary labels
+  textSlate: "#525C6B", // Slate Gray — tertiary text
+  textCool: "#546273", // Cool Gray — metadata text
+  textSubtle: "#667085", // Subtle Gray — caption / helper text
+  textSageGray: "#9DB3AD", // Sage Gray — muted on dark green
 
   // ─── Borders / Dividers ────────────────────────────────────────────
   border: "#3E474F", // Default border
@@ -70,6 +98,8 @@ export const Colors = {
   lossDark: "#E42D04", // Deep Red
   lossBg: "#F8AD88", // Loss background tint
   lossPale: "#F5AB85", // Pale loss
+  lossBright: "#E4484C", // Bright Red — vivid loss indicator
+  lossWarm: "#E45252", // Warm Red — softer loss variant
 
   // ─── Semantic — Warning / Caution ──────────────────────────────────
   warning: "#FCBD68", // Amber — warning
@@ -85,6 +115,9 @@ export const Colors = {
   warningGold: "#D5BB5E", // Gold
   warningBrown: "#7A2C18", // Dark Brown / rust
   warningBrownAlt: "#7A2B18",
+  warningAmber: "#DB9E38", // Rich Amber — deeper gold warning
+  warningBronze: "#C9A95C", // Bronze — muted gold
+  warningFlare: "#F2A627", // Flare Amber — vivid orange-gold
 
   // ─── Semantic — Info / Links ───────────────────────────────────────
   info: "#4285F4", // Blue — info
@@ -94,6 +127,8 @@ export const Colors = {
   infoPurple: "#7833F6", // Purple — special label
   infoDark: "#0033AD", // Dark Blue
   infoDarkAlt: "#382A59", // Dark Purple
+  infoCyan: "#29B8C7", // Cyan — info accent / highlight
+  infoIndigo: "#8F9BFF", // Indigo — soft purple-blue accent
 
   // ─── Neutrals / Utility ────────────────────────────────────────────
   white: "#FFFFFF",
@@ -102,6 +137,9 @@ export const Colors = {
   lightGray: "#E3E8ED",
   paleBlue: "#EDF0F4",
   black: "#000000",
+  snowGray: "#F1F6F8", // Snow Gray — lightest cool gray
+  cloudGray: "#EDF0F0", // Cloud Gray — near-white neutral
+  softGray: "#F0F0F0", // Soft Gray — pure light neutral
 } as const;
 
 export type ColorKey = keyof typeof Colors;

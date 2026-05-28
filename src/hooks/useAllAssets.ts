@@ -16,19 +16,18 @@ export function useAllAssets(q?: string, pollIntervalMs = 10000) {
     };
   }, [q]);
 
-  const { data, isLoading, isFetching, isError, refetch } = useAllAssetsQuery(
-    params,
-    {
+  const { data, isLoading, isFetching, isError, refetch, isUninitialized } =
+    useAllAssetsQuery(params, {
       pollingInterval: pollIntervalMs,
       refetchOnFocus: true,
       refetchOnReconnect: true,
-    },
-  );
+    });
 
   return {
     coins: data ?? [],
     isSearching: isFetching,
     isError,
     refetch,
+    isUninitialized,
   };
 }

@@ -55,7 +55,7 @@ const SettingsScreen = () => {
   }
 
   const settingsList = buildSettingsList(settings);
-  console.log("Settings:", settings);
+  // console.log("Settings:", settings);
 
   return (
     <FlatList

@@ -23,9 +23,11 @@ const SkeletonRow = memo(function SkeletonRow() {
 const CoinList = memo(function CoinList({
   data,
   isLoading,
+  isUninitialized,
 }: {
   data: Asset[] | undefined;
   isLoading: boolean;
+  isUninitialized: boolean;
 }) {
   const renderItem = useCallback(
     ({ item }: { item: Asset }) => <CoinCard coin={item} />,
@@ -37,7 +39,7 @@ const CoinList = memo(function CoinList({
     [],
   );
 
-  if (isLoading) {
+  if (isLoading && isUninitialized) {
     return (
       <View style={styles.skeletonRow}>
         <SkeletonRow />
@@ -63,8 +65,16 @@ const CoinList = memo(function CoinList({
 });
 
 const Coins = () => {
-  const { coins, isSearching: coinsLoading } = useAllAssets(undefined, 10000);
-  const { trending, isLoading: trendingLoading } = useTrendingAssets(10000);
+  const {
+    coins,
+    isSearching: coinsLoading,
+    isUninitialized,
+  } = useAllAssets(undefined, 10000);
+  const {
+    trending,
+    isLoading: trendingLoading,
+    isUninitialized: trendingUninitialized,
+  } = useTrendingAssets(10000);
 
   return (
     <View style={styles.container}>
@@ -77,7 +87,11 @@ const Coins = () => {
         >
           Recent Coins
         </ThemedText>
-        <CoinList data={coins} isLoading={coinsLoading} />
+        <CoinList
+          data={coins}
+          isLoading={coinsLoading}
+          isUninitialized={isUninitialized}
+        />
 
         <ThemedText
           weight="bold"
@@ -87,7 +101,11 @@ const Coins = () => {
         >
           Top Coins
         </ThemedText>
-        <CoinList data={trending} isLoading={trendingLoading} />
+        <CoinList
+          data={trending}
+          isLoading={trendingLoading}
+          isUninitialized={trendingUninitialized}
+        />
       </View>
     </View>
   );

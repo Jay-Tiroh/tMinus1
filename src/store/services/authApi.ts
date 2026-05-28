@@ -16,7 +16,7 @@ import {
 } from "@/types/auth";
 import { baseApi } from "./baseApi";
 
-const authApi = baseApi.injectEndpoints({
+export const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     // Unified login endpoint using the new LoginRequest structure
     login: builder.mutation<AuthResponseData, LoginRequest>({

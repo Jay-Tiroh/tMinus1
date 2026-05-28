@@ -25,7 +25,7 @@ const TradesScreen = () => {
   } = useAssetChart(coin as string, false, 15000);
   const chartWidth = 0.8 * WIDTH;
   const isPositive = coinDetails?.change24h && coinDetails.change24h > 0;
-  console.log(chart);
+  // console.log(chart);
   const handleBuyPress = () => {
     dispatch(openSheet("tradeSheet"));
   };

@@ -75,6 +75,12 @@ export default function OnboardingScreen() {
     }
   };
 
+  // import AsyncStorage from '@react-native-async-storage/async-storage';
+
+  // const completeOnboarding = async () => {
+  //   await AsyncStorage.setItem('has_onboarded', 'true');
+  //   router.replace('/(auth)/sign-in'); // or wherever
+  // };
   return (
     <ThemedView style={styles.container}>
       <ImageBackground

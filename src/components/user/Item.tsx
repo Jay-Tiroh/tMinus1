@@ -84,7 +84,7 @@ const Item = ({
         setSelectedOption(confirmedOption); // Revert to last confirmed value
       } else {
         setConfirmedOption(selectedOption); // Commit new value
-        console.log("Update result:", result);
+        // console.log("Update result:", result);
       }
     };
 
@@ -106,7 +106,7 @@ const Item = ({
         console.error("Failed to update setting:", result.error);
         setIsEnabled(!nextState);
       }
-      console.log("Update result:", result);
+      // console.log("Update result:", result);
     }
   };
 

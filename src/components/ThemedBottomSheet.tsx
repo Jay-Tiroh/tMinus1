@@ -14,7 +14,7 @@ const ThemedBottomSheet = forwardRef<BottomSheet, ThemedBottomSheetProps>(
     const snapPoints = useMemo(() => ["25%", "50%"], []);
     const handleCollapse = () => {
       if (ref && "current" in ref && ref.current) {
-        ref.current.collapse();
+        ref.current.close();
       }
     };
     const segments = useSegments() as string[];
@@ -26,6 +26,7 @@ const ThemedBottomSheet = forwardRef<BottomSheet, ThemedBottomSheetProps>(
         snapPoints={snapPoints}
         index={-1}
         enablePanDownToClose={true}
+        enableContentPanningGesture={false} // <-- ADD THIS
         onClose={onClose}
         style={styles.container}
         backgroundStyle={styles.sheetBackground}

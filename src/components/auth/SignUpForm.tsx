@@ -9,6 +9,7 @@ import { SignupFormData, signupSchema } from "@/schemas/authSchemas";
 import { useAppDispatch } from "@/store/hooks";
 import { useRegisterMutation } from "@/store/services/authApi";
 import { setCredentials } from "@/store/slices/authSlice";
+import { saveToken } from "@/utils/secureStore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
 import { useEffect } from "react";
@@ -40,7 +41,15 @@ export default function SignUpForm() {
   const onSubmit = async (data: FormData) => {
     const result = await register(data);
     if ("data" in result && result.data) {
-      dispatch(setCredentials(result.data));
+      dispatch(
+        setCredentials({
+          user: result.data.user,
+          token: result.data.accessToken,
+          refreshToken: result.data.refreshToken,
+        }),
+      );
+      await saveToken("ACCESS_TOKEN", result.data.accessToken);
+      await saveToken("REFRESH_TOKEN", result.data.refreshToken);
       router.replace("/success");
     }
   };

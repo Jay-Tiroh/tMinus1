@@ -92,7 +92,7 @@ const CoinList = React.memo(function CoinList({
   return (
     <View style={[styles.coinListContainer]}>
       <LinearGradient
-        colors={[Colors.surface, "transparent"]}
+        colors={[Colors.black, "transparent"]}
         style={styles.fadeGradientTop}
       />
       <FlatList
@@ -106,7 +106,7 @@ const CoinList = React.memo(function CoinList({
         contentContainerStyle={contentContainerStyle}
       />
       <LinearGradient
-        colors={["transparent", Colors.surface]}
+        colors={["transparent", Colors.black]}
         style={styles.fadeGradient}
       />
     </View>

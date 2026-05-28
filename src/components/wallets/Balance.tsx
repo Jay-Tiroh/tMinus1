@@ -12,7 +12,7 @@ const Balance = () => {
     setIsVisible((prev) => !prev);
   };
   const { wallet, isLoading, isError } = useWallet();
-  console.log(wallet?.data?.wallet);
+  // console.log(wallet?.data?.wallet);
   const balance = isVisible ? wallet?.data?.portfolioValueUsd : "*******";
   const balanceUSD = isVisible ? "$468,554.23" : "*******";
 

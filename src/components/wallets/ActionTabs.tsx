@@ -1,5 +1,6 @@
 import { ThemedButton } from "@/components/ThemedButton";
 import { Colors } from "@/constants/Colors";
+import { Href, useRouter } from "expo-router";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 
@@ -12,6 +13,7 @@ const Tabs = [
   },
   {
     name: "Transfer",
+    href: "/(tabs)/wallets/myQr",
   },
 ];
 
@@ -20,7 +22,13 @@ const ActionTabs = () => {
 
   const handleTabPress = (tabName: string) => {
     setActiveTab(tabName);
+    const tab = Tabs.find((t) => t.name === tabName);
+    if (tab?.href) {
+      router.push(tab.href as Href);
+    }
   };
+
+  const router = useRouter();
 
   return (
     <View style={styles.container}>

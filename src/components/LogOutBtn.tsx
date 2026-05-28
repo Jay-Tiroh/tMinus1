@@ -12,7 +12,7 @@ const LogOutBtn = () => {
     const result = await logout();
     if (isSuccess) {
       router.replace("/(auth)");
-      console.log("Logged out successfully", result);
+      // console.log("Logged out successfully", result);
     }
     if (isError) {
       // NOTE: Add toast notification for error

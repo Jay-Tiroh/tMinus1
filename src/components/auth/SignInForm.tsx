@@ -5,6 +5,7 @@ import { Spacer } from "@/components/Spacer";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { Spacing } from "@/constants/Spacing";
+import { useBiometrics } from "@/hooks/useBiometrics";
 import {
   EmailPasswordFormData,
   emailPasswordSchema,
@@ -12,14 +13,16 @@ import {
   mobilePasswordSchema,
 } from "@/schemas/authSchemas";
 import { useAppDispatch } from "@/store/hooks";
-import { useLoginMutation } from "@/store/services/authApi";
+import { authApi, useLoginMutation } from "@/store/services/authApi";
 import { setCredentials } from "@/store/slices/authSlice";
 import { LoginRequest } from "@/types/auth";
+import { getToken, saveToken } from "@/utils/secureStore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
+
 type FormData = EmailPasswordFormData | MobilePasswordFormData;
 
 export default function SignInForm() {
@@ -32,8 +35,8 @@ export default function SignInForm() {
     mode: "onChange",
   });
 
-  // API Mutations
-  const [login, { isLoading, isError, error, isSuccess }] = useLoginMutation();
+  const [login, { isLoading, isError, error }] = useLoginMutation();
+  const { isSupported, isEnrolled, authenticate } = useBiometrics();
 
   const onSubmit = async (data: FormData) => {
     const formattedData: LoginRequest = {
@@ -41,11 +44,9 @@ export default function SignInForm() {
       identifier: "email" in data ? data.email : data.phone,
       password: data.password,
     };
+
     const result = await login(formattedData);
-    if (isError) {
-      // console.log(error?.error?.message ?? "Login failed");
-      // console.log("error");
-    }
+
     if ("data" in result && result.data) {
       dispatch(
         setCredentials({
@@ -54,14 +55,68 @@ export default function SignInForm() {
           refreshToken: result.data.refreshToken,
         }),
       );
-      if (isSuccess) {
-        router.replace("/(tabs)/home");
-      }
+      await saveToken("ACCESS_TOKEN", result.data.accessToken);
+      await saveToken("REFRESH_TOKEN", result.data.refreshToken);
+      router.replace("/(tabs)/home");
     }
   };
+
   const handleToggle = () => {
     reset();
     setIsEmail((prev) => !prev);
+  };
+
+  const handleBiometricAuth = async () => {
+    if (!isSupported || !isEnrolled) return;
+
+    const result = await authenticate("Unlock tMinus1");
+    if (!result.success) {
+      console.warn("Biometric auth failed:", result.error);
+      return;
+    }
+
+    const token = await getToken("ACCESS_TOKEN");
+    const refreshToken = await getToken("REFRESH_TOKEN");
+
+    if (!token) {
+      console.warn("No saved token — please sign in first.");
+      return;
+    }
+
+    // Set token in redux first so baseQuery picks it up for the session call
+    dispatch(
+      setCredentials({
+        user: null as any,
+        token,
+        refreshToken: refreshToken ?? "",
+      }),
+    );
+
+    try {
+      const sessionData = await dispatch(
+        authApi.endpoints.getSession.initiate(undefined, {
+          forceRefetch: true,
+        }),
+      ).unwrap();
+
+      dispatch(
+        setCredentials({
+          user: sessionData.user,
+          token: sessionData.accessToken,
+          refreshToken: sessionData.refreshToken,
+        }),
+      );
+
+      // Refresh stored tokens in case the session returned new ones
+      await saveToken("ACCESS_TOKEN", sessionData.accessToken);
+      await saveToken("REFRESH_TOKEN", sessionData.refreshToken);
+
+      router.replace("/(tabs)/home");
+    } catch (err) {
+      // Session fetch failed — token likely expired, force re-login
+      dispatch({ type: "auth/clearCredentials" });
+      console.warn("Session expired, please sign in again.");
+    }
   };
 
   return (
@@ -142,12 +197,21 @@ export default function SignInForm() {
       <Spacer size={55} />
 
       {/* Biometric Option */}
-      <View style={styles.biometricContainer}>
-        <Fingerprint color={Colors.primary} style={styles.fingerprintIcon} />
-        <ThemedText size={14} letterSpacing={2.64} style={styles.biometricText}>
-          Use fingerprint instead?
-        </ThemedText>
-      </View>
+      {isSupported && isEnrolled && (
+        <Pressable
+          onPress={handleBiometricAuth}
+          style={styles.biometricContainer}
+        >
+          <Fingerprint color={Colors.primary} style={styles.fingerprintIcon} />
+          <ThemedText
+            size={14}
+            letterSpacing={2.64}
+            style={styles.biometricText}
+          >
+            Use fingerprint instead?
+          </ThemedText>
+        </Pressable>
+      )}
     </View>
   );
 }

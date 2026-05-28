@@ -42,13 +42,13 @@ export default function VerifyScreen() {
       }).unwrap();
 
       router.replace("/signUp");
-      console.log("Submitting OTP:", otpToSubmit);
+      // console.log("Submitting OTP:", otpToSubmit);
     } catch (err) {
       const fetchError = err as FetchBaseQueryError;
       const data = fetchError.data as { error: { message: string } };
       const message = data?.error?.message ?? "Verification failed. Try again.";
       setVerifyError(message);
-      console.log(payload, otpToSubmit);
+      // console.log(payload, otpToSubmit);
     }
   };
 
