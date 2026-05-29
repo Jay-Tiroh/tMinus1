@@ -1,5 +1,4 @@
 import type { ConfigContext, ExpoConfig } from "expo/config";
-
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: "tMinus1",
@@ -41,6 +40,19 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   plugins: [
     [
+      "expo-splash-screen",
+      {
+        backgroundColor: "#1B232A",
+        image: "./src/assets/images/splash.png",
+        imageResizeMode: "cover",
+        dark: {
+          backgroundColor: "#1B232A",
+          image: "./src/assets/images/splash.png",
+          imageResizeMode: "cover",
+        },
+      },
+    ],
+    [
       "expo-file-system",
       [
         "@react-native-async-storage/async-storage",
@@ -64,7 +76,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         root: "src/app",
       },
     ],
-
     [
       "expo-local-authentication",
       {

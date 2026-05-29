@@ -4,12 +4,14 @@ import { store } from "@/store";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { enableScreens } from "react-native-screens";
-import SplashScreen from "react-native-splash-screen";
 import { Provider } from "react-redux";
+
+SplashScreen.preventAutoHideAsync();
 
 enableScreens(true);
 
@@ -22,7 +24,9 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    if (fontsLoaded || fontError) SplashScreen.hide();
+    if (fontsLoaded || fontError) {
+      SplashScreen.hideAsync();
+    }
   }, [fontsLoaded, fontError]);
 
   if (!fontsLoaded && !fontError) return null;
