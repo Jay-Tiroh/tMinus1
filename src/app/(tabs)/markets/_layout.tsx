@@ -11,21 +11,8 @@ export default function MarketsLayout() {
         headerShown: false,
       }}
     >
-      <Stack.Screen
-        name="index"
-        options={
-          {
-            // header: () => <ThemedHeader avatar headerRight="normal" />,
-          }
-        }
-      />
-      {/*<Stack.Screen
-        name="menu"
-        options={{
-          header: () => <ThemedHeader goBack title="Menu" headerRight="menu" />,
-          contentStyle: { backgroundColor: Colors.surfaceDark },
-        }}
-      />*/}
+      <Stack.Screen name="index" />
+      <Stack.Screen name="trending" />
     </Stack>
   );
 }

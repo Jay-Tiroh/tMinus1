@@ -9,6 +9,7 @@ export default function TradesLayout() {
         animation: "slide_from_right", // smooth horizontal slide
         animationDuration: 200,
         contentStyle: { backgroundColor: Colors.surface },
+        headerShown: false,
       }}
     >
       <Stack.Screen
@@ -17,13 +18,7 @@ export default function TradesLayout() {
           header: () => <ThemedHeader avatar headerRight="trade" />,
         }}
       />
-      {/*<Stack.Screen
-        name="menu"
-        options={{
-          header: () => <ThemedHeader goBack title="Menu" headerRight="menu" />,
-          contentStyle: { backgroundColor: Colors.surfaceDark },
-        }}
-      />*/}
+      <Stack.Screen name="asset" />
     </Stack>
   );
 }

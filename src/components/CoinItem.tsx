@@ -15,7 +15,6 @@ type CoinItemProps = {
   alias: string;
   amount: number;
   amountInUsd?: number;
-  showAmountInUsd?: boolean;
   change?: number;
   showChange?: boolean;
   showChart?: boolean;
@@ -30,7 +29,6 @@ const CoinItem = ({
   amountInUsd,
   change,
   icon: Icon,
-  showAmountInUsd = false,
   showChange = false,
   showChart = false,
   useHrefs = false,
@@ -40,42 +38,42 @@ const CoinItem = ({
   const [chartVisible, setChartVisible] = useState(false);
 
   const router = useRouter();
-  const route = "/(tabs)/trades?coin=" + alias;
+  const route = "/(tabs)/trades/asset?coin=" + alias;
   const handlePress = () => {
     if (useHrefs) {
       router.push(route as Href);
     }
   };
   return (
-    <View style={styles.container} onLayout={() => setChartVisible(true)}>
-      <Pressable onPress={handlePress} style={styles.left}>
+    <Pressable
+      onPress={handlePress}
+      style={styles.container}
+      onLayout={() => setChartVisible(true)}
+    >
+      <View style={styles.left}>
         <CryptoIcon symbol={alias} size={40} />
         <View style={styles.nameBlock}>
-          <ThemedText weight="bold" size={14} color={Colors.white}>
+          <ThemedText weight="bold" size={14} color={Colors.snowGray}>
             {name}
           </ThemedText>
-          <ThemedText size={14} color={Colors.textMuted}>
+          <ThemedText size={14} color={Colors.textMidGray}>
             {alias}
           </ThemedText>
         </View>
-      </Pressable>
+      </View>
 
       {showChart && chartVisible && chartData.length > 0 && (
-        <Chart isPositive={isPositive} data={chartData} />
+        <Chart isPositive={isPositive} data={chartData} width={120} />
       )}
 
       <View style={styles.right}>
         <ThemedText weight="bold" size={14} color={Colors.white}>
-          {formatCurrency(amount)}
+          ${formatCurrency(amountInUsd as number)}
         </ThemedText>
-        {showAmountInUsd && amountInUsd != null && (
-          <ThemedText size={14} color={Colors.textMuted}>
-            ${formatCurrency(amountInUsd)}
-          </ThemedText>
-        )}
+
         {showChange && change != null && <ChangeText change={change} />}
       </View>
-    </View>
+    </Pressable>
   );
 };
 
@@ -88,6 +86,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     width: "100%",
+    backgroundColor: Colors.backgroundDark,
+    borderRadius: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    // height: 70,
   },
   left: {
     flexDirection: "row",
@@ -96,9 +99,13 @@ const styles = StyleSheet.create({
   },
   nameBlock: {
     minWidth: 70,
+    gap: 14,
+    justifyContent: "center",
   },
   right: {
     minWidth: 80,
     alignItems: "flex-end",
+    gap: 14,
+    justifyContent: "center",
   },
 });

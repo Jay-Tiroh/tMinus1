@@ -24,6 +24,11 @@ export interface DetailMeta {
   requestId: string;
 }
 
+export interface ChartData {
+  time: string;
+  priceUsd: number;
+}
+
 export interface Asset {
   id: string;
   symbol: string;
@@ -35,11 +40,7 @@ export interface Asset {
   minBuyUsd: number;
   minSellUsd: number;
   iconUrl: string;
-}
-
-export interface ChartData {
-  time: string;
-  priceUsd: number;
+  sparkline?: ChartData[]; // Added for the trending endpoint
 }
 
 export interface Prices {
@@ -97,4 +98,32 @@ export interface AssetsQueryParams {
 export interface AssetsEnvelope {
   data: Asset[];
   meta: ListMeta;
+}
+
+// --- Trending Specific Types ---
+
+export interface FeaturedMeta {
+  type: string;
+  symbol: string;
+  name: string;
+  priceUsd: number;
+  change24h: number;
+  reason: string;
+}
+
+export interface TrendingMeta {
+  requestId: string;
+  count: number;
+  market?: Market;
+  featured?: FeaturedMeta;
+  include?: string[];
+}
+
+export interface TrendingResponse {
+  data: Asset[];
+  meta: TrendingMeta;
+}
+
+export interface TrendingQueryParams {
+  include?: "sparkline" | "none";
 }

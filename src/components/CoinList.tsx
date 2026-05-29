@@ -16,7 +16,6 @@ import {
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export type CoinItemConfig = {
-  showAmountInUsd?: boolean;
   showChange?: boolean;
   showChart?: boolean;
 };
@@ -31,11 +30,9 @@ type CoinListProps = {
 // ─── Separator ────────────────────────────────────────────────────────────────
 
 const Separator = () => (
-  <View style={{ paddingVertical: 20 }}>
+  <View style={{ paddingVertical: 6 }}>
     <View
       style={{
-        borderBottomWidth: 1,
-        borderColor: Colors.border + "1A",
         width: "100%",
       }}
     />
@@ -52,11 +49,7 @@ const CoinList = React.memo(function CoinList({
 }: CoinListProps) {
   const [isReady, setIsReady] = useState(false);
 
-  const {
-    showAmountInUsd = false,
-    showChange = false,
-    showChart = false,
-  } = coinItemConfig ?? {};
+  const { showChange = false, showChart = false } = coinItemConfig ?? {};
 
   useEffect(() => {
     const task = InteractionManager.runAfterInteractions(() => {
@@ -74,7 +67,6 @@ const CoinList = React.memo(function CoinList({
           icon={CoinIcons[item.symbol]}
           alias={item.symbol}
           amountInUsd={item.priceUsd}
-          showAmountInUsd={showAmountInUsd}
           change={item.change24h}
           showChange={showChange}
           showChart={showChart}
@@ -82,7 +74,7 @@ const CoinList = React.memo(function CoinList({
         />
       </View>
     ),
-    [showAmountInUsd, showChange, showChart],
+    [showChange, showChart],
   );
 
   const keyExtractor = useCallback((item: Asset) => item.id, []);

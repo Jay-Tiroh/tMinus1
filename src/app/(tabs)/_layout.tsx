@@ -34,6 +34,7 @@ export default function TabsLayout() {
           fontSize: TabBarColors.labelSize,
           fontFamily: Fonts.regular,
         },
+        tabBarBackground: () => null,
       }}
     >
       {TABS.map((tab) => (

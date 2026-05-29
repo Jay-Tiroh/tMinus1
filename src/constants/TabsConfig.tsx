@@ -27,7 +27,7 @@ export interface TabConfig {
 
 export const TabBarStyle = {
   borderColor: "transparent",
-  backgroundColor: Colors.surface,
+  backgroundColor: Colors.backgroundDark + "cc",
   borderRadius: 20,
   marginHorizontal: 24,
   height: 76,

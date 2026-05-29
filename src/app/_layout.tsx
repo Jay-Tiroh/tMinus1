@@ -4,18 +4,17 @@ import { store } from "@/store";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
-import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { enableScreens } from "react-native-screens";
+import SplashScreen from "react-native-splash-screen";
 import { Provider } from "react-redux";
+
 enableScreens(true);
 
-SplashScreen.preventAutoHideAsync();
-
 export default function RootLayout() {
-  const [fontsLoaded] = useFonts({
+  const [fontsLoaded, fontError] = useFonts({
     "NeueMontreal-Light": require("@/assets/fonts/NeueMontreal-Light.otf"),
     "NeueMontreal-Regular": require("@/assets/fonts/NeueMontreal-Regular.otf"),
     "NeueMontreal-Medium": require("@/assets/fonts/NeueMontreal-Medium.otf"),
@@ -23,10 +22,11 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    if (fontsLoaded) SplashScreen.hideAsync();
-  }, [fontsLoaded]);
+    if (fontsLoaded || fontError) SplashScreen.hide();
+  }, [fontsLoaded, fontError]);
 
-  if (!fontsLoaded) return null;
+  if (!fontsLoaded && !fontError) return null;
+
   return (
     <Provider store={store}>
       <SafeAreaProvider>
@@ -35,7 +35,7 @@ export default function RootLayout() {
             <Stack
               screenOptions={{
                 headerShown: false,
-                animation: "slide_from_right", // smooth horizontal slide
+                animation: "slide_from_right",
                 animationDuration: 200,
                 contentStyle: { backgroundColor: Colors.surface },
               }}

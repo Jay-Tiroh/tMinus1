@@ -38,7 +38,6 @@ const WalletsScreen = () => {
       <View style={{ height: listHeight }}>
         <CoinList
           data={coins}
-          coinItemConfig={{ showAmountInUsd: true }}
           contentContainerStyle={{
             paddingBottom: bottomPadding,
             paddingTop: 12,

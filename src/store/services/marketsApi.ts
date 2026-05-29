@@ -7,6 +7,8 @@ import {
   AssetsQueryParams,
   AssetsResponse,
   PricesResponse,
+  TrendingQueryParams,
+  TrendingResponse,
 } from "@/types/assets";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import { baseApi } from "./baseApi";
@@ -63,9 +65,27 @@ const marketsApi = baseApi.injectEndpoints({
       serializeQueryArgs: ({ queryArgs }) => queryArgs.slice().sort().join(","),
     }),
 
-    trending: builder.query<AssetsResponse["data"], void>({
-      query: () => `/market/trending`,
-      transformResponse: (response: AssetsResponse) => response.data,
+    // Updated: Accepts query params, still returns just data[] for backwards compatibility
+    trending: builder.query<
+      TrendingResponse["data"],
+      TrendingQueryParams | void
+    >({
+      query: (params) => ({
+        url: `/market/trending`,
+        params: params ?? undefined,
+      }),
+      transformResponse: (response: TrendingResponse) => response.data,
+    }),
+
+    // New: Returns the full envelope so you can access meta.featured
+    trendingWithMeta: builder.query<
+      TrendingResponse,
+      TrendingQueryParams | void
+    >({
+      query: (params) => ({
+        url: `/market/trending`,
+        params: params ?? undefined,
+      }),
     }),
 
     prices: builder.query<PricesResponse["data"], void>({
@@ -82,5 +102,6 @@ export const {
   useGetAssetQuery,
   useGetAssetsQuery,
   useTrendingQuery,
+  useTrendingWithMetaQuery,
   usePricesQuery,
 } = marketsApi;

@@ -1,20 +1,27 @@
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, TextStyle, View } from "react-native";
 
 type TextBlockProps = {
   title?: string;
   body?: string;
+  titleStyle?: TextStyle;
+  bodyStyle?: TextStyle;
 };
 
-const TextBlock = ({ title, body }: TextBlockProps) => {
+const TextBlock = ({ title, body, titleStyle, bodyStyle }: TextBlockProps) => {
   return (
     <View style={styles.container}>
-      <ThemedText size={24} weight="bold" color={Colors.snowGray}>
+      <ThemedText
+        size={24}
+        weight="bold"
+        color={Colors.snowGray}
+        style={titleStyle}
+      >
         {title}
       </ThemedText>
-      <ThemedText size={14} color={Colors.textMidGray}>
+      <ThemedText size={14} color={Colors.textMidGray} style={bodyStyle}>
         {body}
       </ThemedText>
     </View>

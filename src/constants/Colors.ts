@@ -29,6 +29,7 @@ export const Colors = {
   primaryCyan: "#4ADBB3", // Cyan Mint — cooler tint
   primaryMist: "#9AF2CB", // Mist Mint — very light
   primaryFrost: "#DFFBED", // Frost — near-white mint tint
+  primaryAqua: "BFF7DC",
 
   // ─── Surface / Background ──────────────────────────────────────────
   background: "#07060B", // True Black — main background

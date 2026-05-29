@@ -41,6 +41,15 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   plugins: [
     [
+      "expo-file-system",
+      [
+        "@react-native-async-storage/async-storage",
+        {
+          exclude: ["NSUserDefaults"],
+        },
+      ],
+    ],
+    [
       "expo-camera",
       {
         cameraPermission: "Allow $(PRODUCT_NAME) to access your camera",
@@ -55,18 +64,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         root: "src/app",
       },
     ],
-    [
-      "expo-splash-screen",
-      {
-        image: "./src/assets/images/splash-icon.png",
-        imageWidth: 1656,
-        resizeMode: "cover",
-        backgroundColor: "#171D22",
-        dark: {
-          backgroundColor: "#171D22",
-        },
-      },
-    ],
+
     [
       "expo-local-authentication",
       {
