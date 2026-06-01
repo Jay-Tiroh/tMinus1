@@ -40,7 +40,7 @@ export interface Asset {
   minBuyUsd: number;
   minSellUsd: number;
   iconUrl: string;
-  sparkline?: ChartData[]; // Added for the trending endpoint
+  sparkline?: ChartData[];
 }
 
 export interface Prices {
@@ -58,7 +58,25 @@ export interface AssetsResponse {
 
 export interface PricesResponse {
   data: Prices[];
-  meta: ListMeta;
+  meta: {
+    requestId: string;
+    count: number;
+    market: Market;
+  };
+}
+
+export interface AssetStats {
+  marketCapUsd: number;
+  volume24hUsd: number;
+  circulatingSupply: number;
+  maxSupply: number;
+  allTimeHighUsd: number;
+  high24hUsd: number;
+  low24hUsd: number;
+  volumeToMarketCapRatio: number;
+  about: string;
+  websiteUrl: string;
+  explorerUrl: string;
 }
 
 export interface AssetDetailsResponse {
@@ -72,6 +90,7 @@ export interface AssetDetailsResponse {
   minBuyUsd: number;
   minSellUsd: number;
   iconUrl: string;
+  stats: AssetStats;
   chart: ChartData[];
 }
 
@@ -84,7 +103,6 @@ export interface AssetDetailsRequest {
   symbol: string;
 }
 
-// For paginated/filtered asset list requests
 export interface AssetsQueryParams {
   q?: string;
   search?: string;
@@ -92,15 +110,13 @@ export interface AssetsQueryParams {
   limit?: number;
   sort?: string;
   order?: "asc" | "desc";
+  include?: string;
 }
 
-// Full response including meta, for when you need pagination info
 export interface AssetsEnvelope {
   data: Asset[];
   meta: ListMeta;
 }
-
-// --- Trending Specific Types ---
 
 export interface FeaturedMeta {
   type: string;
@@ -126,4 +142,82 @@ export interface TrendingResponse {
 
 export interface TrendingQueryParams {
   include?: "sparkline" | "none";
+}
+
+export interface Candle {
+  time: string;
+  openUsd: number;
+  highUsd: number;
+  lowUsd: number;
+  closeUsd: number;
+  volume: number;
+}
+
+export interface CandlesQueryParams {
+  symbol: string;
+  interval?: string;
+  limit?: number;
+}
+
+export interface CandlesResponse {
+  data: Candle[];
+  meta: {
+    requestId: string;
+    count: number;
+    symbol: string;
+    interval: string;
+    market: Market;
+  };
+}
+
+export interface OrderBookLevel {
+  priceUsd: number;
+  amount: number;
+  total: number;
+}
+
+export interface OrderBook {
+  bids: OrderBookLevel[];
+  asks: OrderBookLevel[];
+  spreadUsd: number;
+  midPriceUsd: number;
+}
+
+export interface OrderBookQueryParams {
+  symbol: string;
+  levels?: number;
+}
+
+export interface OrderBookResponse {
+  data: OrderBook;
+  meta: {
+    requestId: string;
+    symbol: string;
+    levels: number;
+    market: Market;
+  };
+}
+
+export interface Trade {
+  id: string;
+  side: "buy" | "sell";
+  priceUsd: number;
+  amount: number;
+  totalUsd: number;
+  createdAt: string;
+}
+
+export interface TradesQueryParams {
+  symbol: string;
+  limit?: number;
+}
+
+export interface TradesResponse {
+  data: Trade[];
+  meta: {
+    requestId: string;
+    count: number;
+    symbol: string;
+    market: Market;
+  };
 }

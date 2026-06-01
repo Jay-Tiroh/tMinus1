@@ -1,11 +1,22 @@
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import React from "react";
+import { TextStyle } from "react-native";
 
-const ChangeText = ({ change }: { change: number }) => {
+const ChangeText = ({
+  change,
+  style,
+}: {
+  change: number;
+  style?: TextStyle;
+}) => {
   const isPositive = change >= 0;
   return (
-    <ThemedText size={14} color={isPositive ? Colors.profit : Colors.loss}>
+    <ThemedText
+      style={style}
+      size={14}
+      color={isPositive ? Colors.profit : Colors.loss}
+    >
       {isPositive ? "+" : ""}
       {change.toFixed(2)}%
     </ThemedText>

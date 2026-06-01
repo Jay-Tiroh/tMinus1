@@ -77,7 +77,7 @@ const walletsApi = baseApi.injectEndpoints({
         method: "POST",
         body: depositData,
       }),
-      // Invalidating Wallet and Transaction tags since a deposit affects balances and transaction history
+
       invalidatesTags: ["Wallet", "Transaction", "Portfolio"],
     }),
 
@@ -88,7 +88,6 @@ const walletsApi = baseApi.injectEndpoints({
         method: "POST",
         body: withdrawalData,
       }),
-      // Invalidating Wallet and Transaction tags since a withdrawal affects balances and transaction history
       invalidatesTags: ["Wallet", "Transaction", "Portfolio"],
     }),
   }),

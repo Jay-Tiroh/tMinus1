@@ -5,7 +5,6 @@ import {
 } from "@/store/services/watchlistApi";
 
 export function useWatchlist(pollIntervalMs = 10000) {
-  // 1. Fetch the watchlist with the same polling/refetch rules
   const { data, isLoading, isError, refetch, isUninitialized } =
     useGetWatchlistQuery(undefined, {
       pollingInterval: pollIntervalMs, // Refreshes every 10 seconds by default
@@ -14,9 +13,14 @@ export function useWatchlist(pollIntervalMs = 10000) {
     });
 
   // 2. Hook up the mutations for adding/removing
-  const [addTrigger, { isLoading: isAdding }] = useAddToWatchlistMutation();
-  const [removeTrigger, { isLoading: isRemoving }] =
-    useRemoveFromWatchlistMutation();
+  const [
+    addTrigger,
+    { isLoading: isAdding, isSuccess: isAdded, isError: isAddingError },
+  ] = useAddToWatchlistMutation();
+  const [
+    removeTrigger,
+    { isLoading: isRemoving, isSuccess: isRemoved, isError: isRemovingError },
+  ] = useRemoveFromWatchlistMutation();
 
   // 3. Convenience method to check if a symbol is already in the watchlist
   const isInWatchlist = (symbol: string) => {
@@ -35,8 +39,12 @@ export function useWatchlist(pollIntervalMs = 10000) {
     // Mutations
     addToWatchlist: addTrigger,
     isAdding,
+    isAdded,
+    isAddingError,
     removeFromWatchlist: removeTrigger,
     isRemoving,
+    isRemoved,
+    isRemovingError,
 
     // Helpers
     isInWatchlist,

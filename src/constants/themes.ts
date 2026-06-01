@@ -1,3 +1,4 @@
+import { Colors } from "@/constants/Colors";
 import { StyleSheet } from "react-native";
 
 export const GeneralStyles = StyleSheet.create({
@@ -8,5 +9,9 @@ export const GeneralStyles = StyleSheet.create({
   wrapper: {
     width: "100%",
     paddingHorizontal: 24,
+  },
+  box: {
+    borderRadius: 14,
+    backgroundColor: Colors.backgroundDark,
   },
 });

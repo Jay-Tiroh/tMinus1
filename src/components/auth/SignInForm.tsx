@@ -1,10 +1,12 @@
 import Fingerprint from "@/assets/icons/fingerprint.svg";
 import CTA from "@/components/auth/CTA";
 import { ThemedTextInput } from "@/components/auth/ThemedTextInput";
+import Loader from "@/components/Loader";
 import { Spacer } from "@/components/Spacer";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { Spacing } from "@/constants/Spacing";
+import { showErrorToast, showSuccessToast } from "@/hooks/showToast";
 import { useBiometrics } from "@/hooks/useBiometrics";
 import {
   EmailPasswordFormData,
@@ -25,10 +27,30 @@ import { Pressable, StyleSheet, View } from "react-native";
 
 type FormData = EmailPasswordFormData | MobilePasswordFormData;
 
+// Interfaces for strict typing to replace `any`
+interface ApiError {
+  data?: {
+    message?: string;
+  };
+}
+
+interface StatusError {
+  status: number;
+}
+
+interface RefreshResponse {
+  accessToken?: string;
+  token?: string;
+  refreshToken?: string;
+  user?: never;
+}
+
 export default function SignInForm() {
   const [isEmail, setIsEmail] = useState(true);
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const [errorMessage, setErrorMessage] = useState("");
+  const [biometricLoading, setBiometricLoading] = useState(false);
 
   const { control, handleSubmit, reset } = useForm<FormData>({
     resolver: zodResolver(isEmail ? emailPasswordSchema : mobilePasswordSchema),
@@ -57,7 +79,24 @@ export default function SignInForm() {
       );
       await saveToken("ACCESS_TOKEN", result.data.accessToken);
       await saveToken("REFRESH_TOKEN", result.data.refreshToken);
+      showSuccessToast({
+        title: "Login Successful",
+        message: "Welcome back! You have been logged in successfully.",
+      });
       router.replace("/(tabs)/home");
+    }
+
+    if (error) {
+      const isApiError = (err: unknown): err is ApiError =>
+        typeof err === "object" && err !== null;
+
+      const loginError =
+        (isApiError(error) && error.data) || "Something went wrong";
+      setErrorMessage(loginError);
+      showErrorToast({
+        title: "Login Failed",
+        message: loginError,
+      });
     }
   };
 
@@ -69,30 +108,43 @@ export default function SignInForm() {
   const handleBiometricAuth = async () => {
     if (!isSupported || !isEnrolled) return;
 
+    setBiometricLoading(true);
+
     const result = await authenticate("Unlock tMinus1");
     if (!result.success) {
-      console.warn("Biometric auth failed:", result.error);
+      setBiometricLoading(false);
+      setErrorMessage(
+        "Biometric authentication failed, login with email and password instead",
+      );
+      showErrorToast({
+        title: "Authentication Failed",
+        message:
+          "Biometric authentication failed, login with email and password instead",
+      });
       return;
+    }
+    if (result.success) {
+      showSuccessToast({
+        title: "Authentication Successful",
+        message: "Biometric authentication successful, logging you in...",
+      });
     }
 
     const token = await getToken("ACCESS_TOKEN");
     const refreshToken = await getToken("REFRESH_TOKEN");
 
-    if (!token) {
-      console.warn("No saved token — please sign in first.");
+    if (!token || !refreshToken) {
+      setBiometricLoading(false);
+      setErrorMessage("No saved session — please sign in first.");
+      showErrorToast({
+        title: "No Saved Session",
+        message: "No saved session — please sign in first.",
+      });
       return;
     }
 
-    // Set token in redux first so baseQuery picks it up for the session call
-    dispatch(
-      setCredentials({
-        user: null as any,
-        token,
-        refreshToken: refreshToken ?? "",
-      }),
-    );
-
     try {
+      // Attempt to use the stored access token directly
       const sessionData = await dispatch(
         authApi.endpoints.getSession.initiate(undefined, {
           forceRefetch: true,
@@ -101,24 +153,55 @@ export default function SignInForm() {
 
       dispatch(
         setCredentials({
-          user: sessionData.user,
-          token: sessionData.accessToken,
-          refreshToken: sessionData.refreshToken,
+          user: sessionData.user || sessionData,
+          token: sessionData.accessToken || token,
+          refreshToken: sessionData.refreshToken || refreshToken,
         }),
       );
 
-      // Refresh stored tokens in case the session returned new ones
-      await saveToken("ACCESS_TOKEN", sessionData.accessToken);
-      await saveToken("REFRESH_TOKEN", sessionData.refreshToken);
+      await saveToken("ACCESS_TOKEN", sessionData.accessToken || token);
+      await saveToken(
+        "REFRESH_TOKEN",
+        sessionData.refreshToken || refreshToken,
+      );
 
       router.replace("/(tabs)/home");
-    } catch (err) {
-      // Session fetch failed — token likely expired, force re-login
-      dispatch({ type: "auth/clearCredentials" });
-      console.warn("Session expired, please sign in again.");
+    } catch {
+      // Access token expired — try refresh before giving up
+      try {
+        const refreshData = await dispatch(
+          authApi.endpoints.refreshToken.initiate({ refreshToken }),
+        ).unwrap();
+
+        const newToken = refreshData.accessToken || refreshData.token || token;
+        const newRefreshToken = refreshData.refreshToken || refreshToken;
+
+        dispatch(
+          setCredentials({
+            user: refreshData.user || (null as never),
+            token: newToken,
+            refreshToken: newRefreshToken,
+          }),
+        );
+
+        await saveToken("ACCESS_TOKEN", newToken);
+        await saveToken("REFRESH_TOKEN", newRefreshToken);
+        showSuccessToast({
+          title: "Login Successful",
+          message: "Welcome back! You have been logged in successfully.",
+        });
+        router.replace("/(tabs)/home");
+      } catch {
+        dispatch({ type: "auth/clearCredentials" });
+        setBiometricLoading(false);
+        setErrorMessage("Session expired, please sign in again.");
+        showErrorToast({
+          title: "Session Expired",
+          message: "Session expired, please sign in again.",
+        });
+      }
     }
   };
-
   return (
     <View style={styles.container}>
       <ThemedText size={32} weight="bold" style={styles.headerText}>
@@ -129,14 +212,18 @@ export default function SignInForm() {
 
       {isError && (
         <ThemedText color={Colors.lossAlt} style={styles.errorText}>
-          {(error as any)?.data?.message ?? "Something went wrong"}
+          {errorMessage}
+        </ThemedText>
+      )}
+      {!isError && errorMessage !== "" && (
+        <ThemedText color={Colors.lossAlt} style={styles.errorText}>
+          {errorMessage}
         </ThemedText>
       )}
 
       <Spacer size={44} />
 
       <View style={styles.formFields}>
-        {/* Identity Input (Email or Mobile) */}
         <View style={styles.inputContainer}>
           <View style={styles.labelRow}>
             <ThemedText size={14} style={styles.label}>
@@ -170,7 +257,6 @@ export default function SignInForm() {
           )}
         </View>
 
-        {/* Password Input */}
         <View style={styles.inputContainer}>
           <ThemedText size={14} style={styles.label}>
             Password
@@ -196,8 +282,7 @@ export default function SignInForm() {
 
       <Spacer size={55} />
 
-      {/* Biometric Option */}
-      {isSupported && isEnrolled && (
+      {isSupported && isEnrolled && !biometricLoading && (
         <Pressable
           onPress={handleBiometricAuth}
           style={styles.biometricContainer}
@@ -212,6 +297,7 @@ export default function SignInForm() {
           </ThemedText>
         </Pressable>
       )}
+      {biometricLoading && <Loader />}
     </View>
   );
 }

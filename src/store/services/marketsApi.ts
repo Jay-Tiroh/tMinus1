@@ -6,7 +6,13 @@ import {
   AssetsEnvelope,
   AssetsQueryParams,
   AssetsResponse,
+  CandlesQueryParams,
+  CandlesResponse,
+  OrderBookQueryParams,
+  OrderBookResponse,
   PricesResponse,
+  TradesQueryParams,
+  TradesResponse,
   TrendingQueryParams,
   TrendingResponse,
 } from "@/types/assets";
@@ -15,7 +21,6 @@ import { baseApi } from "./baseApi";
 
 const marketsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    // Returns just data[] — for screens that don't need pagination meta
     allAssets: builder.query<AssetsResponse["data"], AssetsQueryParams | void>({
       query: (params) => {
         return {
@@ -26,7 +31,6 @@ const marketsApi = baseApi.injectEndpoints({
       transformResponse: (response: AssetsResponse) => response.data,
     }),
 
-    // Returns full envelope — for screens that need meta (pagination, total, etc.)
     allAssetsWithMeta: builder.query<AssetsEnvelope, AssetsQueryParams | void>({
       query: (params) => ({
         url: `/market/assets`,
@@ -37,6 +41,33 @@ const marketsApi = baseApi.injectEndpoints({
     getAsset: builder.query<AssetDetailsResponse, AssetDetailsRequest>({
       query: ({ symbol }) => `/market/assets/${symbol}`,
       transformResponse: (response: AssetDetailsEnvelope) => response.data,
+    }),
+
+    getCandles: builder.query<CandlesResponse["data"], CandlesQueryParams>({
+      query: ({ symbol, ...params }) => ({
+        url: `/market/assets/${symbol}/candles`,
+        params,
+      }),
+      transformResponse: (response: CandlesResponse) => response.data,
+    }),
+
+    getOrderBook: builder.query<
+      OrderBookResponse["data"],
+      OrderBookQueryParams
+    >({
+      query: ({ symbol, ...params }) => ({
+        url: `/market/assets/${symbol}/order-book`,
+        params,
+      }),
+      transformResponse: (response: OrderBookResponse) => response.data,
+    }),
+
+    getTrades: builder.query<TradesResponse["data"], TradesQueryParams>({
+      query: ({ symbol, ...params }) => ({
+        url: `/market/assets/${symbol}/trades`,
+        params,
+      }),
+      transformResponse: (response: TradesResponse) => response.data,
     }),
 
     getAssets: builder.query<Asset[], string[]>({
@@ -65,7 +96,6 @@ const marketsApi = baseApi.injectEndpoints({
       serializeQueryArgs: ({ queryArgs }) => queryArgs.slice().sort().join(","),
     }),
 
-    // Updated: Accepts query params, still returns just data[] for backwards compatibility
     trending: builder.query<
       TrendingResponse["data"],
       TrendingQueryParams | void
@@ -77,7 +107,6 @@ const marketsApi = baseApi.injectEndpoints({
       transformResponse: (response: TrendingResponse) => response.data,
     }),
 
-    // New: Returns the full envelope so you can access meta.featured
     trendingWithMeta: builder.query<
       TrendingResponse,
       TrendingQueryParams | void
@@ -100,6 +129,9 @@ export const {
   useAllAssetsQuery,
   useAllAssetsWithMetaQuery,
   useGetAssetQuery,
+  useGetCandlesQuery,
+  useGetOrderBookQuery,
+  useGetTradesQuery,
   useGetAssetsQuery,
   useTrendingQuery,
   useTrendingWithMetaQuery,

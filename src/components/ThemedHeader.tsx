@@ -114,7 +114,7 @@ const NormalRight = () => {
         hitSlop={10}
         onPress={() => pushTo("/user/settings")}
       />
-      <Scanner onPress={() => pushTo("/wallets/scanQr")} hitSlop={10} />
+      <Scanner onPress={() => pushTo("/kyc")} hitSlop={10} />
       <Bell onPress={() => pushTo("/home/notifications")} hitSlop={10} />
     </View>
   );

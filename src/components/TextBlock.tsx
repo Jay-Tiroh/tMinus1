@@ -32,7 +32,6 @@ export default TextBlock;
 
 const styles = StyleSheet.create({
   container: {
-    width: "100%",
     gap: 8,
   },
 });

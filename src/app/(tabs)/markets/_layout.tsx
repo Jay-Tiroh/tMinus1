@@ -13,6 +13,7 @@ export default function MarketsLayout() {
     >
       <Stack.Screen name="index" />
       <Stack.Screen name="trending" />
+      <Stack.Screen name="watchlist" />
     </Stack>
   );
 }

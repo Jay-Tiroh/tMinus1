@@ -7,6 +7,7 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { Colors } from "@/constants/Colors";
 import { Spacing } from "@/constants/Spacing";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import { useRef, useState } from "react";
 import {
@@ -62,6 +63,12 @@ export default function OnboardingScreen() {
     setActiveIndex(index);
   };
 
+  const completeOnboarding = async () => {
+    await AsyncStorage.setItem("has_onboarded", "true");
+
+    navigation.replace("/(auth)"); // or wherever
+  };
+
   const handleNext = () => {
     const nextIndex = activeIndex + 1;
     if (nextIndex < PagesConfig.length) {
@@ -71,7 +78,7 @@ export default function OnboardingScreen() {
       });
       setActiveIndex(nextIndex);
     } else {
-      navigation.replace("/(auth)");
+      completeOnboarding();
     }
   };
 

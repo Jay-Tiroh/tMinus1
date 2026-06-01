@@ -11,7 +11,7 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { useSafeBottom } from "@/hooks/useSafeBottom";
 import { useWatchlist } from "@/hooks/useWatchlist";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { ImageBackground, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -20,52 +20,48 @@ const MarketsScreen = () => {
   const topInset = useSafeAreaInsets().top;
   const [query, setQuery] = useState("");
   const debouncedQuery = useDebounce(query, 400);
-
   const { coins, isError } = useAllAssets(debouncedQuery);
-
   const { watchlist } = useWatchlist(10000);
-
   const tabs = ["All", "Gainers", "Watchlist"];
   const [activeTab, setActiveTab] = useState("All");
-  const [displayedCoins, setDisplayedCoins] = useState(coins);
   const router = useRouter();
+
   const handleTabChange = (tab: string) => {
-    // setActiveTab(tab);
     if (tab === "All") {
-      setDisplayedCoins(coins);
+      // already on all
     } else if (tab === "Gainers") {
       router.push("/(tabs)/markets/trending");
     } else if (tab === "Watchlist") {
-      setDisplayedCoins(watchlist);
+      router.push("/(tabs)/markets/watchlist");
     }
   };
 
-  return (
-    <ImageBackground
-      source={require("@/assets/images/new-bg.png")}
-      style={[
-        GeneralStyles.container,
-        { paddingTop: topInset + 24, paddingBottom: bottomPadding * 0 },
-      ]}
-    >
+  const header = useMemo(
+    () => (
       <View style={GeneralStyles.wrapper}>
         <TextBlock
           title="Markets"
           body="Search assets, view live prices, and open a coin detail screen."
         />
-      </View>
-      <Spacer size={16} />
-      <View style={GeneralStyles.wrapper}>
+        <Spacer size={16} />
         <SearchBar value={query} onChangeText={setQuery} />
-      </View>
-      <Spacer size={22} />
-      <View style={GeneralStyles.wrapper}>
+        <Spacer size={22} />
         <Tabs tabs={tabs} activeTab={activeTab} handlePress={handleTabChange} />
+        <Spacer size={26} />
       </View>
-      <Spacer size={26} />
+    ),
+    [query, activeTab],
+  );
+
+  return (
+    <ImageBackground
+      source={require("@/assets/images/new-bg.png")}
+      style={[GeneralStyles.container, { paddingTop: topInset + 24 }]}
+    >
       <CoinList
         data={coins}
         coinItemConfig={{ showChange: true, showChart: true }}
+        ListHeaderComponent={header}
         contentContainerStyle={{
           paddingTop: 12,
           paddingBottom: bottomPadding * 2,
@@ -75,7 +71,6 @@ const MarketsScreen = () => {
     </ImageBackground>
   );
 };
-
 type TabsProps = {
   tabs: string[];
   activeTab: string;

@@ -7,6 +7,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import React, { useCallback, useEffect, useState } from "react";
 import {
   FlatList,
+  FlatListProps,
   InteractionManager,
   StyleSheet,
   View,
@@ -25,6 +26,9 @@ type CoinListProps = {
   coinItemConfig?: CoinItemConfig;
   contentContainerStyle?: ViewStyle;
   useHrefs?: boolean;
+  ListHeaderComponent?: FlatListProps<Asset>["ListHeaderComponent"];
+  ListFooterComponent?: FlatListProps<Asset>["ListFooterComponent"];
+  hasModal?: boolean;
 };
 
 // ─── Separator ────────────────────────────────────────────────────────────────
@@ -46,6 +50,9 @@ const CoinList = React.memo(function CoinList({
   coinItemConfig,
   contentContainerStyle,
   useHrefs = false,
+  ListHeaderComponent,
+  ListFooterComponent,
+  hasModal = false,
 }: CoinListProps) {
   const [isReady, setIsReady] = useState(false);
 
@@ -71,6 +78,7 @@ const CoinList = React.memo(function CoinList({
           showChange={showChange}
           showChart={showChart}
           useHrefs={useHrefs}
+          hasModal={hasModal}
         />
       </View>
     ),
@@ -96,6 +104,9 @@ const CoinList = React.memo(function CoinList({
         ItemSeparatorComponent={Separator}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={contentContainerStyle}
+        ListHeaderComponent={ListHeaderComponent}
+        ListFooterComponent={ListFooterComponent}
+        scrollEventThrottle={16}
       />
       <LinearGradient
         colors={["transparent", Colors.black]}

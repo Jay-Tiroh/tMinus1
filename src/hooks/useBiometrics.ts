@@ -55,10 +55,10 @@ export function useBiometrics() {
         promptMessage,
         fallbackLabel: "Use passcode",
         cancelLabel: "Cancel",
-        disableDeviceFallback: false, // allow PIN/pattern fallback
+        disableDeviceFallback: false,
       });
 
-      return result; // { success: boolean, error?: string }
+      return result;
     },
     [state],
   );
