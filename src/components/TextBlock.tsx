@@ -13,17 +13,21 @@ type TextBlockProps = {
 const TextBlock = ({ title, body, titleStyle, bodyStyle }: TextBlockProps) => {
   return (
     <View style={styles.container}>
-      <ThemedText
-        size={24}
-        weight="bold"
-        color={Colors.snowGray}
-        style={titleStyle}
-      >
-        {title}
-      </ThemedText>
-      <ThemedText size={14} color={Colors.textMidGray} style={bodyStyle}>
-        {body}
-      </ThemedText>
+      {title && (
+        <ThemedText
+          size={24}
+          weight="bold"
+          color={Colors.snowGray}
+          style={titleStyle}
+        >
+          {title}
+        </ThemedText>
+      )}
+      {body && (
+        <ThemedText size={14} color={Colors.textMidGray} style={bodyStyle}>
+          {body}
+        </ThemedText>
+      )}
     </View>
   );
 };

@@ -4,6 +4,7 @@ import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
 import Entypo from "@expo/vector-icons/Entypo";
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { LayoutChangeEvent, Pressable, StyleSheet, View } from "react-native";
 type HeaderProps = {
@@ -11,6 +12,7 @@ type HeaderProps = {
   body?: string;
   stage?: number;
   onBackPress?: () => void;
+  goBack?: boolean;
 };
 
 const Stages = [
@@ -33,7 +35,19 @@ const Header = ({
   body = "Complete identity verification from inside the app before high-value trading or withdrawals.",
   stage = 0,
   onBackPress,
+  goBack = false,
 }: HeaderProps) => {
+  const router = useRouter();
+
+  const handleBackPress = () => {
+    if (goBack) {
+      router.back();
+    }
+    if (onBackPress) {
+      onBackPress();
+    }
+  };
+
   const [componentWidth, setComponentWidth] = useState<number>(0);
 
   const handleLayout = (event: LayoutChangeEvent) => {
@@ -65,7 +79,7 @@ const Header = ({
               alignItems: "center",
             },
           ]}
-          onPress={onBackPress}
+          onPress={handleBackPress}
         >
           <Entypo name="chevron-left" size={20} color={Colors.snowGray} />
         </Pressable>

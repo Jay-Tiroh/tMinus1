@@ -123,12 +123,6 @@ export default function SignInForm() {
       });
       return;
     }
-    if (result.success) {
-      showSuccessToast({
-        title: "Authentication Successful",
-        message: "Biometric authentication successful, logging you in...",
-      });
-    }
 
     const token = await getToken("ACCESS_TOKEN");
     const refreshToken = await getToken("REFRESH_TOKEN");

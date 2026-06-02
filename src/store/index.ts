@@ -1,3 +1,4 @@
+import { countriesApi } from "@/store/country-picker/countriesApi";
 import { configureStore } from "@reduxjs/toolkit";
 import { baseApi } from "./services/baseApi";
 import bottomSheetReducer from "./slices/BottomSheetSlice";
@@ -9,6 +10,7 @@ import userReducer from "./slices/userSlice";
 export const store = configureStore({
   reducer: {
     [baseApi.reducerPath]: baseApi.reducer,
+    [countriesApi.reducerPath]: countriesApi.reducer,
     menu: menuReducer,
     auth: authReducer,
     notifications: notificationReducer,
@@ -16,7 +18,7 @@ export const store = configureStore({
     bottomSheet: bottomSheetReducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(baseApi.middleware),
+    getDefaultMiddleware().concat(baseApi.middleware, countriesApi.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

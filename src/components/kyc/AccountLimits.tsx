@@ -1,15 +1,14 @@
-import Header from "@/components/kyc/Header";
+// app/kyc/AccountLimits.tsx
+import Template from "@/components/kyc/Template";
 import { Spacer } from "@/components/Spacer";
 import TextBlock from "@/components/TextBlock";
-import { ThemedButton } from "@/components/ThemedButton";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
-import { useSafeBottom } from "@/hooks/useSafeBottom";
+import { useGoToRoute } from "@/hooks/useGoToRoute";
 import React from "react";
-import { ImageBackground, StyleSheet, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { View } from "react-native";
 
 const steps = [
   {
@@ -37,25 +36,26 @@ const AccountLimits = ({
   const handleBackPress = () => {
     handlePress(0);
   };
-  const topInset = useSafeAreaInsets().top;
-  const bottomPadding = useSafeBottom();
+
+  const handlePush = useGoToRoute("/kyc/step1");
+
   return (
-    <ImageBackground
-      source={require("@/assets/images/new-bg.png")}
-      style={[
-        GeneralStyles.container,
-        {
-          paddingTop: topInset + 24,
-          paddingBottom: bottomPadding,
+    <Template
+      headerProps={{
+        onBackPress: handleBackPress,
+        title: "Account limits",
+        body: "Your verification level controls trade, withdrawal, and sandbox deposit access.",
+      }}
+      ctaProps={{
+        variant: "primary",
+        title: "Continue",
+        onPress: handlePush,
+        textStyle: {
+          fontSize: 14,
+          fontFamily: Fonts.bold,
         },
-      ]}
+      }}
     >
-      <Header
-        onBackPress={handleBackPress}
-        title="Account limits"
-        body="Your verification level controls trade, withdrawal, and sandbox deposit access."
-      />
-      <Spacer size={40} />
       <View style={[GeneralStyles.wrapper]}>
         <View
           style={[
@@ -157,40 +157,32 @@ const AccountLimits = ({
           </View>
         ))}
       </View>
-
-      {/*CTA*/}
-      <View
-        style={[
-          GeneralStyles.wrapper,
-          { gap: 14, flex: 1, justifyContent: "flex-end" },
-        ]}
-      >
-        <ThemedButton
-          variant="primary"
-          title="Start Verification"
-          textStyle={{
-            fontSize: 14,
-            fontFamily: Fonts.bold,
-          }}
-        />
-        <ThemedText
-          color={Colors.textMidGray}
-          size={11}
-          style={{ textAlign: "center" }}
+      <Spacer size={52} />
+      <View style={[GeneralStyles.wrapper]}>
+        <View
+          style={[
+            GeneralStyles.box,
+            {
+              padding: 16,
+              justifyContent: "center",
+              alignItems: "center",
+              borderRadius: 16,
+              minHeight: 86,
+            },
+          ]}
         >
-          You can continue browsing markets without verification.
-        </ThemedText>
+          <TextBlock
+            body="Verification is required before executing quotes or requesting withdrawals."
+            bodyStyle={{
+              color: Colors.snowGray,
+              fontSize: 13,
+              maxWidth: 300,
+            }}
+          />
+        </View>
       </View>
-    </ImageBackground>
+    </Template>
   );
 };
 
 export default AccountLimits;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});

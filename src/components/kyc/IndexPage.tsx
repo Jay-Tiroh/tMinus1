@@ -1,15 +1,13 @@
-import Header from "@/components/kyc/Header";
+// app/kyc/IndexPage.tsx
+import Template from "@/components/kyc/Template";
 import { Spacer } from "@/components/Spacer";
 import TextBlock from "@/components/TextBlock";
-import { ThemedButton } from "@/components/ThemedButton";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
-import { useSafeBottom } from "@/hooks/useSafeBottom";
 import React from "react";
-import { ImageBackground, StyleSheet, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { View } from "react-native";
 
 const features = [
   {
@@ -31,21 +29,28 @@ const IndexPage = ({
 }: {
   handlePress: (step: number) => void;
 }) => {
-  const topInset = useSafeAreaInsets().top;
-  const bottomPadding = useSafeBottom();
   return (
-    <ImageBackground
-      source={require("@/assets/images/new-bg.png")}
-      style={[
-        GeneralStyles.container,
-        {
-          paddingTop: topInset + 24,
-          paddingBottom: bottomPadding,
+    <Template
+      headerProps={{ goBack: true }}
+      ctaProps={{
+        variant: "primary",
+        title: "Start Verification",
+        textStyle: {
+          fontSize: 14,
+          fontFamily: Fonts.bold,
         },
-      ]}
+        onPress: () => handlePress(1),
+      }}
+      ctaFooter={
+        <ThemedText
+          color={Colors.textMidGray}
+          size={11}
+          style={{ textAlign: "center" }}
+        >
+          You can continue browsing markets without verification.
+        </ThemedText>
+      }
     >
-      <Header />
-      <Spacer size={40} />
       <View style={[GeneralStyles.wrapper]}>
         <View
           style={[
@@ -119,41 +124,8 @@ const IndexPage = ({
           </View>
         ))}
       </View>
-
-      {/*CTA*/}
-      <View
-        style={[
-          GeneralStyles.wrapper,
-          { gap: 14, flex: 1, justifyContent: "flex-end" },
-        ]}
-      >
-        <ThemedButton
-          variant="primary"
-          title="Start Verification"
-          textStyle={{
-            fontSize: 14,
-            fontFamily: Fonts.bold,
-          }}
-          onPress={() => handlePress(1)}
-        />
-        <ThemedText
-          color={Colors.textMidGray}
-          size={11}
-          style={{ textAlign: "center" }}
-        >
-          You can continue browsing markets without verification.
-        </ThemedText>
-      </View>
-    </ImageBackground>
+    </Template>
   );
 };
 
 export default IndexPage;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});
