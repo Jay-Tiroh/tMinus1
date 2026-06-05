@@ -154,7 +154,7 @@ const Item = ({
         visible={isOptionModalVisible}
         setVisible={setOptionModalVisible}
         options={options}
-        value={selectedOption ?? value}
+        value={selectedOption ?? (value as string)}
         setValue={setSelectedOption}
       />
     </View>

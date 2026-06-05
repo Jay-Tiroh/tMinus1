@@ -4,6 +4,7 @@ import { baseApi } from "./services/baseApi";
 import bottomSheetReducer from "./slices/BottomSheetSlice";
 import menuReducer from "./slices/MenuSlice";
 import authReducer from "./slices/authSlice";
+import kycReducer from "./slices/kycSlice";
 import notificationReducer from "./slices/notificationSlice";
 import userReducer from "./slices/userSlice";
 
@@ -16,6 +17,7 @@ export const store = configureStore({
     notifications: notificationReducer,
     tempUser: userReducer,
     bottomSheet: bottomSheetReducer,
+    kyc: kycReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(baseApi.middleware, countriesApi.middleware),

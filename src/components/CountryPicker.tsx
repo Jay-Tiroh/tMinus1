@@ -25,7 +25,7 @@ type CountryPickerProps = {
 };
 
 export const CountryPicker = ({
-  value = "",
+  value = "Nigeria",
   onChangeText,
   onCountryChange,
   showDialCode = true,
@@ -37,7 +37,8 @@ export const CountryPicker = ({
   const [searchQuery, setSearchQuery] = useState("");
   const insets = useSafeAreaInsets();
 
-  const displayCountry = selectedCountry || countries[0];
+  const displayCountry =
+    selectedCountry || countries.find((c) => c.name === value);
 
   const filteredCountries = useMemo(() => {
     if (!searchQuery) return countries;
@@ -73,10 +74,10 @@ export const CountryPicker = ({
           ) : (
             <>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <ThemedText size={16}>{displayCountry?.flag}</ThemedText>
+                <ThemedText size={20}>{displayCountry?.flag}</ThemedText>
                 {!showPhoneInput && (
                   <ThemedText
-                    size={14}
+                    size={12}
                     style={{ marginLeft: 8 }}
                     color={Colors.textOnDark}
                   >
@@ -166,12 +167,14 @@ export const CountryPicker = ({
 
 const styles = StyleSheet.create({
   inputContainer: {
-    flexDirection: "row",
+    borderRadius: 12,
+    justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: Colors.backgroundDark,
-    borderRadius: 16,
+    flexDirection: "row",
     paddingHorizontal: 16,
-    height: 56,
+    paddingVertical: 8,
+    minHeight: 52,
   },
   pickerButton: {
     flexDirection: "row",

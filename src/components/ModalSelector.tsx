@@ -7,14 +7,16 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
   View,
+  ViewStyle,
 } from "react-native";
 
 type ModalProps = {
   visible: boolean;
   setVisible: (visible: boolean) => void;
   options: string[] | undefined;
-  value: string | boolean;
+  value: string;
   setValue?: (value: string) => void;
+  width?: ViewStyle["width"];
 };
 
 const ModalSelector = ({
@@ -23,6 +25,7 @@ const ModalSelector = ({
   options,
   value,
   setValue,
+  width = 120,
 }: ModalProps) => {
   const [selected, setSelected] = useState(value);
 
@@ -44,7 +47,7 @@ const ModalSelector = ({
         <View style={styles.backdrop}>
           {/* Stop tap propagation so tapping the dropdown itself doesn't close it */}
           <TouchableWithoutFeedback>
-            <View style={styles.dropdown}>
+            <View style={[styles.dropdown, { minWidth: width }]}>
               {options?.map((opt) => (
                 <Pressable
                   key={opt}
@@ -55,7 +58,9 @@ const ModalSelector = ({
                   ]}
                 >
                   <ThemedText
-                    color={opt === selected ? Colors.primary : Colors.offWhite}
+                    color={
+                      opt === selected ? Colors.primary : Colors.snowGray + "CC"
+                    }
                   >
                     {opt}
                   </ThemedText>
@@ -81,15 +86,15 @@ const styles = StyleSheet.create({
     paddingRight: 24,
   },
   dropdown: {
-    width: 120,
     borderRadius: 8,
-    backgroundColor: Colors.surfaceAlt,
+    backgroundColor: Colors.surfaceGreenNight,
     overflow: "hidden",
   },
   option: {
     padding: 10,
     borderBottomWidth: 0.5,
-    borderBottomColor: Colors.offWhite + "05",
+    borderBottomColor: Colors.paleGray + "0D",
+    paddingHorizontal: 16,
   },
   optionSelected: {
     backgroundColor: Colors.white + "1A",

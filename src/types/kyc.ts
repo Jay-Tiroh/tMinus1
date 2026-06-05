@@ -1,12 +1,11 @@
-// ── Submit KYC ─────────────────────────────────────────────────────────────
 export interface SubmitKYCRequest {
   legalName: string;
   country: string;
-  documentType: string;
+  documentType: "national_id" | "passport" | "drivers_license";
   documentNumber: string;
-  selfieImageUrl: string;
-  documentImageUrl: string;
-  idempotencyKey?: string; // Used for the header, omitted from the body payload
+  selfieImageUrl?: string;
+  documentImageUrl?: string;
+  idempotencyKey?: string;
 }
 
 export interface KYCSubmissionData {
@@ -31,11 +30,10 @@ export interface SubmitKYCResponse {
   };
 }
 
-// ── KYC Upload Instructions ────────────────────────────────────────────────
 export interface KYCUploadInstructionRequest {
   fileName: string;
   contentType: string;
-  documentKind: string; // e.g., "document_front", "document_back", "selfie"
+  documentKind: string;
 }
 
 export interface KYCUploadInstructionData {
@@ -52,3 +50,46 @@ export interface KYCUploadInstructionData {
 export interface KYCUploadInstructionResponse {
   data: KYCUploadInstructionData;
 }
+
+export type KycDocumentCategory = "identity" | "address";
+
+export type KycDocumentType = "national_id" | "passport" | "drivers_license";
+
+export interface KycDocumentOption {
+  label: string;
+  type: KycDocumentType;
+  category: KycDocumentCategory;
+  acceptedMimeTypes: string[];
+  acceptedExtensions: string[];
+}
+
+const STANDARD_IMAGE_AND_PDF_MIMES = [
+  "image/jpeg",
+  "image/png",
+  "application/pdf",
+];
+const STANDARD_IMAGE_AND_PDF_EXTENSIONS = [".jpg", ".jpeg", ".png", ".pdf"];
+
+export const KYC_DOCUMENT_TYPES: KycDocumentOption[] = [
+  {
+    label: "National ID",
+    type: "national_id",
+    category: "identity",
+    acceptedMimeTypes: STANDARD_IMAGE_AND_PDF_MIMES,
+    acceptedExtensions: STANDARD_IMAGE_AND_PDF_EXTENSIONS,
+  },
+  {
+    label: "Passport",
+    type: "passport",
+    category: "identity",
+    acceptedMimeTypes: STANDARD_IMAGE_AND_PDF_MIMES,
+    acceptedExtensions: STANDARD_IMAGE_AND_PDF_EXTENSIONS,
+  },
+  {
+    label: "Driver's License",
+    type: "drivers_license",
+    category: "identity",
+    acceptedMimeTypes: STANDARD_IMAGE_AND_PDF_MIMES,
+    acceptedExtensions: STANDARD_IMAGE_AND_PDF_EXTENSIONS,
+  },
+];
