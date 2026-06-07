@@ -1,25 +1,16 @@
-// components/kyc/Step2/index.tsx
-import Phase1 from "@/components/kyc/Step2/Phase1";
-import Phase2 from "@/components/kyc/Step2/Phase2";
+import Phase1 from "@/components/kyc/step2/Phase1";
+import Phase2 from "@/components/kyc/step2/Phase2";
 import Template from "@/components/kyc/Template";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
+import { showErrorToast } from "@/hooks/showToast";
+import { useGoToRoute } from "@/hooks/useGoToRoute";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import {
-  useGetKYCUploadInstructionsMutation,
-  useSubmitKYCMutation,
-} from "@/store/services/kycApi";
-import {
-  resetKycData,
-  selectKycData,
-  selectKycFiles,
-  setKycFile,
-  setUploadedUrls,
-} from "@/store/slices/kycSlice";
-import * as ImagePicker from "expo-image-picker";
+import { selectKycFiles, setKycFile } from "@/store/slices/kycSlice";
+// import * as ImagePicker from "expo-image-picker";
 import React, { useState } from "react";
-import { ActivityIndicator, Alert, StyleSheet, View } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 
 const PhaseConfig = {
   1: {
@@ -32,28 +23,30 @@ const PhaseConfig = {
   },
 };
 
-const Step2 = ({
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL ?? "";
+
+if (!API_BASE_URL) {
+  console.warn("EXPO_PUBLIC_API_BASE_URL is not configured.");
+}
+
+export default function Step2({
   handlePress: proceedToNextStep,
 }: {
   handlePress?: (step: number) => void;
-}) => {
+}) {
   const [currentPhase, setCurrentPhase] = useState<1 | 2>(1);
   const [isUploading, setIsUploading] = useState(false);
 
   const dispatch = useAppDispatch();
-  const kycData = useAppSelector(selectKycData);
   const selectedFiles = useAppSelector(selectKycFiles);
   const selfieFile = selectedFiles.selfie;
 
-  const [getUploadInstructions] = useGetKYCUploadInstructionsMutation();
-  const [submitKYC] = useSubmitKYCMutation();
-
   const handlePhase1Transition = () => {
-    if (!selectedFiles.document_front && !selectedFiles.passport) {
-      Alert.alert(
-        "Required",
-        "Please upload a document (Front or Passport) to continue.",
-      );
+    if (!selectedFiles.document_front) {
+      showErrorToast({
+        title: "Required",
+        message: "Please upload a document to continue.",
+      });
       return;
     }
     setCurrentPhase(2);
@@ -61,113 +54,67 @@ const Step2 = ({
 
   const handleTakeSelfie = async () => {
     try {
-      const { status } = await ImagePicker.requestCameraPermissionsAsync();
+      // const { status } = await ImagePicker.requestCameraPermissionsAsync();
 
-      if (status !== "granted") {
-        Alert.alert(
-          "Permission Denied",
-          "Camera access is required to take a verification selfie.",
-        );
-        return;
-      }
+      // if (status !== "granted") {
+      //   showErrorToast({
+      //     title: "Permission Denied",
+      //     message: "Camera access is required to take a verification selfie.",
+      //   });
+      //   return;
+      // }
 
-      const result = await ImagePicker.launchCameraAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: true,
-        aspect: [1, 1],
-        quality: 0.75,
-      });
+      // const result = await ImagePicker.launchCameraAsync({
+      //   mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      //   allowsEditing: true,
+      //   aspect: [1, 1],
+      //   quality: 0.75,
+      // });
 
-      if (!result.canceled && result.assets && result.assets.length > 0) {
-        const asset = result.assets[0];
+      // if (!result.canceled && result.assets && result.assets.length > 0) {
+      //   const asset = result.assets[0];
+      //   console.log("Captured selfie asset:", asset);
+      const debugUri =
+        "file:///data/user/0/com.anonymous.tMinus1/cache/DocumentPicker/4a0b073e-ef6b-495a-9e55-533dc114cc25.jpg";
 
-        dispatch(
-          setKycFile({
-            key: "selfie",
-            file: {
-              uri: asset.uri,
-              name: asset.fileName || `selfie_${Date.now()}.jpg`,
-              mimeType: asset.mimeType || "image/jpeg",
-              size: asset.fileSize || 0,
-              lastModified: Date.now(),
-            },
-          }),
-        );
-      }
+      dispatch(
+        setKycFile({
+          key: "selfie",
+          file: {
+            uri: debugUri,
+            name: "test_document.jpg",
+            mimeType: "image/jpeg",
+            size: 500000,
+          },
+        }),
+      );
+      // }
     } catch (error) {
       console.error("Camera acquisition failure:", error);
-    }
-  };
-
-  const handleFinalSubmit = async () => {
-    setIsUploading(true);
-
-    try {
-      let documentImageUrl = "";
-      let selfieImageUrl = "";
-
-      for (const [docKind, fileAsset] of Object.entries(selectedFiles)) {
-        if (!fileAsset) continue;
-
-        const instructionRes = await getUploadInstructions({
-          fileName: fileAsset.name,
-          contentType: fileAsset.mimeType || "image/jpeg",
-          documentKind: docKind,
-        }).unwrap();
-
-        const { uploadUrl, publicUrl, method, headers } = instructionRes;
-
-        const localFileResponse = await fetch(fileAsset.uri);
-        const fileBlob = await localFileResponse.blob();
-
-        const uploadResponse = await fetch(uploadUrl, {
-          method: method,
-          headers: headers,
-          body: fileBlob,
-        });
-
-        if (!uploadResponse.ok) {
-          throw new Error(`Failed to upload ${docKind} to cloud storage.`);
-        }
-
-        if (docKind === "selfie") {
-          selfieImageUrl = publicUrl;
-        } else if (docKind === "passport" || docKind === "document_front") {
-          documentImageUrl = publicUrl;
-        }
-      }
-
-      dispatch(setUploadedUrls({ documentImageUrl, selfieImageUrl }));
-
-      const finalPayload = {
-        legalName: kycData.legalName,
-        country: kycData.country,
-        documentType: kycData.documentType,
-        documentNumber: kycData.documentNumber,
-        documentImageUrl,
-        selfieImageUrl,
-      };
-
-      await submitKYC(finalPayload).unwrap();
-
-      dispatch(resetKycData());
-      if (proceedToNextStep) proceedToNextStep(3);
-    } catch (error) {
-      console.error("KYC Submission failed:", error);
-      Alert.alert(
-        "Upload Failed",
-        "An error occurred while uploading your documents. Please try again.",
-      );
-    } finally {
-      setIsUploading(false);
     }
   };
 
   const getCTATitle = () => {
     if (isUploading) return "Uploading...";
     if (currentPhase === 1) return "Upload and continue";
-    if (currentPhase === 2 && !selfieFile) return "Upload selfie";
+    if (currentPhase === 2 && !selfieFile) {
+      return "Upload selfie";
+    }
+    if (currentPhase === 2 && selfieFile) {
+      return "Continue";
+    }
     return "Submit Verification";
+  };
+  const handlePushTo = useGoToRoute("/kyc/step3");
+  const handlePhase2Transition = () => {
+    if (!selfieFile) {
+      showErrorToast({
+        title: "Required",
+        message: "Please upload a selfie to continue.",
+      });
+      return;
+    }
+    handlePushTo();
   };
 
   const handlePress = () => {
@@ -177,7 +124,8 @@ const Step2 = ({
       if (!selfieFile) {
         handleTakeSelfie();
       } else {
-        handleFinalSubmit();
+        // handleFinalSubmit();
+        handlePhase2Transition();
       }
     }
   };
@@ -221,9 +169,7 @@ const Step2 = ({
       </View>
     </Template>
   );
-};
-
-export default Step2;
+}
 
 const styles = StyleSheet.create({
   inputContainer: {

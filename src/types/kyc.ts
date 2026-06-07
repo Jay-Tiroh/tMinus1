@@ -23,6 +23,14 @@ export interface KYCSubmissionData {
   reviewerNote: string | null;
 }
 
+export interface KycFileAsset {
+  uri: string;
+  name: string;
+  mimeType: string;
+  size: number;
+  lastModified?: number;
+}
+
 export interface SubmitKYCResponse {
   data: KYCSubmissionData;
   meta?: {
@@ -39,11 +47,15 @@ export interface KYCUploadInstructionRequest {
 export interface KYCUploadInstructionData {
   uploadId: string;
   provider: string;
+  cloudName: string;
   storageKey: string;
+  folder: string;
+  publicId: string;
   uploadUrl: string;
   publicUrl: string;
   method: string;
   headers: Record<string, string>;
+  formFields: Record<string, string | number>;
   expiresAt: string;
 }
 
@@ -93,3 +105,15 @@ export const KYC_DOCUMENT_TYPES: KycDocumentOption[] = [
     acceptedExtensions: STANDARD_IMAGE_AND_PDF_EXTENSIONS,
   },
 ];
+
+export const KYC_DOCUMENT_LABELS = KYC_DOCUMENT_TYPES.map((doc) => doc.label);
+export const getDocumentByType = (
+  type: string,
+): KycDocumentOption | undefined => {
+  return KYC_DOCUMENT_TYPES.find((doc) => doc.type === type);
+};
+export const getDocumentByLabel = (
+  label: string,
+): KycDocumentOption | undefined => {
+  return KYC_DOCUMENT_TYPES.find((doc) => doc.label === label);
+};

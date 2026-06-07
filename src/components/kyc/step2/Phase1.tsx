@@ -1,18 +1,18 @@
 // components/kyc/Step2/Phase1.tsx
-import { getDocumentByLabel } from "@/components/screens/kyc/Step1";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
 import { formatExtensionsForDisplay } from "@/helpers/functions";
+
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { KycFilesState, setKycFile } from "@/store/slices/kycSlice";
+import { getDocumentByType, KycFileAsset } from "@/types/kyc";
 import Feather from "@expo/vector-icons/Feather";
 import Fontisto from "@expo/vector-icons/Fontisto";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import * as DocumentPicker from "expo-document-picker";
+// import * as DocumentPicker from "expo-document-picker";
 import React, { useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
-
 export type UploadOption = {
   label: keyof KycFilesState;
   title: string;
@@ -47,17 +47,6 @@ const UploadOptionsConfig: UploadOption[] = [
       color: Colors.textMidGray,
     },
     cta: "Upload document back",
-  },
-  {
-    label: "passport",
-    title: "Passport page",
-    icon: {
-      type: Fontisto,
-      name: "passport",
-      size: 18,
-      color: Colors.textMidGray,
-    },
-    cta: "Upload passport page",
   },
 ];
 
@@ -135,14 +124,14 @@ const UploadOptions = ({
   );
 };
 
-const UploadCTA = ({
+export const UploadCTA = ({
   title,
   onPress,
   file,
 }: {
   title: string;
   onPress: () => void;
-  file?: DocumentPicker.DocumentPickerAsset;
+  file?: KycFileAsset;
 }) => {
   return (
     <Pressable
@@ -204,7 +193,7 @@ const Phase1 = () => {
   const docType = useAppSelector((state) => state.kyc.documentType);
   const selectedFiles = useAppSelector((state) => state.kyc.selectedFiles);
 
-  const documentType = getDocumentByLabel(docType);
+  const documentType = getDocumentByType(docType);
   const currentConfig = UploadOptionsConfig.find(
     (o) => o.label === selectedOption,
   );
@@ -212,24 +201,36 @@ const Phase1 = () => {
 
   const handlePickDocument = async () => {
     try {
-      const result = await DocumentPicker.getDocumentAsync({
-        type: documentType?.acceptedMimeTypes || "*/*",
-        copyToCacheDirectory: true,
-      });
+      // const result = await DocumentPicker.getDocumentAsync({
+      //   type: documentType?.acceptedMimeTypes ?? ["*/*"],
+      //   copyToCacheDirectory: true,
+      // });
 
-      if (!result.canceled && result.assets && result.assets.length > 0) {
-        dispatch(
-          setKycFile({
-            key: selectedOption,
-            file: result.assets[0],
-          }),
-        );
-      }
+      // if (!result.canceled && result.assets && result.assets.length > 0) {
+      //   // Small delay to let the app fully resume before dispatching
+      //   await new Promise((resolve) => setTimeout(resolve, 300));
+
+      //   const asset = result.assets[0];
+      // console.log("Picked document asset:", asset);
+      const debugUri =
+        "file:///data/user/0/com.anonymous.tMinus1/cache/DocumentPicker/9b710e00-1647-4e12-abaa-457a38567a43.jpg";
+      dispatch(
+        setKycFile({
+          key: "document_front",
+          file: {
+            uri: debugUri,
+            name: "test_document.jpg",
+            mimeType: "image/jpeg",
+            size: 5500000,
+          },
+        }),
+      );
+      // console.warn("[KYC] File URI:", asset.uri);
+      // }
     } catch (error) {
-      console.error("Document picking failed:", error);
+      console.warn("Document picking failed:", error);
     }
   };
-
   return (
     <View style={styles.container}>
       <UploadOptions

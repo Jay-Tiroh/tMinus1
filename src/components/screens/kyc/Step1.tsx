@@ -10,19 +10,16 @@ import { useGoToRoute } from "@/hooks/useGoToRoute";
 import { KycStep1FormValues, kycStep1Schema } from "@/schemas/kycSchemas";
 import { useAppDispatch } from "@/store/hooks";
 import { setStep1Data } from "@/store/slices/kycSlice";
-import { KYC_DOCUMENT_TYPES, KycDocumentOption } from "@/types/kyc";
+import {
+  getDocumentByLabel,
+  KYC_DOCUMENT_LABELS,
+  KycDocumentType,
+} from "@/types/kyc";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Pressable, StyleSheet, TextInput, View } from "react-native";
-
-export const KYC_DOCUMENT_LABELS = KYC_DOCUMENT_TYPES.map((doc) => doc.label);
-export const getDocumentByLabel = (
-  label: string,
-): KycDocumentOption | undefined => {
-  return KYC_DOCUMENT_TYPES.find((doc) => doc.label === label);
-};
 
 const Step1 = () => {
   const [isDocTypeModalVisible, setDocTypeModalVisible] = useState(false);
@@ -50,11 +47,13 @@ const Step1 = () => {
   const handlePress = useGoToRoute("/kyc/step2");
   const onSubmit = (data: KycStep1FormValues) => {
     console.log("Validated Data:", data);
+    const strictDocumentType = (getDocumentByLabel(data.documentType)?.type ||
+      data.documentType) as KycDocumentType;
     dispatch(
       setStep1Data({
         legalName: data.legalName,
         country: data.country,
-        documentType: data.documentType,
+        documentType: strictDocumentType,
         documentNumber: data.documentNumber,
       }),
     );

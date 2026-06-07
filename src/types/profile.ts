@@ -4,9 +4,26 @@ export interface UserSettings {
   language: string;
   fiatCurrency: string;
   theme: string;
-  priceAlerts: boolean;
   pushNotifications: boolean;
   biometricEnabled: boolean;
+}
+
+export interface VerificationLimits {
+  depositPerTransactionUsd: number;
+  tradePerTransactionUsd: number;
+  withdrawalPerTransactionUsd: number;
+  dailyWithdrawalUsd: number;
+}
+
+export interface UserVerification {
+  status: string;
+  tier: string;
+  level: number;
+  label: string;
+  limits: VerificationLimits;
+  canTrade: boolean;
+  canWithdraw: boolean;
+  canUseSandboxDeposits: boolean;
 }
 
 export interface User {
@@ -17,6 +34,7 @@ export interface User {
   phone: string;
   twoFactorEnabled: boolean;
   kycStatus: string;
+  verification: UserVerification;
   avatarUrl: string | null;
   watchlist: string[];
   settings: UserSettings;

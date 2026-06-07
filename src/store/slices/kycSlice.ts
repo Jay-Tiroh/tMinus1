@@ -1,14 +1,13 @@
 // store/slices/kycSlice.ts
 import { RootState } from "@/store";
-import { SubmitKYCRequest } from "@/types/kyc";
+import { KycDocumentType, KycFileAsset, SubmitKYCRequest } from "@/types/kyc";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import * as DocumentPicker from "expo-document-picker";
 
 export type KycFilesState = {
-  document_front?: DocumentPicker.DocumentPickerAsset;
-  document_back?: DocumentPicker.DocumentPickerAsset;
-  passport?: DocumentPicker.DocumentPickerAsset;
-  selfie?: DocumentPicker.DocumentPickerAsset;
+  document_front?: KycFileAsset;
+  document_back?: KycFileAsset;
+  passport?: KycFileAsset;
+  selfie?: KycFileAsset;
 };
 
 interface KycState extends SubmitKYCRequest {
@@ -18,7 +17,7 @@ interface KycState extends SubmitKYCRequest {
 const initialState: KycState = {
   legalName: "",
   country: "Nigeria",
-  documentType: "",
+  documentType: "" as KycDocumentType,
   documentNumber: "",
   selfieImageUrl: "",
   documentImageUrl: "", // Note: API expects a single URL, we will likely map front/passport here.
@@ -49,7 +48,7 @@ const kycSlice = createSlice({
       state,
       action: PayloadAction<{
         key: keyof KycFilesState;
-        file: DocumentPicker.DocumentPickerAsset;
+        file: KycFileAsset;
       }>,
     ) => {
       state.selectedFiles[action.payload.key] = action.payload.file;

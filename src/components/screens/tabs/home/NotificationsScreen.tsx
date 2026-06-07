@@ -82,7 +82,7 @@ const NotificationsScreen = () => {
           width: "100%",
           borderTopWidth: 1,
           borderTopColor: Colors.white + "08",
-          flex: 1,
+          // flex: 1,
         }}
         style={{ width: "100%", flex: 1 }}
         renderItem={({ item, index }) => <Notification notification={item} />}

@@ -68,7 +68,7 @@ const CoinItem = ({
       showSuccessToast({
         title: `${name} removed from Watchlist`,
       });
-    } catch (error) {
+    } catch {
       setRemoveLoading(false);
       setModalVisible(false);
       showErrorToast({

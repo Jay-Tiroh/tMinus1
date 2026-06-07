@@ -1,5 +1,6 @@
 // app/kyc/IndexPage.tsx
 import Template from "@/components/kyc/Template";
+import { LabelValueItem } from "@/components/LabelValueItem";
 import { Spacer } from "@/components/Spacer";
 import TextBlock from "@/components/TextBlock";
 import { ThemedText } from "@/components/ThemedText";
@@ -97,31 +98,14 @@ const IndexPage = ({
       <Spacer size={30} />
       <View style={[GeneralStyles.wrapper, { gap: 14 }]}>
         {features.map((item) => (
-          <View
+          <LabelValueItem
+            label={item.label}
+            value={item.value}
             key={item.label}
-            style={[
-              GeneralStyles.box,
-              {
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                padding: 20,
-              },
-            ]}
-          >
-            <ThemedText size={12} color={Colors.textMidGray}>
-              {item.label}
-            </ThemedText>
-            <ThemedText
-              size={13}
-              color={
-                item.value === "Locked" ? Colors.lossBright : Colors.snowGray
-              }
-              weight="bold"
-            >
-              {item.value}
-            </ThemedText>
-          </View>
+            valueColor={
+              item.value === "Locked" ? Colors.lossBright : Colors.snowGray
+            }
+          />
         ))}
       </View>
     </Template>
