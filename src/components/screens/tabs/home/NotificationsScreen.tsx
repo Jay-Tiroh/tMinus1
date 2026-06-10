@@ -4,8 +4,13 @@ import Notification from "@/components/home/Notification";
 import { Spacer } from "@/components/Spacer";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
-import { useNotificationsQuery } from "@/store/services/notificationsApi";
-import React, { useState } from "react";
+import { GeneralStyles } from "@/constants/themes";
+import {
+  useMarkAllNotificationsReadMutation,
+  useMarkNotificationReadMutation,
+  useNotificationsQuery,
+} from "@/store/services/notificationsApi";
+import React, { useEffect, useState } from "react";
 import { FlatList, Modal, Pressable, StyleSheet, View } from "react-native";
 
 const NotificationsScreen = () => {
@@ -22,20 +27,68 @@ const NotificationsScreen = () => {
     "Auth",
   ];
 
-  const { data: notifications, isLoading } = useNotificationsQuery();
+  const [selectedNotifications, setSelectedNotifications] = useState<string[]>(
+    [],
+  );
+  const [selectMode, setSelectMode] = useState(false);
 
-  const empty = false;
+  const { data: notifications, isLoading } = useNotificationsQuery();
+  const [
+    markAsRead,
+    { isLoading: isMarkingAsRead, isError: isMarkingAsReadError },
+  ] = useMarkNotificationReadMutation();
+  const [
+    markAllRead,
+    { isLoading: isMarkingAllRead, isError: isMarkingAllReadError },
+  ] = useMarkAllNotificationsReadMutation();
+
   console.log(notifications, isLoading);
+
+  const handleLongPress = (id: string) => {
+    setSelectMode(true);
+    setSelectedNotifications((prev) => [...prev, id]);
+  };
+  const handlePress = (id: string) => {
+    if (selectMode) {
+      if (selectedNotifications.includes(id)) {
+        setSelectedNotifications((prev) => prev.filter((nid) => nid !== id));
+      } else {
+        setSelectedNotifications((prev) => [...prev, id]);
+      }
+    }
+  };
+
+  const isSelected = (id: string) => selectedNotifications.includes(id);
+
+  const handleMarkRead = () => {
+    if (selectMode) {
+      selectedNotifications.forEach((id) => markAsRead(id));
+      setSelectedNotifications([]);
+    } else {
+      markAllRead();
+    }
+  };
+
+  const sortNotifications = (sortParam: string) => {};
+
+  useEffect(() => {
+    if (selectedNotifications.length === 0) {
+      setSelectMode(false);
+    }
+  }, [selectedNotifications]);
+
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
+      <View style={[GeneralStyles.wrapper, styles.header]}>
         <ThemedText weight="bold" size={18} color={Colors.white}>
           Notifications
         </ThemedText>
         <View style={{ flexDirection: "row", alignItems: "center", gap: 16 }}>
-          <ThemedText weight="regular" size={14} color={Colors.textMuted}>
-            Mark All Read
-          </ThemedText>
+          <Pressable onPress={handleMarkRead} hitSlop={20}>
+            <ThemedText weight="regular" size={14} color={Colors.textMuted}>
+              Mark {selectMode ? "As" : "All"} Read
+            </ThemedText>
+          </Pressable>
 
           <Pressable onPress={() => setVisible(true)} hitSlop={20}>
             <Filter />
@@ -85,7 +138,14 @@ const NotificationsScreen = () => {
           // flex: 1,
         }}
         style={{ width: "100%", flex: 1 }}
-        renderItem={({ item, index }) => <Notification notification={item} />}
+        renderItem={({ item, index }) => (
+          <Notification
+            onLongPress={() => handleLongPress(item.id)}
+            onPress={() => handlePress(item.id)}
+            notification={item}
+            isSelected={isSelected(item.id)}
+          />
+        )}
         showsVerticalScrollIndicator={false}
         ListEmptyComponent={
           <View
@@ -105,24 +165,6 @@ const NotificationsScreen = () => {
           </View>
         }
       />
-
-      {empty && (
-        <View
-          style={{
-            flex: 1,
-            width: "100%",
-            marginTop: 16,
-            justifyContent: "center",
-            alignItems: "center",
-            gap: 8,
-          }}
-        >
-          <Illustration />
-          <ThemedText weight="bold" size={14} color={Colors.white}>
-            You have no notifications
-          </ThemedText>
-        </View>
-      )}
     </View>
   );
 };
@@ -133,7 +175,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    padding: 24,
+    paddingVertical: 24,
   },
   header: {
     flexDirection: "row",

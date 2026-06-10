@@ -26,6 +26,24 @@ export interface Balance {
   locked: number;
 }
 
+export interface VerificationLimits {
+  depositPerTransactionUsd: number;
+  tradePerTransactionUsd: number;
+  withdrawalPerTransactionUsd: number;
+  dailyWithdrawalUsd: number;
+}
+
+export interface WalletVerification {
+  status: "approved" | "rejected" | "pending";
+  tier: string;
+  level: number;
+  label: string;
+  limits: VerificationLimits;
+  canTrade: boolean;
+  canWithdraw: boolean;
+  canUseSandboxDeposits: boolean;
+}
+
 export interface Wallet {
   id: string;
   userId: string;
@@ -37,6 +55,8 @@ export interface Wallet {
 export interface PortfolioChartPoint {
   time: string;
   valueUsd: number;
+  value: number;
+  currency: string;
 }
 
 export interface Transaction {
@@ -64,7 +84,7 @@ export interface Withdrawal {
   feeAssetAmount: number;
   address: string;
   network: string;
-  status: TransactionStatus; // Typically shares the same status types
+  status: TransactionStatus;
   createdAt: string;
   reviewedAt: string | null;
   reviewerNote: string | null;
@@ -73,7 +93,7 @@ export interface Withdrawal {
 // Request Data Models
 export interface SimulateDepositRequest {
   amount: number;
-  settlementDelaySeconds: number;
+  settlementDelaySeconds?: number;
 }
 
 export interface WithdrawalRequest {
@@ -94,10 +114,11 @@ export interface GetTransactionsQueryParams {
 // Response Models
 export interface WalletResponse {
   data: {
-    portfolioCurrency: string;
-    portfolioValue: number;
-    portfolioValueUsd: number;
     wallet: Wallet;
+    portfolioValueUsd: number;
+    portfolioValue: number;
+    portfolioCurrency: string;
+    verification: WalletVerification;
   };
   meta: {
     requestId: string;
@@ -105,9 +126,12 @@ export interface WalletResponse {
 }
 
 export interface PortfolioHistoryMeta {
+  requestId: string;
   count: number;
   range: PortfolioRange;
   latestValueUsd: number;
+  latestValue: number;
+  currency: string;
 }
 
 export interface PortfolioHistoryResponse {
@@ -126,11 +150,23 @@ export interface SingleDepositAddressResponse {
   data: DepositAddress;
 }
 
+export interface TransactionsMeta {
+  requestId: string;
+  count: number;
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+  status?: TransactionStatus;
+  type?: TransactionType;
+  order: "asc" | "desc";
+}
+
 export interface TransactionsResponse {
   data: Transaction[];
-  meta: {
-    count: number;
-  };
+  meta: TransactionsMeta;
 }
 
 export interface TransactionDetailResponse {

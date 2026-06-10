@@ -1,11 +1,24 @@
 import Ellipse from "@/assets/icons/home/notifications/ellipse.svg";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
+import { GeneralStyles } from "@/constants/themes";
 import { Notification } from "@/types/notification";
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 
-const NotificationItem = ({ notification }: { notification: Notification }) => {
+type NotificationItemProps = {
+  notification: Notification;
+  onPress: () => void;
+  onLongPress: () => void;
+  isSelected?: boolean;
+};
+
+const NotificationItem = ({
+  notification,
+  onPress,
+  onLongPress,
+  isSelected = false,
+}: NotificationItemProps) => {
   const colorMap = {
     withdrawal: Colors.primary,
     deposit: Colors.warningGold,
@@ -16,7 +29,15 @@ const NotificationItem = ({ notification }: { notification: Notification }) => {
   } as const;
 
   return (
-    <View style={styles.container}>
+    <Pressable
+      style={[
+        GeneralStyles.wrapper,
+        styles.container,
+        isSelected && { backgroundColor: Colors.infoBright + "0D" },
+      ]}
+      onLongPress={onLongPress}
+      onPress={onPress}
+    >
       <View style={styles.notificationTitleBlock}>
         <ThemedText color={Colors.textFaint} weight="medium" size={14}>
           {notification.title}
@@ -24,7 +45,7 @@ const NotificationItem = ({ notification }: { notification: Notification }) => {
         <Ellipse color={colorMap[notification.type]} />
       </View>
       <ThemedText
-        color={notification.isRead ? Colors.textMuted : Colors.textDim}
+        color={notification.isRead ? Colors.textMuted : Colors.textSecondary}
         size={14}
         style={styles.details}
         numberOfLines={1}
@@ -32,7 +53,7 @@ const NotificationItem = ({ notification }: { notification: Notification }) => {
       >
         {notification.body}
       </ThemedText>
-    </View>
+    </Pressable>
   );
 };
 

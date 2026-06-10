@@ -1,5 +1,6 @@
 import { ThemedButton } from "@/components/ThemedButton";
 import { Colors } from "@/constants/Colors";
+import { Fonts } from "@/constants/Fonts";
 import { Href, useRouter } from "expo-router";
 import React from "react";
 import { StyleSheet, View } from "react-native";
@@ -37,7 +38,9 @@ const ActionTabs = () => {
           key={tab.name}
           variant={"primary"}
           title={tab.name}
-          textStyle={activeTab !== tab.name ? styles.inActiveText : undefined}
+          textStyle={
+            activeTab !== tab.name ? styles.inActiveText : styles.activeText
+          }
           style={[
             activeTab !== tab.name ? styles.inActiveButton : undefined,
             styles.defaultButton,
@@ -60,14 +63,20 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   inActiveButton: {
-    backgroundColor: Colors.surfaceMid,
+    backgroundColor: Colors.surface,
   },
   inActiveText: {
-    color: Colors.textMuted,
+    color: Colors.snowGray,
+    fontFamily: Fonts.bold,
+    fontSize: 13,
+  },
+  activeText: {
+    fontFamily: Fonts.bold,
+    fontSize: 13,
   },
   defaultButton: {
     width: 116,
-    borderRadius: 8,
+    borderRadius: 14,
     height: 46,
   },
 });

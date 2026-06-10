@@ -1,23 +1,29 @@
 import { useGetWalletQuery } from "@/store/services/walletsApi";
 import { useCallback } from "react";
 
-export default function useWallet() {
+export default function useWallet(pollIntervalMs = 30000) {
   const {
-    data: rawData,
+    data,
     isLoading,
+    isFetching,
     isError,
     isSuccess,
+    isUninitialized,
     refetch,
-  } = useGetWalletQuery();
+  } = useGetWalletQuery(undefined, {
+    pollingInterval: pollIntervalMs,
+    refetchOnFocus: true,
+    refetchOnReconnect: true,
+  });
 
-  const apiData = rawData?.data;
-  const walletData = apiData?.wallet;
-  const portfolioValue = apiData?.portfolioValue ?? 0;
-  const portfolioCurrency = apiData?.portfolioCurrency ?? "USD";
-  const balances = walletData?.balances ?? [];
-  const depositAddresses = walletData?.depositAddresses ?? [];
+  const wallet = data?.wallet;
+  const verification = data?.verification;
+  const portfolioValue = data?.portfolioValue ?? 0;
+  const portfolioValueUsd = data?.portfolioValueUsd ?? 0;
+  const portfolioCurrency = data?.portfolioCurrency ?? "USD";
+  const balances = wallet?.balances ?? [];
+  const depositAddresses = wallet?.depositAddresses ?? [];
 
-  // The lookup function
   const getDepositAddressBySymbol = useCallback(
     (symbol: string) => {
       if (!symbol) return {};
@@ -37,16 +43,31 @@ export default function useWallet() {
     [depositAddresses],
   );
 
+  const getBalanceBySymbol = useCallback(
+    (symbol: string) => {
+      if (!symbol) return null;
+      return (
+        balances.find((b) => b.assetSymbol === symbol.toUpperCase()) ?? null
+      );
+    },
+    [balances],
+  );
+
   return {
+    wallet,
+    verification,
     portfolioValue,
+    portfolioValueUsd,
     portfolioCurrency,
     balances,
     depositAddresses,
     getDepositAddressBySymbol,
-    wallet: rawData,
+    getBalanceBySymbol,
     isLoading,
+    isFetching,
     isError,
     isSuccess,
+    isUninitialized,
     refetch,
   };
 }

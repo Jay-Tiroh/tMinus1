@@ -82,7 +82,7 @@ const CoinList = React.memo(function CoinList({
         />
       </View>
     ),
-    [showChange, showChart],
+    [showChange, showChart, useHrefs, hasModal],
   );
 
   const keyExtractor = useCallback((item: Asset) => item.id, []);

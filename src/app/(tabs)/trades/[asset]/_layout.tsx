@@ -10,9 +10,9 @@ export default function TradesLayout() {
         contentStyle: { backgroundColor: Colors.surface },
         headerShown: false,
       }}
-      // initialRouteName="asset"
+      initialRouteName="asset"
     >
-      <Stack.Screen name="[asset]" />
+      <Stack.Screen name="asset" />
     </Stack>
   );
 }

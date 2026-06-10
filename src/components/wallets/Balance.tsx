@@ -1,9 +1,12 @@
+import { Spacer } from "@/components/Spacer";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
+import { GeneralStyles } from "@/constants/themes";
+import { showErrorToast } from "@/hooks/showToast";
 import useWallet from "@/hooks/useWallet";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import React from "react";
-import { StyleSheet, View } from "react-native";
+import React, { useEffect } from "react";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 
 const Balance = () => {
   const [isVisible, setIsVisible] = React.useState(false);
@@ -11,16 +14,33 @@ const Balance = () => {
   const toggleVisibility = () => {
     setIsVisible((prev) => !prev);
   };
-  const { wallet, isLoading, isError } = useWallet();
-  // console.log(wallet?.data?.wallet);
-  const balance = isVisible ? wallet?.data?.portfolioValueUsd : "*******";
-  const balanceUSD = isVisible ? "$468,554.23" : "*******";
+  const { portfolioValueUsd, isLoading, isError } = useWallet();
+
+  const balance = isVisible ? portfolioValueUsd : "*******";
+
+  useEffect(() => {
+    if (isError) {
+      showErrorToast({
+        title: "Error fetching balance",
+        message: "Unable to retrieve portfolio value. Please try again later.",
+      });
+    }
+  }, [isError]);
 
   return (
-    <View style={styles.container}>
+    <View
+      style={{
+        ...GeneralStyles.box,
+        backgroundColor: Colors.surfaceGreenNight,
+        height: 150,
+        padding: 20,
+        borderRadius: 22,
+      }}
+    >
       <ThemedText color={Colors.textMuted} size={14}>
-        Current Balance
+        Total Portfolio Value
       </ThemedText>
+      <Spacer size={8} />
       <View
         style={{
           flexDirection: "row",
@@ -29,12 +49,17 @@ const Balance = () => {
         }}
       >
         <View>
-          <ThemedText size={32} weight="bold" color={Colors.white}>
-            {balance}
-          </ThemedText>
-          <ThemedText color={Colors.textSecondary} size={14}>
+          {isLoading ? (
+            <ActivityIndicator />
+          ) : (
+            <ThemedText size={32} weight="bold" color={Colors.snowGray}>
+              {balance}
+            </ThemedText>
+          )}
+          <Spacer size={6} />
+          {/*<ThemedText color={Colors.textSecondary} size={14}>
             {balanceUSD}
-          </ThemedText>
+          </ThemedText>*/}
         </View>
         {isVisible ? (
           <Ionicons

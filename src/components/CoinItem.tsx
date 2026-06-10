@@ -46,16 +46,16 @@ const CoinItem = ({
   const [modalVisible, setModalVisible] = useState(false);
 
   const router = useRouter();
-  const route = "/(tabs)/trades/asset?coin=" + alias;
-
-  // Destructure only the mutation function
-  const { removeFromWatchlist } = useWatchlist();
+  const route = alias ? "/(tabs)/trades/" + alias + "/asset" : null;
 
   const handlePress = () => {
-    if (useHrefs) {
+    if (useHrefs && route) {
       router.push(route as Href);
     }
   };
+
+  // Destructure only the mutation function
+  const { removeFromWatchlist } = useWatchlist();
 
   const handleConfirm = async () => {
     setRemoveLoading(true);

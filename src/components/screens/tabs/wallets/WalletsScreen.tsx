@@ -1,8 +1,9 @@
-import CoinList from "@/components/CoinList";
-import { ThemedView } from "@/components/ThemedView";
+import { Spacer } from "@/components/Spacer";
+import Template from "@/components/trades/Template";
 import ActionTabs from "@/components/wallets/ActionTabs";
 import Balance from "@/components/wallets/Balance";
 import { Colors } from "@/constants/Colors";
+import { GeneralStyles } from "@/constants/themes";
 import { useAllAssets } from "@/hooks/useAllAssets";
 import { useSafeBottom } from "@/hooks/useSafeBottom";
 import useWallet from "@/hooks/useWallet";
@@ -13,7 +14,8 @@ const SCREEN_HEIGHT = Dimensions.get("window").height;
 
 const WalletsScreen = () => {
   const { coins } = useAllAssets();
-  const { wallet, isLoading, refetch } = useWallet();
+  const { wallet, balances, isLoading, refetch } = useWallet();
+  // console.log(balances);
 
   if (!isLoading) {
     // console.log("Wallet data in screen now:", wallet);
@@ -25,26 +27,23 @@ const WalletsScreen = () => {
   const listHeight = SCREEN_HEIGHT - headerHeight;
 
   return (
-    <View style={styles.container}>
-      <ThemedView
-        safe
-        style={styles.header}
-        onLayout={(e) => setHeaderHeight(e.nativeEvent.layout.height)}
-      >
+    <Template
+      textBlockProps={{
+        title: "Wallet",
+        body: "Aggregated in USD from active asset balances.",
+      }}
+      ctaProps={undefined}
+    >
+      <View style={GeneralStyles.wrapper}>
         <Balance />
-        <ActionTabs />
-      </ThemedView>
-
-      <View style={{ height: listHeight }}>
-        <CoinList
-          data={coins}
-          contentContainerStyle={{
-            paddingBottom: bottomPadding,
-            paddingTop: 12,
-          }}
-        />
       </View>
-    </View>
+      <Spacer size={32} />
+      <View style={GeneralStyles.wrapper}>
+        <ActionTabs />
+      </View>
+      <Spacer size={32} />
+      <View style={GeneralStyles.wrapper}></View>
+    </Template>
   );
 };
 

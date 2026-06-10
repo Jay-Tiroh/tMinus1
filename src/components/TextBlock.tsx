@@ -3,7 +3,7 @@ import { Colors } from "@/constants/Colors";
 import React from "react";
 import { StyleSheet, TextStyle, View } from "react-native";
 
-type TextBlockProps = {
+export type TextBlockProps = {
   title?: string;
   body?: string;
   titleStyle?: TextStyle;

@@ -4,6 +4,7 @@ import InProgress from "@/components/kyc/step3/InProgress";
 import Template from "@/components/kyc/Template";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
+import { useGoToRoute } from "@/hooks/useGoToRoute";
 import { useKyc } from "@/hooks/useKyc";
 import React, { useEffect } from "react";
 import { StyleSheet } from "react-native";
@@ -40,13 +41,18 @@ const KycStatus = () => {
   };
 
   const { kycStatus } = useKyc();
-
+  const goHome = useGoToRoute("/(tabs)/home");
+  const goTrade = useGoToRoute("/(tabs)/markets");
+  const goKyc = useGoToRoute("/kyc/step1");
   const handlePress = () => {
     if (phase === "inProgress") {
-      setPhase("approved");
+      goHome();
     }
     if (phase === "approved") {
-      setPhase("failed");
+      goTrade();
+    }
+    if (phase === "failed") {
+      goKyc();
     }
   };
 

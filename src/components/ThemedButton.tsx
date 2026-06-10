@@ -3,7 +3,12 @@ import { Colors } from "@/constants/Colors";
 import { Pressable, StyleProp, TextStyle, ViewStyle } from "react-native";
 import { SvgProps } from "react-native-svg";
 
-type ButtonVariant = "default" | "primary" | "secondary" | "outline" | "red";
+export type ButtonVariant =
+  | "default"
+  | "primary"
+  | "secondary"
+  | "outline"
+  | "red";
 
 type ThemedButtonProps = {
   title: string;

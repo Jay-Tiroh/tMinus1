@@ -1,14 +1,20 @@
 import {
+  DepositAddress,
   DepositAddressesResponse,
   GetTransactionsQueryParams,
+  PortfolioChartPoint,
+  PortfolioHistoryMeta,
   PortfolioHistoryResponse,
   PortfolioRange,
   SimulateDepositRequest,
   SimulateDepositResponse,
   SingleDepositAddressResponse,
+  Transaction,
   TransactionDetailResponse,
+  TransactionsMeta,
   TransactionsResponse,
   WalletResponse,
+  Withdrawal,
   WithdrawalRequest,
   WithdrawalResponse,
 } from "@/types/wallets";
@@ -17,59 +23,69 @@ import { baseApi } from "./baseApi";
 const walletsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     // GET /wallet
-    getWallet: builder.query<WalletResponse, void>({
+    getWallet: builder.query<WalletResponse["data"], void>({
       query: () => "/wallet",
+      transformResponse: (response: WalletResponse) => response.data,
       providesTags: ["Wallet"],
     }),
 
     // GET /wallet/portfolio/history
     getPortfolioHistory: builder.query<
-      PortfolioHistoryResponse,
+      { data: PortfolioChartPoint[]; meta: PortfolioHistoryMeta },
       { range: PortfolioRange }
     >({
       query: ({ range }) => ({
         url: "/wallet/portfolio/history",
         params: { range },
       }),
+      transformResponse: (response: PortfolioHistoryResponse) => ({
+        data: response.data,
+        meta: response.meta,
+      }),
       providesTags: ["Portfolio"],
     }),
 
     // GET /wallet/deposit-addresses
-    getDepositAddresses: builder.query<DepositAddressesResponse, void>({
+    getDepositAddresses: builder.query<DepositAddress[], void>({
       query: () => "/wallet/deposit-addresses",
+      transformResponse: (response: DepositAddressesResponse) => response.data,
       providesTags: ["Wallet"],
     }),
 
     // GET /wallet/deposit-addresses/{symbol}
-    getDepositAddressBySymbol: builder.query<
-      SingleDepositAddressResponse,
-      string
-    >({
+    getDepositAddressBySymbol: builder.query<DepositAddress, string>({
       query: (symbol) => `/wallet/deposit-addresses/${symbol}`,
+      transformResponse: (response: SingleDepositAddressResponse) =>
+        response.data,
       providesTags: ["Wallet"],
     }),
 
     // GET /wallet/transactions
     getTransactions: builder.query<
-      TransactionsResponse,
+      { data: Transaction[]; meta: TransactionsMeta },
       GetTransactionsQueryParams | void
     >({
       query: (params) => ({
         url: "/wallet/transactions",
         params: params || undefined,
       }),
+      transformResponse: (response: TransactionsResponse) => ({
+        data: response.data,
+        meta: response.meta,
+      }),
       providesTags: ["Transaction"],
     }),
 
     // GET /wallet/transactions/{transactionId}
-    getTransactionById: builder.query<TransactionDetailResponse, string>({
+    getTransactionById: builder.query<Transaction, string>({
       query: (transactionId) => `/wallet/transactions/${transactionId}`,
+      transformResponse: (response: TransactionDetailResponse) => response.data,
       providesTags: ["Transaction"],
     }),
 
     // POST /wallet/deposit/simulate
     simulateDeposit: builder.mutation<
-      SimulateDepositResponse,
+      SimulateDepositResponse["data"],
       SimulateDepositRequest
     >({
       query: (depositData) => ({
@@ -77,17 +93,18 @@ const walletsApi = baseApi.injectEndpoints({
         method: "POST",
         body: depositData,
       }),
-
+      transformResponse: (response: SimulateDepositResponse) => response.data,
       invalidatesTags: ["Wallet", "Transaction", "Portfolio"],
     }),
 
     // POST /wallet/withdrawals
-    requestWithdrawal: builder.mutation<WithdrawalResponse, WithdrawalRequest>({
+    requestWithdrawal: builder.mutation<Withdrawal, WithdrawalRequest>({
       query: (withdrawalData) => ({
         url: "/wallet/withdrawals",
         method: "POST",
         body: withdrawalData,
       }),
+      transformResponse: (response: WithdrawalResponse) => response.data,
       invalidatesTags: ["Wallet", "Transaction", "Portfolio"],
     }),
   }),

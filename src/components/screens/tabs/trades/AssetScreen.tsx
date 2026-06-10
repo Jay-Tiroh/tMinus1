@@ -23,41 +23,42 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import Add from "@/assets/icons/markets/add-circle.svg";
 import { showErrorToast, showSuccessToast } from "@/hooks/showToast";
+import { useGoToRoute } from "@/hooks/useGoToRoute";
 import { useWatchlist } from "@/hooks/useWatchlist";
-
-const actionConfig = [
-  {
-    title: "Sell",
-    onPress: () => {
-      showSuccessToast({
-        title: "Added to Watchlist",
-        message: `This asset has been added to your watchlist.`,
-      });
-    },
-  },
-  {
-    title: "Swap",
-    onPress: () => {
-      showErrorToast({
-        title: "Added to Watchlist",
-        message: `This asset has been added to your watchlist.`,
-      });
-    },
-  },
-  {
-    title: "Alert",
-  },
-];
+import { Href } from "expo-router";
 
 const AssetScreen = () => {
-  const { coin = "btc" } = useLocalSearchParams();
-  const {
-    coinInfo: coinDetails,
-    isLoading,
-    chart,
-  } = useAssetChart(coin as string, false, 15000);
+  const params = useLocalSearchParams<{ asset?: string }>();
+  const asset = params.asset ?? "btc";
+  const { coinInfo: coinDetails, isLoading } = useAssetChart(
+    asset as string,
+    false,
+    15000,
+  );
   const insets = useSafeAreaInsets();
   const bottomPadding = useSafeBottom();
+
+  const handleBuy = useGoToRoute(
+    ("/(tabs)/trades/" + asset + "/action?action=Buy") as Href,
+  );
+  const actionConfig = [
+    {
+      title: "Sell",
+      onPress: useGoToRoute(
+        ("/(tabs)/trades/" + asset + "/action?action=Sell") as Href,
+      ),
+    },
+    {
+      title: "Swap",
+      onPress: useGoToRoute(
+        ("/(tabs)/trades/" + asset + "/action?action=Swap") as Href,
+      ),
+    },
+    {
+      title: "Alert",
+      onPress: useGoToRoute(("/(tabs)/trades/" + asset + "/alert") as Href),
+    },
+  ];
 
   const stats = [
     {
@@ -152,7 +153,7 @@ const AssetScreen = () => {
           />
         </View>
         <View style={GeneralStyles.wrapper}>
-          <ThemedButton title="Buy" variant="primary" />
+          <ThemedButton title="Buy" variant="primary" onPress={handleBuy} />
         </View>
         <View
           style={[
