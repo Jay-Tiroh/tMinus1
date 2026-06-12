@@ -1,13 +1,13 @@
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import React from "react";
-import { StyleSheet, TextStyle, View } from "react-native";
+import { StyleProp, StyleSheet, TextStyle, View } from "react-native";
 
 export type TextBlockProps = {
   title?: string;
   body?: string;
-  titleStyle?: TextStyle;
-  bodyStyle?: TextStyle;
+  titleStyle?: StyleProp<TextStyle>;
+  bodyStyle?: StyleProp<TextStyle>;
 };
 
 const TextBlock = ({ title, body, titleStyle, bodyStyle }: TextBlockProps) => {

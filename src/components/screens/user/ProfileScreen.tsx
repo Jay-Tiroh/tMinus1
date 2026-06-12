@@ -1,98 +1,184 @@
-import Avatar from "@/assets/icons/user/avatar.svg";
-import LogOutBtn from "@/components/LogOutBtn";
+import { Spacer } from "@/components/Spacer";
+import { ThemedButton } from "@/components/ThemedButton";
 import { ThemedText } from "@/components/ThemedText";
-import Item from "@/components/user/Item";
+import Template from "@/components/trades/Template";
 import { Colors } from "@/constants/Colors";
-import useMisc from "@/constants/misc";
-import { LinearGradient } from "expo-linear-gradient";
-import { useRouter } from "expo-router";
+import { GeneralStyles } from "@/constants/themes";
+import { Href, useRouter } from "expo-router";
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 
 const ProfileScreen = () => {
-  const { displayName, details } = useMisc();
-
+  const route: Href[] = [
+    "/user/edit-profile",
+    "/user/security",
+    "/user/price-alerts",
+    "/(tabs)/home/notifications",
+    "/(tabs)/markets/watchlist",
+  ];
   const router = useRouter();
+  const menuItems = [
+    {
+      title: "Edit profile",
+      subtitle: "Name, email, phone",
+      onPress: () => {
+        router.push(route[0]);
+      },
+    },
+    {
+      title: "Security",
+      subtitle: "2FA, PIN, recovery codes",
+      onPress: () => {
+        router.push(route[1]);
+      },
+    },
+    {
+      title: "Price alerts",
+      subtitle: "3 active alerts",
+      trailing: "3",
+      onPress: () => {
+        router.push(route[2]);
+      },
+    },
+    {
+      title: "Notifications",
+      subtitle: "2 unread messages",
+      trailing: "2",
+      onPress: () => {
+        router.push(route[3]);
+      },
+    },
+    {
+      title: "Watchlist",
+      subtitle: "BTC, ETH, SOL",
+      onPress: () => {
+        router.push(route[4]);
+      },
+    },
+  ];
+
   return (
-    <View style={styles.container}>
-      <View style={styles.imageContainer}>
-        <LinearGradient
-          colors={[Colors.surface, Colors.primary + "1A"]}
-          style={styles.gradient}
-        ></LinearGradient>
-        <View style={styles.avatarContainer}>
-          <Avatar />
-          <ThemedText
-            weight="bold"
-            size={18}
-            color={Colors.white}
-            style={{ position: "absolute", bottom: 8 }}
+    <Template
+      textBlockProps={{ title: "Profile", body: "" }}
+      ctaProps={undefined}
+      topSpacerSize={32}
+    >
+      <View style={GeneralStyles.wrapper}>
+        {/* User Header */}
+        <View style={{ flexDirection: "row", alignItems: "center", gap: 16 }}>
+          <View
+            style={{
+              width: 72,
+              height: 72,
+              borderRadius: 36,
+              backgroundColor: Colors.primary,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
           >
-            {displayName}
-          </ThemedText>
+            <ThemedText size={32} weight="bold" color={Colors.backgroundInk}>
+              A
+            </ThemedText>
+          </View>
+          <View style={{ gap: 4 }}>
+            <ThemedText size={20} weight="bold" color={Colors.white}>
+              Ada Student
+            </ThemedText>
+            <ThemedText size={14} color={Colors.textMidGray}>
+              student@cryptoclass.test
+            </ThemedText>
+            <View
+              style={{
+                backgroundColor: Colors.surfaceNavy, // Adjust to your dark green tint
+                paddingVertical: 4,
+                paddingHorizontal: 12,
+                borderRadius: 12,
+                alignSelf: "flex-start",
+                marginTop: 4,
+              }}
+            >
+              <ThemedText size={12} weight="bold" color={Colors.primaryClean}>
+                Verified
+              </ThemedText>
+            </View>
+          </View>
         </View>
+
+        <Spacer size={40} />
+
+        {/* Menu Items */}
+        <View style={{ gap: 12 }}>
+          {menuItems.map((item, index) => (
+            <ListItem
+              key={index}
+              title={item.title}
+              subtitle={item.subtitle}
+              trailingText={item.trailing}
+              iconColor={Colors.primaryClean}
+              onPress={item.onPress}
+            />
+          ))}
+        </View>
+
+        <Spacer size={40} />
+
+        {/* Logout Button */}
+        <ThemedButton title="Logout" variant="secondary" />
       </View>
-      <View style={styles.otherDetails}>
-        {details.map((detail, _) => (
-          <Item
-            key={detail.label}
-            label={detail.label}
-            value={detail.value as string}
-            pushTo={detail.name}
-          />
-        ))}
-      </View>
-      <LogOutBtn />
-    </View>
+    </Template>
   );
 };
 
-export default ProfileScreen;
+// Reusable List Item Component for these screens
+export const ListItem = ({
+  title,
+  subtitle,
+  trailingText,
+  iconColor,
+  onPress,
+}: {
+  title: string;
+  subtitle: string;
+  trailingText?: string;
+  iconColor: string;
+  onPress?: () => void;
+}) => (
+  <TouchableOpacity
+    onPress={onPress}
+    style={[
+      GeneralStyles.box,
+      {
+        padding: 16,
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+      },
+    ]}
+  >
+    <View style={{ flexDirection: "row", alignItems: "center", gap: 16 }}>
+      <View
+        style={{
+          width: 24,
+          height: 24,
+          borderRadius: 12,
+          backgroundColor: iconColor,
+        }}
+      />
+      <View style={{ gap: 4 }}>
+        <ThemedText size={16} weight="bold" color={Colors.white}>
+          {title}
+        </ThemedText>
+        <ThemedText size={12} color={Colors.textMidGray}>
+          {subtitle}
+        </ThemedText>
+      </View>
+    </View>
+    {trailingText && (
+      <ThemedText size={14} weight="bold" color={Colors.primaryClean}>
+        {trailingText}
+      </ThemedText>
+    )}
+  </TouchableOpacity>
+);
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    gap: 34,
-  },
-  imageContainer: {
-    width: "100%",
-    height: 200,
-    justifyContent: "center",
-    alignItems: "center",
-    position: "relative",
-  },
-  gradient: {
-    width: "100%",
-    height: 100,
-    position: "absolute",
-    top: 0,
-  },
-  avatarContainer: {
-    height: "100%",
-    gap: 16,
-    justifyContent: "center",
-    alignItems: "center",
-    position: "relative",
-  },
-  otherDetails: {
-    padding: 30,
-    paddingTop: 0,
-    width: "100%",
-    borderTopWidth: 0.5,
-    borderTopColor: Colors.border + "1A",
-  },
-  detail: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    borderBottomWidth: 0.5,
-    borderBottomColor: Colors.border + "1A",
-    height: 62,
-  },
-  valueContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-  },
-});
+export default ProfileScreen;

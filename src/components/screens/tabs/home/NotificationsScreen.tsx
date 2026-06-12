@@ -42,7 +42,7 @@ const NotificationsScreen = () => {
     { isLoading: isMarkingAllRead, isError: isMarkingAllReadError },
   ] = useMarkAllNotificationsReadMutation();
 
-  console.log(notifications, isLoading);
+  // console.log(notifications, isLoading);
 
   const handleLongPress = (id: string) => {
     setSelectMode(true);
@@ -62,7 +62,10 @@ const NotificationsScreen = () => {
 
   const handleMarkRead = () => {
     if (selectMode) {
-      selectedNotifications.forEach((id) => markAsRead(id));
+      selectedNotifications.forEach((id) => {
+        markAsRead(id);
+        console.log("id: ", id);
+      });
       setSelectedNotifications([]);
     } else {
       markAllRead();

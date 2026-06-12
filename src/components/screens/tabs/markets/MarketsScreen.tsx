@@ -25,7 +25,6 @@ const MarketsScreen = () => {
   const tabs = ["All", "Gainers", "Watchlist"];
   const [activeTab, setActiveTab] = useState("All");
   const router = useRouter();
-
   const handleTabChange = (tab: string) => {
     if (tab === "All") {
       // already on all

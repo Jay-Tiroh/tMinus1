@@ -13,6 +13,12 @@ export default function TradesLayout() {
       initialRouteName="asset"
     >
       <Stack.Screen name="asset" />
+      <Stack.Screen name="action" />
+      <Stack.Screen name="alert" />
+      <Stack.Screen name="execute" />
+      <Stack.Screen name="order-book" />
+      <Stack.Screen name="quote" />
+      <Stack.Screen name="recent-trades" />
     </Stack>
   );
 }

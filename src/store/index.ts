@@ -6,8 +6,8 @@ import menuReducer from "./slices/MenuSlice";
 import authReducer from "./slices/authSlice";
 import kycReducer from "./slices/kycSlice";
 import notificationReducer from "./slices/notificationSlice";
+import tradesReducer from "./slices/tradesSlice";
 import userReducer from "./slices/userSlice";
-
 export const store = configureStore({
   reducer: {
     [baseApi.reducerPath]: baseApi.reducer,
@@ -18,6 +18,7 @@ export const store = configureStore({
     tempUser: userReducer,
     bottomSheet: bottomSheetReducer,
     kyc: kycReducer,
+    trades: tradesReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(baseApi.middleware, countriesApi.middleware),

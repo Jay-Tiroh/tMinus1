@@ -46,6 +46,7 @@ const CoinItem = ({
   const [modalVisible, setModalVisible] = useState(false);
 
   const router = useRouter();
+
   const route = alias ? "/(tabs)/trades/" + alias + "/asset" : null;
 
   const handlePress = () => {

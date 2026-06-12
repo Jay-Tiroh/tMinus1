@@ -23,13 +23,12 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import Add from "@/assets/icons/markets/add-circle.svg";
 import { showErrorToast, showSuccessToast } from "@/hooks/showToast";
-import { useGoToRoute } from "@/hooks/useGoToRoute";
+import { useAssetRoute } from "@/hooks/useAssetRoute";
 import { useWatchlist } from "@/hooks/useWatchlist";
-import { Href } from "expo-router";
 
 const AssetScreen = () => {
   const params = useLocalSearchParams<{ asset?: string }>();
-  const asset = params.asset ?? "btc";
+  const asset = params.asset ?? "BTC";
   const { coinInfo: coinDetails, isLoading } = useAssetChart(
     asset as string,
     false,
@@ -37,26 +36,25 @@ const AssetScreen = () => {
   );
   const insets = useSafeAreaInsets();
   const bottomPadding = useSafeBottom();
-
-  const handleBuy = useGoToRoute(
-    ("/(tabs)/trades/" + asset + "/action?action=Buy") as Href,
-  );
+  const push = useAssetRoute();
   const actionConfig = [
     {
       title: "Sell",
-      onPress: useGoToRoute(
-        ("/(tabs)/trades/" + asset + "/action?action=Sell") as Href,
-      ),
+      onPress: () => {
+        push("action", { action: "Sell", asset });
+      },
     },
     {
       title: "Swap",
-      onPress: useGoToRoute(
-        ("/(tabs)/trades/" + asset + "/action?action=Swap") as Href,
-      ),
+      onPress: () => {
+        push("action", { action: "Swap", asset });
+      },
     },
     {
       title: "Alert",
-      onPress: useGoToRoute(("/(tabs)/trades/" + asset + "/alert") as Href),
+      onPress: () => {
+        push("alert");
+      },
     },
   ];
 
@@ -153,7 +151,13 @@ const AssetScreen = () => {
           />
         </View>
         <View style={GeneralStyles.wrapper}>
-          <ThemedButton title="Buy" variant="primary" onPress={handleBuy} />
+          <ThemedButton
+            title="Buy"
+            variant="primary"
+            onPress={() => {
+              push("action", { action: "Buy", asset });
+            }}
+          />
         </View>
         <View
           style={[

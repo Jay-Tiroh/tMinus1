@@ -11,13 +11,22 @@ interface UseKycReturn {
   isLoading: boolean;
   isError: boolean;
   isSuccess: boolean;
+  refetch: () => void;
 }
 
-export function useKyc(): UseKycReturn {
-  const { data, isLoading, isError, isSuccess } = useProfileQuery();
+export function useKyc(pollIntervalMs = 0): UseKycReturn {
+  const { data, isLoading, isError, isSuccess, refetch } = useProfileQuery(
+    undefined,
+    {
+      pollingInterval: pollIntervalMs,
+      // Optional but recommended for status-checking hooks:
+      refetchOnFocus: true,
+      refetchOnReconnect: true,
+    },
+  );
 
-  const verification = data?.data.verification;
-  const kycStatus = data?.data.kycStatus;
+  const verification = data?.data?.verification;
+  const kycStatus = data?.data?.kycStatus;
 
   return {
     verification,
@@ -29,5 +38,6 @@ export function useKyc(): UseKycReturn {
     isLoading,
     isError,
     isSuccess,
+    refetch,
   };
 }

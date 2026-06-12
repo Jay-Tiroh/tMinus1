@@ -19,6 +19,7 @@ import {
 export type CoinItemConfig = {
   showChange?: boolean;
   showChart?: boolean;
+  amountInUsd?: number;
 };
 
 type CoinListProps = {
@@ -56,7 +57,11 @@ const CoinList = React.memo(function CoinList({
 }: CoinListProps) {
   const [isReady, setIsReady] = useState(false);
 
-  const { showChange = false, showChart = false } = coinItemConfig ?? {};
+  const {
+    showChange = false,
+    showChart = false,
+    amountInUsd,
+  } = coinItemConfig ?? {};
 
   useEffect(() => {
     const task = InteractionManager.runAfterInteractions(() => {
@@ -73,7 +78,7 @@ const CoinList = React.memo(function CoinList({
           amount={30594}
           icon={CoinIcons[item.symbol]}
           alias={item.symbol}
-          amountInUsd={item.priceUsd}
+          amountInUsd={amountInUsd ?? item.priceUsd}
           change={item.change24h}
           showChange={showChange}
           showChart={showChart}

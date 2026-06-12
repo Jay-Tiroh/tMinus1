@@ -1,3 +1,4 @@
+import CryptoAssetItem from "@/components/screens/tabs/wallets/CryptoAsset";
 import { Spacer } from "@/components/Spacer";
 import Template from "@/components/trades/Template";
 import ActionTabs from "@/components/wallets/ActionTabs";
@@ -17,6 +18,11 @@ const WalletsScreen = () => {
   const { wallet, balances, isLoading, refetch } = useWallet();
   // console.log(balances);
 
+  const assetsHeld = balances.map((balance) => balance.assetSymbol);
+  // console.log("My assets:", assetsHeld);
+  const displayedCoins = coins.filter((coin) =>
+    assetsHeld.includes(coin.symbol),
+  );
   if (!isLoading) {
     // console.log("Wallet data in screen now:", wallet);
     // refetch(); // Refetch to ensure we have the latest data
@@ -42,7 +48,31 @@ const WalletsScreen = () => {
         <ActionTabs />
       </View>
       <Spacer size={32} />
-      <View style={GeneralStyles.wrapper}></View>
+      <View
+        style={{
+          ...GeneralStyles.wrapper,
+          gap: 16,
+          paddingBottom: bottomPadding,
+        }}
+      >
+        {displayedCoins.map((coin) => (
+          <CryptoAssetItem
+            key={coin.id}
+            asset={{
+              id: coin.id,
+              name: coin.name,
+              symbol: coin.symbol,
+              fiatBalance:
+                coin.priceUsd *
+                (balances.find((balance) => balance.assetSymbol === coin.symbol)
+                  ?.available || 0),
+              cryptoBalance:
+                balances.find((balance) => balance.assetSymbol === coin.symbol)
+                  ?.available || 0,
+            }}
+          />
+        ))}
+      </View>
     </Template>
   );
 };

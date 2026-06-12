@@ -8,82 +8,77 @@ import TransactionPinInput from "@/components/trades/TransactionPinInput";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
-import { useGoToRoute } from "@/hooks/useGoToRoute";
+import { useAssetRoute } from "@/hooks/useAssetRoute";
+import useTrade from "@/hooks/useTrade";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
-import { Href, useLocalSearchParams } from "expo-router";
-import React, { useEffect } from "react";
-import { View } from "react-native";
+import React, { useRef, useState } from "react";
+import { ActivityIndicator, View } from "react-native";
+
+type ScreenState = "confirm" | "completed" | "failed";
 
 const ExecuteScreen = () => {
-  const params = useLocalSearchParams<{ asset: string }>();
-  const asset = params.asset;
-  const goToAlert = useGoToRoute(
-    ("/(tabs)/trades/" + asset + "/alert") as Href,
-  );
-  const Config: ConfigType[] = [
-    {
+  const push = useAssetRoute();
+  const { activeQuote, executeQuote, isExecuting, lastTransaction } =
+    useTrade();
+  const [screenState, setScreenState] = useState<ScreenState>("confirm");
+  const [pin, setPin] = useState("");
+  const idempotencyKey = useRef(Date.now().toString());
+
+  const handleExecute = async () => {
+    if (pin.length < 4) return;
+    try {
+      await executeQuote(pin, idempotencyKey.current);
+      setScreenState("completed");
+    } catch {
+      setScreenState("failed");
+    }
+  };
+
+  const Config: Record<ScreenState, ConfigType> = {
+    confirm: {
       title: "Confirm trade",
       body: "Enter your transaction PIN to execute this quote.",
       cta: {
-        title: "Execute trade",
-        onPress: () => {
-          toggleConfig();
-        },
+        title: isExecuting ? "Executing..." : "Execute trade",
+        onPress: handleExecute,
         variant: "primary",
         style: undefined,
         textStyle: undefined,
       },
-      content: Confirm,
+      content: () => <Confirm quote={activeQuote} onPinComplete={setPin} />,
       topSpacerSize: 42,
     },
-
-    {
+    completed: {
       title: "Trade completed",
-      body: "Your sandbox trade has settled successfully.",
+      body: "Your trade has settled successfully.",
       cta: {
         title: "View transaction",
-        onPress: () => {
-          toggleConfig();
-        },
+        onPress: () => push("alert"), // swap for your transaction detail route
         variant: "primary",
         style: undefined,
         textStyle: undefined,
       },
-      content: Completed,
+      content: () => <Completed transaction={lastTransaction} />,
       topSpacerSize: 42,
     },
-
-    {
+    failed: {
       title: "Trade failed",
       body: "The trade could not be completed.",
       cta: {
         title: "Edit amount",
-        onPress: goToAlert,
+        onPress: () => push("alert"),
         variant: "red",
         style: undefined,
         textStyle: undefined,
       },
-      content: Failed,
+      content: () => <Failed transaction={lastTransaction} />,
       topSpacerSize: 42,
     },
-  ];
-
-  const [activeConfigIndex, setActiveConfigIndex] = React.useState(0);
-  const [activeConfig, setActiveConfig] = React.useState(
-    Config[activeConfigIndex],
-  );
-
-  const toggleConfig = () => {
-    if (activeConfigIndex === 2) {
-      setActiveConfigIndex(0);
-    } else {
-      setActiveConfigIndex((prev) => prev + 1);
-    }
   };
-  useEffect(() => {
-    setActiveConfig(Config[activeConfigIndex]);
-  }, [activeConfigIndex]);
+
+  const activeConfig = Config[screenState];
+
   return (
     <Template
       textBlockProps={{
@@ -110,11 +105,18 @@ const ExecuteScreen = () => {
   );
 };
 
-const Confirm = () => {
-  const handlePinComplete = (pin: string) => {
-    console.log("PIN entered:", pin);
-    // fire your submit / verify mutation here
-  };
+const Confirm = ({
+  quote,
+  onPinComplete,
+}: {
+  quote: ReturnType<typeof useTrade>["activeQuote"];
+  onPinComplete: (pin: string) => void;
+}) => {
+  if (!quote) {
+    return <ActivityIndicator color={Colors.primaryClean} />;
+  }
+
+  const action = quote.type.charAt(0).toUpperCase() + quote.type.slice(1);
 
   return (
     <>
@@ -129,13 +131,14 @@ const Confirm = () => {
         }}
       >
         <ThemedText color={Colors.snowGray} size={17} weight="bold">
-          Buy BTC
+          {action} {quote.toAsset}
         </ThemedText>
         <ThemedText color={Colors.textMidGray} size={14}>
-          250.00 USDT → 0.00384 BTC
+          {quote.fromAmount} {quote.fromAsset} → {quote.toAmount}{" "}
+          {quote.toAsset}
         </ThemedText>
         <ThemedText color={Colors.textMidGray} size={12}>
-          Fee 2.50 USDT
+          Fee {quote.feeAmount} {quote.fromAsset}
         </ThemedText>
       </View>
 
@@ -149,7 +152,8 @@ const Confirm = () => {
 
       <Spacer size={28} />
 
-      <TransactionPinInput onComplete={handlePinComplete} />
+      <TransactionPinInput onComplete={onPinComplete} />
+
       <Spacer size={50} />
       <View
         style={{
@@ -165,9 +169,7 @@ const Confirm = () => {
         <ThemedText
           color={Colors.textMidGray}
           size={12}
-          style={{
-            textAlign: "center",
-          }}
+          style={{ textAlign: "center" }}
         >
           The API executes only after POST /trade/execute with quoteId and PIN.
         </ThemedText>
@@ -176,22 +178,43 @@ const Confirm = () => {
     </>
   );
 };
-const Completed = () => {
-  const config = [
-    { label: "Reference", value: "Swap" },
-    { label: "Paid", value: "250.00 USD" },
-    { label: "Received", value: "123,456.00 BTC" },
-    { label: "Fee", value: "1 USD = 493.82 BTC" },
-    {
-      label: "Status",
-      value: "Completed",
-      valueColor: Colors.primaryClean,
-    },
-  ];
+
+const Completed = ({
+  transaction,
+}: {
+  transaction: ReturnType<typeof useTrade>["lastTransaction"];
+}) => {
+  const config = transaction
+    ? [
+        { label: "Reference", value: transaction.reference },
+        {
+          label: "Paid",
+          value: `${transaction.fromAmount} ${transaction.fromAsset}`,
+        },
+        {
+          label: "Received",
+          value: `${transaction.toAmount} ${transaction.toAsset}`,
+        },
+        {
+          label: "Fee",
+          value: `${transaction.feeAmount} ${transaction.fromAsset}`,
+        },
+        {
+          label: "Status",
+          value: "Completed",
+          valueColor: Colors.primaryClean,
+        },
+      ]
+    : [];
+
   return (
     <>
       <BadgeStuff
-        title="0.00384 BTC received"
+        title={
+          transaction
+            ? `${transaction.toAmount} ${transaction.toAsset} received`
+            : "Trade complete"
+        }
         outerColor={Colors.primaryClean}
         innerColor={Colors.primaryClean}
         IconComponent={
@@ -199,11 +222,7 @@ const Completed = () => {
         }
       />
       <Spacer size={32} />
-      <View
-        style={{
-          gap: 10,
-        }}
-      >
+      <View style={{ gap: 10 }}>
         {config.map((item) => (
           <LabelValueItem
             key={item.label}
@@ -216,36 +235,34 @@ const Completed = () => {
     </>
   );
 };
-const Failed = () => {
-  const config = [
-    { label: "Received", value: "123,456.00 BTC" },
-    {
-      label: "Available",
-      value: "1 USD = 493.82 BTC",
-      valueColor: Colors.lossBright,
-    },
-    {
-      label: "Status",
-      value: "Failed",
-      valueColor: Colors.lossBright,
-    },
-  ];
+
+const Failed = ({
+  transaction,
+}: {
+  transaction: ReturnType<typeof useTrade>["lastTransaction"];
+}) => {
+  const config = transaction
+    ? [
+        {
+          label: "Attempted",
+          value: `${transaction.fromAmount} ${transaction.fromAsset}`,
+        },
+        { label: "Status", value: "Failed", valueColor: Colors.lossBright },
+      ]
+    : [];
+
   return (
     <>
       <BadgeStuff
-        title="Insufficient balance"
-        desc="Your available USDT balance changed before the quote was executed."
+        title="Trade failed"
+        desc="Your trade could not be completed. Please try again."
         outerColor={Colors.lossBright}
         IconComponent={
           <FontAwesome6 name="xmark" size={42} color={Colors.lossBright} />
         }
       />
       <Spacer size={56} />
-      <View
-        style={{
-          gap: 10,
-        }}
-      >
+      <View style={{ gap: 10 }}>
         {config.map((item) => (
           <LabelValueItem
             key={item.label}

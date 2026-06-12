@@ -53,7 +53,7 @@ const Balance = () => {
             <ActivityIndicator />
           ) : (
             <ThemedText size={32} weight="bold" color={Colors.snowGray}>
-              {balance}
+              ${balance}
             </ThemedText>
           )}
           <Spacer size={6} />

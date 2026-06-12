@@ -14,17 +14,20 @@ import { Colors } from "./Colors";
  */
 
 // ─── Types ───────────────────────────────────────────────────────────────────
-
 export type TabRoute = "home" | "markets" | "trades" | "activity" | "wallets";
 
 export interface TabConfig {
   name: TabRoute;
   label: string;
   icon: React.FC<SvgProps>;
+  /** The screen to navigate to when the tab is pressed.
+   *  Defaults to undefined (no nested reset needed). */
+  initialRoute?: string;
+  /** Params to pass to initialRoute — use for dynamic segments. */
+  initialParams?: Record<string, unknown>;
 }
 
 // ─── Global Tab Bar Appearance ───────────────────────────────────────────────
-
 export const TabBarStyle = {
   borderColor: "transparent",
   backgroundColor: Colors.backgroundDark + "cc",
@@ -38,47 +41,57 @@ export const TabBarStyle = {
   placeContent: "center",
   alignSelf: "center",
   position: "absolute",
-  // boxShadow: "0px 12px 50px rgba(22, 28, 34, 1)",
 } as const;
 
 export const TabBarColors = {
-  active: Colors.textFaint, // ← label color
-  inactive: Colors.textMuted, // ←  label color
+  active: Colors.textFaint,
+  inactive: Colors.textMuted,
   labelSize: 12,
 } as const;
 
-// ─── Tab Definitions ─────────────────────────────────────────────────────────
+// ─── Default Asset for Trades Tab ────────────────────────────────────────────
+export const DEFAULT_TRADE_ASSET = "BTC";
 
+// ─── Tab Definitions ─────────────────────────────────────────────────────────
 export const TABS: TabConfig[] = [
   {
     name: "home",
     label: "Home",
     icon: HomeIcon,
+    initialRoute: "index",
   },
   {
     name: "markets",
     label: "Markets",
     icon: MarketsIcon,
+    initialRoute: "index",
   },
   {
     name: "trades",
     label: "Trades",
     icon: TradesIcon,
+    // trades has no index — resets to [asset]/asset.tsx with a default asset
+    initialRoute: "[asset]",
+    initialParams: {
+      screen: "asset",
+      params: { asset: DEFAULT_TRADE_ASSET },
+    },
   },
   {
     name: "activity",
     label: "Activity",
     icon: ActivityIcon,
+    initialRoute: "index",
   },
   {
     name: "wallets",
     label: "Wallets",
     icon: WalletsIcon,
+    initialRoute: "index",
   },
 ];
 
 // ─── Helper ──────────────────────────────────────────────────────────────────
-
 /** Look up a tab config by route name */
 export const getTabConfig = (name: TabRoute): TabConfig | undefined =>
   TABS.find((t) => t.name === name);

@@ -46,6 +46,15 @@ export default function TabsLayout() {
             tabBarIcon: ({ color, focused }) => renderIcon(tab.icon, focused),
             headerShown: false,
           }}
+          listeners={({ navigation }) => ({
+            tabPress: (e) => {
+              e.preventDefault();
+              navigation.navigate(tab.name, {
+                screen: tab.initialRoute,
+                ...(tab.initialParams ? { params: tab.initialParams } : {}),
+              });
+            },
+          })}
         />
       ))}
     </Tabs>

@@ -1,6 +1,10 @@
 import {
   ProfileResponse,
+  RegisterDeviceRequest,
+  RegisterDeviceResponse,
   SettingsResponse,
+  UpdatePinRequest,
+  UpdatePinResponse,
   UpdateProfileRequest,
   UpdateSettingsRequest,
   UserSettings,
@@ -11,12 +15,12 @@ const profileApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     profile: builder.query<ProfileResponse, void>({
       query: () => "/me",
-      providesTags: ["User"], // <-- Add this here just in case
+      providesTags: ["User", "Kyc"],
     }),
     settings: builder.query<UserSettings, void>({
       query: () => "/me/settings",
       transformResponse: (response: SettingsResponse) => response.data,
-      providesTags: ["User"], // <-- ADD THIS LINE! This links the cache to the tag
+      providesTags: ["User", "Kyc"],
     }),
     updateProfile: builder.mutation<ProfileResponse, UpdateProfileRequest>({
       query: (updateData) => ({
@@ -24,7 +28,7 @@ const profileApi = baseApi.injectEndpoints({
         method: "PATCH",
         body: updateData,
       }),
-      invalidatesTags: ["User"],
+      invalidatesTags: ["User", "Kyc"],
     }),
     updateSettings: builder.mutation<UserSettings, UpdateSettingsRequest>({
       query: (updateData) => ({
@@ -33,7 +37,24 @@ const profileApi = baseApi.injectEndpoints({
         body: updateData,
       }),
       transformResponse: (response: SettingsResponse) => response.data,
-      invalidatesTags: ["User"], // This now successfully triggers a refetch of `settings`
+      invalidatesTags: ["User"],
+    }),
+    updatePin: builder.mutation<UpdatePinResponse, UpdatePinRequest>({
+      query: (pinData) => ({
+        url: "/me/pin",
+        method: "PATCH",
+        body: pinData,
+      }),
+    }),
+    registerDevice: builder.mutation<
+      RegisterDeviceResponse,
+      RegisterDeviceRequest
+    >({
+      query: (deviceData) => ({
+        url: "/me/devices",
+        method: "POST",
+        body: deviceData,
+      }),
     }),
   }),
   overrideExisting: false,
@@ -44,4 +65,6 @@ export const {
   useSettingsQuery,
   useUpdateProfileMutation,
   useUpdateSettingsMutation,
+  useUpdatePinMutation,
+  useRegisterDeviceMutation,
 } = profileApi;

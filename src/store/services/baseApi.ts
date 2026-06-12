@@ -107,6 +107,7 @@ export const baseApi = createApi({
     "PriceAlerts",
     "Watchlist",
     "Notifications",
+    "Kyc",
   ],
   endpoints: () => ({}),
 });

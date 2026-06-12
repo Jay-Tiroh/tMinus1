@@ -9,18 +9,16 @@ import Template from "@/components/trades/Template";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
-import { useGoToRoute } from "@/hooks/useGoToRoute";
+import { useAssetRoute } from "@/hooks/useAssetRoute";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-import { Href, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import React, { useEffect } from "react";
 import { TouchableOpacity, View } from "react-native";
 
 const AlertScreen = () => {
   const params = useLocalSearchParams<{ asset: string }>();
   const asset = params.asset;
-  const goToExecute = useGoToRoute(
-    ("/(tabs)/trades/" + asset + "/execute") as Href,
-  );
+  const push = useAssetRoute();
   const Config: ConfigType[] = [
     {
       title: "Create price alert",

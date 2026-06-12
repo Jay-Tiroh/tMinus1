@@ -1,4 +1,5 @@
 import { useGetWalletQuery } from "@/store/services/walletsApi";
+import { Balance, DepositAddress } from "@/types/wallets";
 import { useCallback } from "react";
 
 export default function useWallet(pollIntervalMs = 30000) {
@@ -21,8 +22,8 @@ export default function useWallet(pollIntervalMs = 30000) {
   const portfolioValue = data?.portfolioValue ?? 0;
   const portfolioValueUsd = data?.portfolioValueUsd ?? 0;
   const portfolioCurrency = data?.portfolioCurrency ?? "USD";
-  const balances = wallet?.balances ?? [];
-  const depositAddresses = wallet?.depositAddresses ?? [];
+  const balances: Balance[] = wallet?.balances ?? [];
+  const depositAddresses: DepositAddress[] = wallet?.depositAddresses ?? [];
 
   const getDepositAddressBySymbol = useCallback(
     (symbol: string) => {

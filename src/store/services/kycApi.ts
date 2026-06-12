@@ -20,6 +20,7 @@ export const kycApi = baseApi.injectEndpoints({
           : undefined,
       }),
       transformResponse: (response: SubmitKYCResponse) => response.data,
+      invalidatesTags: ["Kyc"],
     }),
 
     getKYCUploadInstructions: builder.mutation<
@@ -33,6 +34,7 @@ export const kycApi = baseApi.injectEndpoints({
       }),
       transformResponse: (response: KYCUploadInstructionResponse) =>
         response.data,
+      invalidatesTags: ["Kyc"],
     }),
   }),
   overrideExisting: false,
