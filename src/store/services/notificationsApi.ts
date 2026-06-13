@@ -1,4 +1,4 @@
-import { NotificationsResponse } from "@/types/notification";
+import { Notification, NotificationsResponse } from "@/types/notification";
 import { baseApi } from "./baseApi";
 
 const notificationsApi = baseApi.injectEndpoints({
@@ -7,19 +7,47 @@ const notificationsApi = baseApi.injectEndpoints({
       query: () => "/me/notifications",
       providesTags: ["Notifications"],
     }),
-    markNotificationRead: builder.mutation<void, string>({
+    markNotificationRead: builder.mutation<{ data: Notification }, string>({
       query: (notificationId) => ({
         url: `/me/notifications/${notificationId}/read`,
-        method: "POST",
+        method: "PATCH",
       }),
-      invalidatesTags: ["Notifications"],
+      async onQueryStarted(notificationId, { dispatch, queryFulfilled }) {
+        try {
+          const { data: response } = await queryFulfilled;
+          dispatch(
+            notificationsApi.util.updateQueryData(
+              "notifications",
+              undefined,
+              (draft) => {
+                const target = draft.data.find((n) => n.id === notificationId);
+                if (target) Object.assign(target, response.data);
+              },
+            ),
+          );
+        } catch {}
+      },
     }),
     markAllNotificationsRead: builder.mutation<void, void>({
-      query: () => ({ url: "/me/notifications/read-all", method: "POST" }),
-      invalidatesTags: ["Notifications"],
+      query: () => ({ url: "/me/notifications/read-all", method: "PATCH" }),
+      async onQueryStarted(_, { dispatch, queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          dispatch(
+            notificationsApi.util.updateQueryData(
+              "notifications",
+              undefined,
+              (draft) => {
+                draft.data.forEach((n) => (n.isRead = true));
+                draft.meta.unread = 0;
+              },
+            ),
+          );
+        } catch {}
+      },
     }),
   }),
-  overrideExisting: false,
+  overrideExisting: true,
 });
 
 export const {

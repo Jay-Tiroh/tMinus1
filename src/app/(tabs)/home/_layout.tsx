@@ -27,7 +27,7 @@ export default function HomeLayout() {
       <Stack.Screen
         name="notifications"
         options={{
-          header: () => <ThemedHeader avatar headerRight="normal" />,
+          headerShown: false,
           contentStyle: { backgroundColor: Colors.surfaceDark },
         }}
       />

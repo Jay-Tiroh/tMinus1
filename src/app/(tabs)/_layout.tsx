@@ -14,6 +14,8 @@ function renderIcon(Icon: React.FC<SvgProps>, focused: boolean) {
         height: 24,
         // boxShadow: focused ? "0 5px 16px rgba(94, 213, 168, .25)" : undefined,
       }}
+      width={24}
+      height={24}
     />
   );
 }

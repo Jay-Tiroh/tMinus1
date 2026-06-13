@@ -1,7 +1,7 @@
 import { Colors } from "@/constants/Colors";
 import { Stack } from "expo-router";
 
-export default function WalletsLayout() {
+export default function DepositLayout() {
   return (
     <Stack
       screenOptions={{
@@ -11,14 +11,9 @@ export default function WalletsLayout() {
         headerShown: false,
       }}
     >
-      <Stack.Screen
-        name="index"
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen name="myQr" />
-      <Stack.Screen name="scanQr" />
+      <Stack.Screen name="deposit-asset-selection" />
+      <Stack.Screen name="deposit-address" />
+      <Stack.Screen name="simulate-deposit" />
     </Stack>
   );
 }

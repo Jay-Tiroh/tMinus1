@@ -1,7 +1,7 @@
-import ActivityIcon from "@/assets/icons/activity.svg";
 import HomeIcon from "@/assets/icons/home.svg";
 import MarketsIcon from "@/assets/icons/markets.svg";
 import TradesIcon from "@/assets/icons/trades.svg";
+import UserIcon from "@/assets/icons/user.svg";
 import WalletsIcon from "@/assets/icons/wallets.svg";
 import { SvgProps } from "react-native-svg";
 import { Colors } from "./Colors";
@@ -14,7 +14,7 @@ import { Colors } from "./Colors";
  */
 
 // ─── Types ───────────────────────────────────────────────────────────────────
-export type TabRoute = "home" | "markets" | "trades" | "activity" | "wallets";
+export type TabRoute = "home" | "markets" | "trades" | "user" | "wallets";
 
 export interface TabConfig {
   name: TabRoute;
@@ -78,15 +78,15 @@ export const TABS: TabConfig[] = [
     },
   },
   {
-    name: "activity",
-    label: "Activity",
-    icon: ActivityIcon,
-    initialRoute: "index",
-  },
-  {
     name: "wallets",
     label: "Wallets",
     icon: WalletsIcon,
+    initialRoute: "index",
+  },
+  {
+    name: "user",
+    label: "Profile",
+    icon: UserIcon,
     initialRoute: "index",
   },
 ];

@@ -1,4 +1,5 @@
-import { ListItem } from "@/components/screens/user/ProfileScreen";
+// import { ListItem } from "@/components/screens/user/ProfileScreen";
+import { ListItem } from "@/components/screens/tabs/user/ProfileScreen";
 import { ThemedButton } from "@/components/ThemedButton";
 import { ThemedText } from "@/components/ThemedText";
 import Template from "@/components/trades/Template";

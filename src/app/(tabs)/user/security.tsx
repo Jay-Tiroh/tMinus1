@@ -1,4 +1,4 @@
-import SecuritySettingsScreen from "@/components/screens/user/SecuritySettingsScreen";
+import SecuritySettingsScreen from "@/components/screens/tabs/user/SecuritySettingsScreen";
 import React from "react";
 
 const Security = () => {

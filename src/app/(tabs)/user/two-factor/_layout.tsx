@@ -1,7 +1,7 @@
 import { Colors } from "@/constants/Colors";
 import { Stack } from "expo-router";
 
-export default function WalletsLayout() {
+export default function TwoFactorAuthLayout() {
   return (
     <Stack
       screenOptions={{
@@ -11,14 +11,9 @@ export default function WalletsLayout() {
         headerShown: false,
       }}
     >
-      <Stack.Screen
-        name="index"
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen name="myQr" />
-      <Stack.Screen name="scanQr" />
+      <Stack.Screen name="disable" />
+      <Stack.Screen name="setup" />
+      <Stack.Screen name="recovery-codes" />
     </Stack>
   );
 }

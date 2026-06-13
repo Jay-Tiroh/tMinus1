@@ -1,5 +1,6 @@
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
+import { Fonts } from "@/constants/Fonts";
 import { Pressable, StyleProp, TextStyle, ViewStyle } from "react-native";
 import { SvgProps } from "react-native-svg";
 
@@ -26,7 +27,10 @@ export const ThemedButton: React.FC<ThemedButtonProps> = ({
   variant = "default",
   onPress,
   style,
-  textStyle,
+  textStyle = {
+    fontSize: 14,
+    fontFamily: Fonts.bold,
+  },
   disabled = false,
   icon: Icon,
   iconComponent,

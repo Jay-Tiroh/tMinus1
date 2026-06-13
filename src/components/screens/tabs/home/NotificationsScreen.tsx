@@ -1,205 +1,279 @@
-import Filter from "@/assets/icons/home/notifications/filter.svg";
-import Illustration from "@/assets/icons/home/notifications/illustration.svg";
-import Notification from "@/components/home/Notification";
-import { Spacer } from "@/components/Spacer";
+import TextBlock from "@/components/TextBlock";
+import { ThemedButton } from "@/components/ThemedButton";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
+import { useSafeBottom } from "@/hooks/useSafeBottom";
 import {
   useMarkAllNotificationsReadMutation,
   useMarkNotificationReadMutation,
   useNotificationsQuery,
 } from "@/store/services/notificationsApi";
-import React, { useEffect, useState } from "react";
-import { FlatList, Modal, Pressable, StyleSheet, View } from "react-native";
+// import {
+//   useMarkAllNotificationsReadMutation,
+//   useMarkNotificationReadMutation,
+//   useNotificationsQuery,
+// } from "@/store/services/notificationsApi";
+import { Notification } from "@/types/notification";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  FlatList,
+  ImageBackground,
+  Pressable,
+  StyleSheet,
+  View,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+// ─── Config & Types ─────────────────────────────────────────────────────────
+
+const SCREEN_CONFIG = {
+  headerTitle: "Notifications",
+  headerBody: "Security, KYC, transaction, and alert messages.",
+  markAllText: "Mark all as read",
+  markSelectedText: "Mark selected as read",
+  emptyStateTitle: "All caught up",
+  emptyStateBody:
+    "When the list is empty, show this calm state instead of a blank screen.",
+};
+
+// ─── Components ─────────────────────────────────────────────────────────────
+
+const NotificationItem = ({
+  item,
+  isSelected,
+  onPress,
+  onLongPress,
+}: {
+  item: Notification;
+  isSelected: boolean;
+  onPress: () => void;
+  onLongPress: () => void;
+}) => {
+  return (
+    <Pressable
+      style={[
+        styles.notificationCard,
+        isSelected && { backgroundColor: Colors.surfaceNavy }, // Visual feedback for selection
+      ]}
+      onPress={onPress}
+      onLongPress={onLongPress}
+      delayLongPress={300}
+    >
+      {/* Indicator Circle */}
+      <View
+        style={[
+          styles.indicator,
+          {
+            backgroundColor: item.isRead
+              ? Colors.surfaceGreenTeal
+              : Colors.primaryClean,
+          },
+        ]}
+      />
+
+      {/* Text Content */}
+      <View style={styles.textContainer}>
+        <ThemedText weight="bold" size={15} color={Colors.white}>
+          {item.title}
+        </ThemedText>
+        <ThemedText
+          size={13}
+          color={Colors.textMidGray}
+          numberOfLines={1}
+          ellipsizeMode="tail"
+        >
+          {item.body}
+        </ThemedText>
+      </View>
+
+      {/* Status Label */}
+      <ThemedText
+        size={13}
+        weight="medium"
+        color={item.isRead ? Colors.primaryPale : Colors.primaryClean}
+      >
+        {item.isRead ? "Read" : "New"}
+      </ThemedText>
+    </Pressable>
+  );
+};
+
+const EmptyStateCard = () => (
+  <View style={styles.emptyStateCard}>
+    <ThemedText weight="bold" size={16} color={Colors.white}>
+      {SCREEN_CONFIG.emptyStateTitle}
+    </ThemedText>
+    <ThemedText size={14} color={Colors.textMidGray} style={{ lineHeight: 20 }}>
+      {SCREEN_CONFIG.emptyStateBody}
+    </ThemedText>
+  </View>
+);
+
+// ─── Main Screen ────────────────────────────────────────────────────────────
 
 const NotificationsScreen = () => {
-  const [visible, setVisible] = useState(false);
-  const [selected, setSelected] = useState("All");
+  const insets = useSafeAreaInsets();
+  const bottomPadding = useSafeBottom();
 
-  const options = [
-    "All",
-    "KYC",
-    "Deposit",
-    "Withdrawal",
-    "Trade",
-    "System",
-    "Auth",
-  ];
-
+  const [selectMode, setSelectMode] = useState(false);
   const [selectedNotifications, setSelectedNotifications] = useState<string[]>(
     [],
   );
-  const [selectMode, setSelectMode] = useState(false);
 
   const { data: notifications, isLoading } = useNotificationsQuery();
-  const [
-    markAsRead,
-    { isLoading: isMarkingAsRead, isError: isMarkingAsReadError },
-  ] = useMarkNotificationReadMutation();
-  const [
-    markAllRead,
-    { isLoading: isMarkingAllRead, isError: isMarkingAllReadError },
-  ] = useMarkAllNotificationsReadMutation();
 
-  // console.log(notifications, isLoading);
+  const sortedNotifications = useMemo(
+    () =>
+      [...(notifications?.data ?? [])].sort(
+        (a, b) => Number(a.isRead) - Number(b.isRead),
+      ),
+    [notifications?.data],
+  );
 
-  const handleLongPress = (id: string) => {
-    setSelectMode(true);
-    setSelectedNotifications((prev) => [...prev, id]);
-  };
-  const handlePress = (id: string) => {
-    if (selectMode) {
-      if (selectedNotifications.includes(id)) {
-        setSelectedNotifications((prev) => prev.filter((nid) => nid !== id));
-      } else {
-        setSelectedNotifications((prev) => [...prev, id]);
-      }
-    }
-  };
-
-  const isSelected = (id: string) => selectedNotifications.includes(id);
-
-  const handleMarkRead = () => {
-    if (selectMode) {
-      selectedNotifications.forEach((id) => {
-        markAsRead(id);
-        console.log("id: ", id);
-      });
-      setSelectedNotifications([]);
-    } else {
-      markAllRead();
-    }
-  };
-
-  const sortNotifications = (sortParam: string) => {};
-
+  const [markAsRead, { isLoading: isMarkingAsRead }] =
+    useMarkNotificationReadMutation();
+  const [markAllRead, { isLoading: isMarkingAllRead }] =
+    useMarkAllNotificationsReadMutation();
+  // Exit select mode if all selections are cleared
   useEffect(() => {
     if (selectedNotifications.length === 0) {
       setSelectMode(false);
     }
   }, [selectedNotifications]);
 
-  return (
-    <View style={styles.container}>
-      <View style={[GeneralStyles.wrapper, styles.header]}>
-        <ThemedText weight="bold" size={18} color={Colors.white}>
-          Notifications
-        </ThemedText>
-        <View style={{ flexDirection: "row", alignItems: "center", gap: 16 }}>
-          <Pressable onPress={handleMarkRead} hitSlop={20}>
-            <ThemedText weight="regular" size={14} color={Colors.textMuted}>
-              Mark {selectMode ? "As" : "All"} Read
-            </ThemedText>
-          </Pressable>
+  const handleLongPress = (id: string) => {
+    setSelectMode(true);
+    if (!selectedNotifications.includes(id)) {
+      setSelectedNotifications((prev) => [...prev, id]);
+    }
+  };
 
-          <Pressable onPress={() => setVisible(true)} hitSlop={20}>
-            <Filter />
-          </Pressable>
-        </View>
-        <Modal visible={visible} transparent animationType="slide">
-          <Pressable
-            style={[styles.modal, { flex: 1 }]}
-            onPress={() => setVisible(false)}
-          >
-            <View style={styles.dropdown}>
-              {options.map((opt) => (
-                <Pressable
-                  key={opt}
-                  onPress={() => {
-                    setSelected(opt);
-                    setVisible(false);
-                  }}
-                  style={[
-                    styles.option,
-                    {
-                      backgroundColor:
-                        opt === selected ? Colors.white + "1A" : undefined,
-                    },
-                  ]}
-                >
-                  <ThemedText
-                    color={opt === selected ? Colors.primary : Colors.offWhite}
-                  >
-                    {opt}
-                  </ThemedText>
-                </Pressable>
-              ))}
-            </View>
-          </Pressable>
-        </Modal>
+  const handlePress = (item: Notification) => {
+    if (selectMode) {
+      setSelectedNotifications((prev) =>
+        prev.includes(item.id)
+          ? prev.filter((nid) => nid !== item.id)
+          : [...prev, item.id],
+      );
+    } else {
+      if (!item.isRead) {
+        markAsRead(item.id)
+          .unwrap()
+          .then((res) => console.log("markAsRead success", res))
+          .catch((err) => console.log("markAsRead error", err));
+      }
+    }
+  };
+
+  const handleMarkAction = useCallback(() => {
+    if (selectMode && selectedNotifications.length > 0) {
+      selectedNotifications.forEach((id) => markAsRead(id));
+      setSelectedNotifications([]);
+    } else {
+      markAllRead();
+    }
+
+    console.log("Notifications data:", notifications);
+  }, [selectMode, selectedNotifications, markAsRead, markAllRead]);
+
+  const ListHeader = useMemo(
+    () => (
+      <View style={{ gap: 24, marginBottom: 24 }}>
+        <TextBlock
+          title={SCREEN_CONFIG.headerTitle}
+          body={SCREEN_CONFIG.headerBody}
+        />
+        <ThemedButton
+          title={
+            selectMode
+              ? SCREEN_CONFIG.markSelectedText
+              : SCREEN_CONFIG.markAllText
+          }
+          variant="default"
+          style={styles.markAllButton}
+          textStyle={{ fontSize: 15, color: Colors.white, fontWeight: "600" }}
+          onPress={handleMarkAction}
+          disabled={
+            isMarkingAllRead ||
+            isMarkingAsRead ||
+            (!selectMode && !notifications?.data?.length) ||
+            (selectMode && selectedNotifications.length === 0)
+          }
+        />
       </View>
+    ),
+    [
+      selectMode,
+      selectedNotifications.length,
+      isMarkingAllRead,
+      isMarkingAsRead,
+      notifications?.data?.length,
+      handleMarkAction, // ← added
+    ],
+  );
 
-      <Spacer size={24} />
+  return (
+    <ImageBackground
+      source={require("@/assets/images/new-bg.png")}
+      style={[{ flex: 1, paddingTop: insets.top + 24 }]}
+    >
       <FlatList
-        data={notifications?.data}
+        data={sortedNotifications}
         keyExtractor={(item) => item.id}
-        contentContainerStyle={{
-          width: "100%",
-          borderTopWidth: 1,
-          borderTopColor: Colors.white + "08",
-          // flex: 1,
-        }}
-        style={{ width: "100%", flex: 1 }}
-        renderItem={({ item, index }) => (
-          <Notification
+        contentContainerStyle={[
+          GeneralStyles.wrapper,
+          { paddingBottom: bottomPadding + 40 },
+        ]}
+        showsVerticalScrollIndicator={false}
+        ListHeaderComponent={ListHeader}
+        renderItem={({ item }) => (
+          <NotificationItem
+            item={item}
+            isSelected={selectedNotifications.includes(item.id)}
+            onPress={() => handlePress(item)}
             onLongPress={() => handleLongPress(item.id)}
-            onPress={() => handlePress(item.id)}
-            notification={item}
-            isSelected={isSelected(item.id)}
           />
         )}
-        showsVerticalScrollIndicator={false}
-        ListEmptyComponent={
-          <View
-            style={{
-              flex: 1,
-              width: "100%",
-              marginTop: 16,
-              justifyContent: "center",
-              alignItems: "center",
-              gap: 8,
-            }}
-          >
-            <Illustration />
-            <ThemedText weight="bold" size={14} color={Colors.white}>
-              You have no notifications
-            </ThemedText>
-          </View>
-        }
+        ListEmptyComponent={!isLoading ? <EmptyStateCard /> : null}
       />
-    </View>
+    </ImageBackground>
   );
 };
 
 export default NotificationsScreen;
 
+// ─── Styles ─────────────────────────────────────────────────────────────────
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    paddingVertical: 24,
+  markAllButton: {
+    backgroundColor: Colors.surfaceNavy,
+    borderWidth: 0,
+    height: 56,
   },
-  header: {
+  notificationCard: {
+    ...GeneralStyles.box,
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
-    width: "100%",
-    position: "relative",
+    padding: 16,
+    marginBottom: 12,
+    gap: 16,
+    height: 72,
   },
-  dropdown: {},
-  option: {
-    padding: 10,
-    borderBottomWidth: 0.5,
-    borderBottomColor: Colors.offWhite + "05",
+  indicator: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
   },
-  modal: {
-    position: "absolute",
-    top: 200,
-    right: 24,
-    borderRadius: 8,
-    backgroundColor: Colors.surfaceAlt,
-    width: 120,
-    overflow: "hidden",
+  textContainer: {
+    flex: 1,
+    gap: 4,
+    justifyContent: "center",
+  },
+  emptyStateCard: {
+    ...GeneralStyles.box,
+    padding: 24,
+    gap: 12,
+    marginTop: 12,
   },
 });

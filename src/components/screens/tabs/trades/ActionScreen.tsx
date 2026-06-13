@@ -372,7 +372,7 @@ const ActionScreen = () => {
   const handleSubmit = async () => {
     try {
       let type: TradeType = "buy";
-      let fromAsset = "USD";
+      let fromAsset = "USDT";
       let toAsset = buyOutputSymbol;
       let fromAmount = parsedBuyAmount;
 

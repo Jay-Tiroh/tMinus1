@@ -1,29 +1,36 @@
 import { CryptoIcon } from "@/components/CryptoIcon";
 import TextBlock from "@/components/TextBlock"; // Adjust import paths as needed
-import { formatAmount } from "@/helpers/functions";
+import { Fonts } from "@/constants/Fonts";
+import { GeneralStyles } from "@/constants/themes";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 
-export interface CryptoAsset {
-  id: string;
-  name: string;
-  symbol: string;
-  fiatBalance: number;
-  cryptoBalance: number;
-}
-
 export interface CryptoAssetItemProps {
-  asset: CryptoAsset;
+  leftTitle: string;
+  leftBody: string;
+  rightTitle: string;
+  rightBody: string;
+  iconSymbol?: string;
+  iconComponent?: React.ReactNode;
 }
 
-export const CryptoAssetItem = ({ asset }: CryptoAssetItemProps) => {
+export const CryptoAssetItem = ({
+  leftTitle,
+  leftBody,
+  rightTitle,
+  rightBody,
+  iconSymbol,
+  iconComponent,
+}: CryptoAssetItemProps) => {
   return (
     <View style={styles.card}>
       <View style={styles.leftSection}>
-        <CryptoIcon symbol={asset.symbol} size={48} />
+        {/* Only render the icon if iconSymbol is provided */}
+        {iconSymbol && <CryptoIcon symbol={iconSymbol} size={32} />}
+        {iconComponent && iconComponent}
         <TextBlock
-          title={asset.name}
-          body={asset.symbol}
+          title={leftTitle}
+          body={leftBody}
           titleStyle={styles.titleStyle}
           bodyStyle={styles.bodyStyle}
         />
@@ -31,8 +38,8 @@ export const CryptoAssetItem = ({ asset }: CryptoAssetItemProps) => {
 
       <View style={styles.rightSection}>
         <TextBlock
-          title={`$${formatAmount(asset.fiatBalance)}`}
-          body={`${formatAmount(asset.cryptoBalance)} ${asset.symbol}`}
+          title={rightTitle}
+          body={rightBody}
           titleStyle={[styles.titleStyle, styles.rightAlign]}
           bodyStyle={[styles.bodyStyle, styles.rightAlign]}
         />
@@ -43,13 +50,13 @@ export const CryptoAssetItem = ({ asset }: CryptoAssetItemProps) => {
 
 const styles = StyleSheet.create({
   card: {
+    ...GeneralStyles.box,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "#161619", // Dark background matching the image UI
     paddingVertical: 16,
     paddingHorizontal: 20,
-    borderRadius: 24,
+    borderRadius: 18,
     width: "100%",
   },
   leftSection: {
@@ -61,11 +68,13 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
   },
   titleStyle: {
-    fontSize: 16,
-    lineHeight: 22,
+    fontSize: 14,
+    fontFamily: Fonts.medium,
+    // lineHeight: 22,
   },
   bodyStyle: {
     textTransform: "uppercase",
+    fontSize: 12,
   },
   rightAlign: {
     textAlign: "right",

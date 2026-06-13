@@ -12,13 +12,16 @@ import { useAssetRoute } from "@/hooks/useAssetRoute";
 import useTrade from "@/hooks/useTrade";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 
 type ScreenState = "confirm" | "completed" | "failed";
 
 const ExecuteScreen = () => {
+  const { asset } = useLocalSearchParams();
   const push = useAssetRoute();
+  const router = useRouter();
   const { activeQuote, executeQuote, isExecuting, lastTransaction } =
     useTrade();
   const [screenState, setScreenState] = useState<ScreenState>("confirm");
@@ -35,6 +38,11 @@ const ExecuteScreen = () => {
     }
   };
 
+  const handleOnPinComplete = (enteredPin: string) => {
+    setPin(enteredPin);
+    handleExecute();
+  };
+
   const Config: Record<ScreenState, ConfigType> = {
     confirm: {
       title: "Confirm trade",
@@ -46,7 +54,9 @@ const ExecuteScreen = () => {
         style: undefined,
         textStyle: undefined,
       },
-      content: () => <Confirm quote={activeQuote} onPinComplete={setPin} />,
+      content: () => (
+        <Confirm quote={activeQuote} onPinComplete={handleOnPinComplete} />
+      ),
       topSpacerSize: 42,
     },
     completed: {
@@ -54,7 +64,10 @@ const ExecuteScreen = () => {
       body: "Your trade has settled successfully.",
       cta: {
         title: "View transaction",
-        onPress: () => push("alert"), // swap for your transaction detail route
+        onPress: () =>
+          router.push(
+            `/(tabs)/wallets/transaction-details?id=${lastTransaction?.id}`,
+          ), // swap for your transaction detail route
         variant: "primary",
         style: undefined,
         textStyle: undefined,
@@ -67,7 +80,8 @@ const ExecuteScreen = () => {
       body: "The trade could not be completed.",
       cta: {
         title: "Edit amount",
-        onPress: () => push("alert"),
+        onPress: () =>
+          push("action", { action: "buy", asset: asset as string }), // swap for your trade edit route
         variant: "red",
         style: undefined,
         textStyle: undefined,

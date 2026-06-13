@@ -1,4 +1,4 @@
-import SettingsScreen from "@/components/screens/user/SettingsScreen";
+import SettingsScreen from "@/components/screens/tabs/user/SettingsScreen";
 import React from "react";
 import { StyleSheet } from "react-native";
 
