@@ -108,6 +108,7 @@ export const baseApi = createApi({
     "Watchlist",
     "Notifications",
     "Kyc",
+    "Devices",
   ],
   endpoints: () => ({}),
 });

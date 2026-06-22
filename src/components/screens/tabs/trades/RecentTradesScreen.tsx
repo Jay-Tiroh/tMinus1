@@ -1,125 +1,76 @@
 import { Spacer } from "@/components/Spacer";
+import TextBlock from "@/components/TextBlock";
 import { ThemedButton } from "@/components/ThemedButton";
 import { ThemedText } from "@/components/ThemedText";
-import Template from "@/components/trades/Template";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
-import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
-
-const RECENT_TRADES_CONFIG = [
-  {
-    id: "1",
-    type: "Buy",
-    price: "$64,206.10",
-    amount: "0.0150",
-    total: "963.09",
-  },
-  {
-    id: "2",
-    type: "Sell",
-    price: "$64,194.20",
-    amount: "0.0201",
-    total: "1,290.30",
-  },
-  {
-    id: "3",
-    type: "Buy",
-    price: "$64,211.00",
-    amount: "0.0080",
-    total: "513.69",
-  },
-  {
-    id: "4",
-    type: "Buy",
-    price: "$64,203.44",
-    amount: "0.0440",
-    total: "2,824.95",
-  },
-  {
-    id: "5",
-    type: "Sell",
-    price: "$64,188.17",
-    amount: "0.0190",
-    total: "1,219.58",
-  },
-  {
-    id: "6",
-    type: "Buy",
-    price: "$64,218.25",
-    amount: "0.0110",
-    total: "706.40",
-  },
-  {
-    id: "7",
-    type: "Sell",
-    price: "$64,182.90",
-    amount: "0.0370",
-    total: "2,374.77",
-  },
-];
+import { useAssetRoute } from "@/hooks/useAssetRoute";
+import { useSafeBottom } from "@/hooks/useSafeBottom";
+import { useGetTradesQuery } from "@/store/services/marketsApi";
+import { useLocalSearchParams } from "expo-router";
+import React from "react";
+import { FlatList, ImageBackground, StyleSheet, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const RecentTradesScreen = () => {
-  const [activeTab, setActiveTab] = useState("Trades");
+  const params = useLocalSearchParams<{ asset?: string }>();
+  const asset = params.asset ?? "BTC";
+  const { replace } = useAssetRoute();
+  const topInset = useSafeAreaInsets().top;
+  const bottomPadding = useSafeBottom();
+
+  const { data: tradeData = [] } = useGetTradesQuery(
+    { symbol: asset },
+    { pollingInterval: 5000 },
+  );
+
+  const ListHeader = (
+    <View style={GeneralStyles.wrapper}>
+      <TextBlock title="Recent trades" body="Latest simulated market prints." />
+      <Spacer size={24} />
+
+      {/* Mini Tabs */}
+      <View style={styles.tabsContainer}>
+        <ThemedButton
+          title="Order book"
+          variant="secondary"
+          style={[styles.tab, { backgroundColor: Colors.surfaceNavy }]}
+          textStyle={[styles.tabText, { color: Colors.snowGray }]}
+          onPress={() => replace("order-book", { asset })}
+        />
+        <ThemedButton
+          title="Trades"
+          variant="primary"
+          style={styles.tab}
+          textStyle={styles.tabText}
+        />
+      </View>
+      <Spacer size={24} />
+    </View>
+  );
 
   return (
-    <Template
-      textBlockProps={{
-        title: "Recent trades",
-        body: "Latest simulated market prints.",
-      }}
-      ctaProps={undefined}
-      topSpacerSize={20}
+    <ImageBackground
+      source={require("@/assets/images/new-bg.png")}
+      style={[{ paddingTop: topInset + 24, width: "100%", flex: 1 }]}
     >
-      <View style={GeneralStyles.wrapper}>
-        {/* Mini Tabs */}
-        <View style={styles.tabsContainer}>
-          <ThemedButton
-            title="Trades"
-            variant={activeTab === "Trades" ? "primary" : "secondary"}
-            style={[
-              styles.tab,
-              activeTab !== "Trades" && { backgroundColor: Colors.surfaceNavy },
-            ]}
-            textStyle={[
-              styles.tabText,
-              activeTab !== "Trades" && { color: Colors.snowGray },
-            ]}
-            onPress={() => setActiveTab("Trades")}
-          />
-          <ThemedButton
-            title="Order book"
-            variant={activeTab === "Order book" ? "primary" : "secondary"}
-            style={[
-              styles.tab,
-              activeTab !== "Order book" && {
-                backgroundColor: Colors.surfaceNavy,
-              },
-            ]}
-            textStyle={[
-              styles.tabText,
-              activeTab !== "Order book" && { color: Colors.snowGray },
-            ]}
-            onPress={() => setActiveTab("Order book")}
-          />
-        </View>
-        <Spacer size={24} />
+      <FlatList
+        data={tradeData}
+        keyExtractor={(trade) => trade.id}
+        renderItem={({ item: trade }) => {
+          const isBuy = trade.side === "buy";
+          const typeColor = isBuy ? Colors.primaryClean : Colors.lossBright;
 
-        {/* Trades List */}
-        <View style={{ gap: 10 }}>
-          {RECENT_TRADES_CONFIG.map((trade) => {
-            const isBuy = trade.type === "Buy";
-            const typeColor = isBuy ? Colors.primaryClean : Colors.lossBright;
-
-            return (
-              <View key={trade.id} style={styles.tradeRow}>
+          return (
+            <View style={[GeneralStyles.wrapper, { marginBottom: 10 }]}>
+              <View style={styles.tradeRow}>
                 <ThemedText
                   size={14}
                   weight="bold"
                   color={typeColor}
                   style={{ width: 40 }}
                 >
-                  {trade.type}
+                  {trade.side}
                 </ThemedText>
                 <ThemedText
                   size={14}
@@ -127,7 +78,7 @@ const RecentTradesScreen = () => {
                   color={Colors.snowGray}
                   style={{ width: 90 }}
                 >
-                  {trade.price}
+                  {trade.priceUsd}
                 </ThemedText>
                 <ThemedText
                   size={14}
@@ -141,14 +92,20 @@ const RecentTradesScreen = () => {
                   color={Colors.textMidGray}
                   style={{ flex: 1, textAlign: "right" }}
                 >
-                  {trade.total}
+                  {trade.totalUsd}
                 </ThemedText>
               </View>
-            );
-          })}
-        </View>
-      </View>
-    </Template>
+            </View>
+          );
+        }}
+        ListHeaderComponent={ListHeader}
+        contentContainerStyle={{ paddingBottom: bottomPadding + 50 }}
+        showsVerticalScrollIndicator={false}
+        // onScrollEndDrag={() => {
+        //   console.log("you've reached the end!");
+        // }}
+      />
+    </ImageBackground>
   );
 };
 

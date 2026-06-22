@@ -12,6 +12,7 @@ export interface CryptoAssetItemProps {
   rightBody: string;
   iconSymbol?: string;
   iconComponent?: React.ReactNode;
+  numberOfLines?: number;
 }
 
 export const CryptoAssetItem = ({
@@ -21,6 +22,7 @@ export const CryptoAssetItem = ({
   rightBody,
   iconSymbol,
   iconComponent,
+  numberOfLines,
 }: CryptoAssetItemProps) => {
   return (
     <View style={styles.card}>
@@ -33,6 +35,7 @@ export const CryptoAssetItem = ({
           body={leftBody}
           titleStyle={styles.titleStyle}
           bodyStyle={styles.bodyStyle}
+          numberOfLines={numberOfLines}
         />
       </View>
 
@@ -42,6 +45,7 @@ export const CryptoAssetItem = ({
           body={rightBody}
           titleStyle={[styles.titleStyle, styles.rightAlign]}
           bodyStyle={[styles.bodyStyle, styles.rightAlign]}
+          numberOfLines={numberOfLines}
         />
       </View>
     </View>
@@ -63,6 +67,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 16,
+
+    maxWidth: "50%",
   },
   rightSection: {
     alignItems: "flex-end",

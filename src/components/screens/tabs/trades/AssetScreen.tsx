@@ -25,6 +25,8 @@ import Add from "@/assets/icons/markets/add-circle.svg";
 import { showErrorToast, showSuccessToast } from "@/hooks/showToast";
 import { useAssetRoute } from "@/hooks/useAssetRoute";
 import { useWatchlist } from "@/hooks/useWatchlist";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { Pressable } from "react-native";
 
 const AssetScreen = () => {
   const params = useLocalSearchParams<{ asset?: string }>();
@@ -36,7 +38,7 @@ const AssetScreen = () => {
   );
   const insets = useSafeAreaInsets();
   const bottomPadding = useSafeBottom();
-  const push = useAssetRoute();
+  const { push } = useAssetRoute();
   const actionConfig = [
     {
       title: "Sell",
@@ -118,14 +120,54 @@ const AssetScreen = () => {
         scrollEventThrottle={16}
         style={{ width: "100%" }}
       >
-        <View style={[GeneralStyles.wrapper, { gap: 8 }]}>
-          <TextBlock
-            title={coinDetails?.name}
-            body={
-              coinDetails?.symbol + " · " + coinDetails?.network + " network"
-            }
-          />
-          <CryptoIcon symbol={coinDetails?.symbol ?? "btc"} size={42} />
+        <View
+          style={[
+            GeneralStyles.wrapper,
+            {
+              flexDirection: "row",
+              alignItems: "flex-start",
+              justifyContent: "space-between",
+            },
+          ]}
+        >
+          <View style={{ gap: 8 }}>
+            <TextBlock
+              title={coinDetails?.name}
+              body={
+                coinDetails?.symbol + " · " + coinDetails?.network + " network"
+              }
+            />
+            <CryptoIcon symbol={coinDetails?.symbol ?? "btc"} size={42} />
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 20,
+            }}
+          >
+            <Pressable
+              hitSlop={10}
+              onPress={() => push("order-book", { asset })}
+            >
+              <MaterialCommunityIcons
+                name="notebook-outline"
+                size={24}
+                color={Colors.primaryClean}
+              />
+            </Pressable>
+            <Pressable
+              hitSlop={10}
+              onPress={() => push("recent-trades", { asset })}
+            >
+              <MaterialCommunityIcons
+                name="handshake-outline"
+                size={24}
+                color={Colors.primaryClean}
+              />
+            </Pressable>
+          </View>
         </View>
         <View
           style={[

@@ -1,9 +1,12 @@
+import LogOutBtn from "@/components/LogOutBtn";
 import { Spacer } from "@/components/Spacer";
-import { ThemedButton } from "@/components/ThemedButton";
 import { ThemedText } from "@/components/ThemedText";
 import Template from "@/components/trades/Template";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
+import useProfile from "@/hooks/useProfile";
+import { useNotificationsQuery } from "@/store/services/notificationsApi";
+import { useGetPriceAlertsQuery } from "@/store/services/priceAlertsApi";
 import { Href, useRouter } from "expo-router";
 import React from "react";
 import { TouchableOpacity, View } from "react-native";
@@ -17,6 +20,19 @@ const ProfileScreen = () => {
     "/(tabs)/markets/watchlist",
   ];
   const router = useRouter();
+
+  const { user, kycStatus } = useProfile();
+  const fullName = user?.fullName ?? "User123";
+  const initials = fullName
+    .split(" ")
+    .map((name) => name[0])
+    .join("")
+    .toUpperCase();
+
+  const { data: notifications } = useNotificationsQuery();
+  const unreadCount = notifications?.meta?.unread ?? 0;
+  const { data, isLoading, isError } = useGetPriceAlertsQuery();
+  const activeAlerts = data?.meta?.active ?? [];
   const menuItems = [
     {
       title: "Edit profile",
@@ -34,16 +50,16 @@ const ProfileScreen = () => {
     },
     {
       title: "Price alerts",
-      subtitle: "3 active alerts",
-      trailing: "3",
+      subtitle: activeAlerts + " active alerts",
+      trailing: `${activeAlerts}`,
       onPress: () => {
         router.push(route[2]);
       },
     },
     {
       title: "Notifications",
-      subtitle: "2 unread messages",
-      trailing: "2",
+      subtitle: unreadCount + " unread messages",
+      trailing: `${unreadCount}`,
       onPress: () => {
         router.push(route[3]);
       },
@@ -77,15 +93,15 @@ const ProfileScreen = () => {
             }}
           >
             <ThemedText size={32} weight="bold" color={Colors.backgroundInk}>
-              A
+              {initials}
             </ThemedText>
           </View>
           <View style={{ gap: 4 }}>
             <ThemedText size={20} weight="bold" color={Colors.white}>
-              Ada Student
+              {fullName}
             </ThemedText>
             <ThemedText size={14} color={Colors.textMidGray}>
-              student@cryptoclass.test
+              {user?.email || ""}
             </ThemedText>
             <View
               style={{
@@ -97,8 +113,22 @@ const ProfileScreen = () => {
                 marginTop: 4,
               }}
             >
-              <ThemedText size={12} weight="bold" color={Colors.primaryClean}>
-                Verified
+              <ThemedText
+                size={12}
+                weight="bold"
+                color={
+                  kycStatus === "approved"
+                    ? Colors.primaryClean
+                    : kycStatus === "pending"
+                      ? Colors.warningAmber
+                      : Colors.loss
+                }
+              >
+                {kycStatus === "approved"
+                  ? "Verified"
+                  : kycStatus === "pending"
+                    ? "Pending"
+                    : "Not Verified"}
               </ThemedText>
             </View>
           </View>
@@ -119,11 +149,16 @@ const ProfileScreen = () => {
             />
           ))}
         </View>
-
-        <Spacer size={40} />
-
-        {/* Logout Button */}
-        <ThemedButton title="Logout" variant="secondary" />
+      </View>
+      <Spacer size={40} />
+      <View
+        style={{
+          alignItems: "center",
+          justifyContent: "center",
+          flex: 1,
+        }}
+      >
+        <LogOutBtn />
       </View>
     </Template>
   );
@@ -134,17 +169,22 @@ export const ListItem = ({
   title,
   subtitle,
   trailingText,
+  trailingTextColor,
   iconColor,
   onPress,
+  onLongPress,
 }: {
   title: string;
   subtitle: string;
   trailingText?: string;
+  trailingTextColor?: string;
   iconColor: string;
   onPress?: () => void;
+  onLongPress?: () => void;
 }) => (
   <TouchableOpacity
     onPress={onPress}
+    onLongPress={onLongPress}
     style={[
       GeneralStyles.box,
       {
@@ -174,7 +214,11 @@ export const ListItem = ({
       </View>
     </View>
     {trailingText && (
-      <ThemedText size={14} weight="bold" color={Colors.primaryClean}>
+      <ThemedText
+        size={14}
+        weight="bold"
+        color={trailingTextColor ?? Colors.primaryClean}
+      >
         {trailingText}
       </ThemedText>
     )}

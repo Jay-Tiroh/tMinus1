@@ -28,6 +28,7 @@ const TAB_TYPE_MAP: Record<string, TransactionType | undefined> = {
   All: undefined,
   Deposits: "deposit",
   Withdrawals: "withdrawal",
+  Transfers: "transfer",
   Buys: "buy",
   Sells: "sell",
   Swaps: "swap",

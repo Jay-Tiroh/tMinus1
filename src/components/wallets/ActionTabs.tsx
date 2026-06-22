@@ -22,7 +22,7 @@ const Tabs: Tab[] = [
   },
   {
     name: "Transfer",
-    href: "/(tabs)/wallets/myQr",
+    href: "/wallets/transfer/transfer",
     bgColor: Colors.infoBright,
   },
 ];

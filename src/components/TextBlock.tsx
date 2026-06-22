@@ -8,9 +8,16 @@ export type TextBlockProps = {
   body?: string;
   titleStyle?: StyleProp<TextStyle>;
   bodyStyle?: StyleProp<TextStyle>;
+  numberOfLines?: number;
 };
 
-const TextBlock = ({ title, body, titleStyle, bodyStyle }: TextBlockProps) => {
+const TextBlock = ({
+  title,
+  body,
+  titleStyle,
+  bodyStyle,
+  numberOfLines,
+}: TextBlockProps) => {
   return (
     <View style={styles.container}>
       {title && (
@@ -19,12 +26,20 @@ const TextBlock = ({ title, body, titleStyle, bodyStyle }: TextBlockProps) => {
           weight="bold"
           color={Colors.snowGray}
           style={titleStyle}
+          numberOfLines={numberOfLines}
+          ellipsizeMode="tail"
         >
           {title}
         </ThemedText>
       )}
       {body && (
-        <ThemedText size={14} color={Colors.textMidGray} style={bodyStyle}>
+        <ThemedText
+          size={14}
+          color={Colors.textMidGray}
+          style={bodyStyle}
+          numberOfLines={numberOfLines}
+          ellipsizeMode="tail"
+        >
           {body}
         </ThemedText>
       )}

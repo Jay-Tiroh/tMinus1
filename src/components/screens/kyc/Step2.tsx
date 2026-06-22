@@ -8,7 +8,7 @@ import { showErrorToast } from "@/hooks/showToast";
 import { useGoToRoute } from "@/hooks/useGoToRoute";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { selectKycFiles, setKycFile } from "@/store/slices/kycSlice";
-// import * as ImagePicker from "expo-image-picker";
+import * as ImagePicker from "expo-image-picker";
 import React, { useState } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 
@@ -54,41 +54,41 @@ export default function Step2({
 
   const handleTakeSelfie = async () => {
     try {
-      // const { status } = await ImagePicker.requestCameraPermissionsAsync();
+      const { status } = await ImagePicker.requestCameraPermissionsAsync();
 
-      // if (status !== "granted") {
-      //   showErrorToast({
-      //     title: "Permission Denied",
-      //     message: "Camera access is required to take a verification selfie.",
-      //   });
-      //   return;
-      // }
+      if (status !== "granted") {
+        showErrorToast({
+          title: "Permission Denied",
+          message: "Camera access is required to take a verification selfie.",
+        });
+        return;
+      }
 
-      // const result = await ImagePicker.launchCameraAsync({
-      //   mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      //   allowsEditing: true,
-      //   aspect: [1, 1],
-      //   quality: 0.75,
-      // });
+      const result = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 0.75,
+      });
 
-      // if (!result.canceled && result.assets && result.assets.length > 0) {
-      //   const asset = result.assets[0];
-      //   console.log("Captured selfie asset:", asset);
-      const debugUri =
-        "file:///data/user/0/com.anonymous.tMinus1/cache/DocumentPicker/4a0b073e-ef6b-495a-9e55-533dc114cc25.jpg";
+      if (!result.canceled && result.assets && result.assets.length > 0) {
+        const asset = result.assets[0];
+        console.log("Captured selfie asset:", asset);
+        const debugUri =
+          "file:///data/user/0/com.anonymous.tMinus1/cache/DocumentPicker/4a0b073e-ef6b-495a-9e55-533dc114cc25.jpg";
 
-      dispatch(
-        setKycFile({
-          key: "selfie",
-          file: {
-            uri: debugUri,
-            name: "test_document.jpg",
-            mimeType: "image/jpeg",
-            size: 500000,
-          },
-        }),
-      );
-      // }
+        dispatch(
+          setKycFile({
+            key: "selfie",
+            file: {
+              uri: asset.uri,
+              name: "test_document.jpg",
+              mimeType: "image/jpeg",
+              size: 500000,
+            },
+          }),
+        );
+      }
     } catch (error) {
       console.error("Camera acquisition failure:", error);
     }

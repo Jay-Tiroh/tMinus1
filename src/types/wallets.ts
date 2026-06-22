@@ -10,7 +10,8 @@ export type TransactionType =
   | "sell"
   | "swap"
   | "deposit"
-  | "withdrawal";
+  | "withdrawal"
+  | "transfer"; // Added "transfer"
 
 // Base Models
 export interface DepositAddress {
@@ -90,6 +91,20 @@ export interface Withdrawal {
   reviewerNote: string | null;
 }
 
+export interface TransferRecipient {
+  id: string;
+  fullName: string;
+  email: string;
+  phone: string;
+}
+
+export interface TransferData {
+  reference: string;
+  assetSymbol: string;
+  amount: number;
+  recipient: TransferRecipient;
+}
+
 // Request Data Models
 export interface SimulateDepositRequest {
   amount: number;
@@ -101,6 +116,13 @@ export interface WithdrawalRequest {
   amount: number;
   address: string;
   network: string;
+}
+
+export interface InternalTransferRequest {
+  assetSymbol: string;
+  amount: number;
+  recipient: string;
+  pin: string;
 }
 
 export interface GetTransactionsQueryParams {
@@ -184,4 +206,13 @@ export interface SimulateDepositResponse {
 
 export interface WithdrawalResponse {
   data: Withdrawal;
+}
+
+export interface InternalTransferResponse {
+  data: {
+    transfer: TransferData;
+    transaction: Transaction;
+    recipientTransaction: Transaction;
+    wallet: Wallet;
+  };
 }

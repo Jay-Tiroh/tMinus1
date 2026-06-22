@@ -1,4 +1,4 @@
-import NotificationsScreen from "@/components/screens/tabs/home/NotificationsScreen";
+import NotificationsScreen from "@/components/screens/tabs/user/NotificationsScreen";
 
 const Notifications = () => {
   return <NotificationsScreen />;

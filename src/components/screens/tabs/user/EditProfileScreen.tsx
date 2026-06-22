@@ -1,181 +1,159 @@
-import Avatar from "@/assets/icons/user/avatar.svg";
-import Camera from "@/assets/icons/user/camera.svg";
+import { Spacer } from "@/components/Spacer";
 import { ThemedButton } from "@/components/ThemedButton";
 import { ThemedText } from "@/components/ThemedText";
+import Template from "@/components/trades/Template";
 import { ThemedTextInput } from "@/components/user/ThemedTextInput";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import useMisc from "@/constants/misc";
-import {
-  EditProfileFormData,
-  editProfileSchema,
-} from "@/schemas/profileSchemas";
+import { showErrorToast, showSuccessToast } from "@/hooks/showToast";
+import { FullNameFormData, fullNameSchema_ } from "@/schemas/authSchemas";
 import { useUpdateProfileMutation } from "@/store/services/profileApi";
-import {
-  ProfileUpdateRequestData,
-  UpdateProfileRequest,
-} from "@/types/profile";
+import { UpdateProfileRequest } from "@/types/profile";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LinearGradient } from "expo-linear-gradient";
-import { useLocalSearchParams } from "expo-router";
-import React, { useEffect, useRef, useState } from "react";
+import { useRouter } from "expo-router";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { StyleSheet, TextInput, View } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 
 const EditProfileScreen = () => {
-  const { displayName, details, profileData } = useMisc();
-  const { email, phone } = profileData;
+  const { profileData } = useMisc();
+  const { email, phone, fullName: displayName } = profileData;
 
-  const { edit } = useLocalSearchParams<{ edit?: keyof EditProfileFormData }>();
+  const { control, handleSubmit, reset } = useForm<FullNameFormData>({
+    resolver: zodResolver(fullNameSchema_),
+    mode: "onChange",
+    defaultValues: {
+      fullName: displayName || "",
+    },
+  });
 
-  const inputRefs = useRef<
-    Partial<Record<keyof EditProfileFormData, TextInput | null>>
-  >({});
-
-  const [focusedInput, setFocusedInput] = useState<
-    keyof EditProfileFormData | null
-  >(null);
-
-  const { control, handleSubmit, setValue, watch, reset, clearErrors } =
-    useForm<EditProfileFormData>({
-      resolver: zodResolver(editProfileSchema),
-      mode: "onChange",
-      defaultValues: {
-        username: displayName,
-        email: email ?? "",
-        phone: phone ?? "",
-      },
-    });
-
+  // Keep form in sync if displayName updates externally
   useEffect(() => {
-    if (!email && !phone) return;
-    reset({
-      username: displayName,
-      email: email ?? "",
-      phone: phone ?? "",
-    });
-  }, [email, phone, displayName]);
+    if (displayName) {
+      reset({ fullName: displayName });
+    }
+  }, [displayName, reset]);
 
-  // Focus the field that was tapped on the Profile screen
-  useEffect(() => {
-    if (!edit || Array.isArray(edit)) return;
+  const [updateProfile, { isLoading }] = useUpdateProfileMutation();
 
-    requestAnimationFrame(() => {
-      setTimeout(() => {
-        inputRefs.current[edit]?.focus();
-      }, 50);
-    });
-  }, [edit]);
+  const router = useRouter();
+  const onSubmit = async (data: FullNameFormData) => {
+    // Avoid unnecessary API calls if the name hasn't changed
+    if (data.fullName.trim() === displayName) return;
 
-  const handleBlur = (
-    fieldName: keyof EditProfileFormData,
-    defaultValue: string,
-  ) => {
-    setFocusedInput(null);
-    const currentValue = watch(fieldName);
-    if (!currentValue || currentValue.trim() === "") {
-      setValue(fieldName, defaultValue);
-      clearErrors(fieldName);
+    const payload: UpdateProfileRequest = {
+      fullName: data.fullName.trim(),
+    };
+    try {
+      const result = await updateProfile(payload).unwrap();
+      showSuccessToast({
+        title: "Profile Updated",
+        message: "Your profile details have been saved successfully.",
+      });
+      router.back();
+    } catch (error) {
+      console.error("Failed to update profile:", error);
+      showErrorToast({
+        title: "Update Failed",
+        message: "We couldn't update your profile right now. Please try again.",
+      });
     }
   };
-  const [updateProfile, { isLoading, isError, isSuccess, error }] =
-    useUpdateProfileMutation();
 
-  const onSubmit = async (data: EditProfileFormData) => {
-    const payload: Partial<ProfileUpdateRequestData> = {};
-
-    if (data.email && data.email.trim() !== "") payload.email = data.email;
-    if (data.phone && data.phone.trim() !== "") payload.phone = data.phone;
-    if (data.username && data.username.trim() !== "")
-      payload.fullName = data.username;
-
-    if (Object.keys(payload).length === 0) return;
-
-    const result = await updateProfile(payload as UpdateProfileRequest);
-
-    if ("error" in result) {
-      console.error("Failed to update profile:", result.error);
-      return;
-    }
-  };
+  // Config-driven locked fields
+  const lockedFields = [
+    {
+      id: "email",
+      label: "Email Address",
+      value: email,
+      fallback: "No email linked",
+    },
+    {
+      id: "phone",
+      label: "Mobile Number",
+      value: phone,
+      fallback: "No phone linked",
+    },
+  ];
 
   return (
-    <View style={styles.container}>
-      {/* Avatar + username */}
-      <View style={styles.imageContainer}>
-        <LinearGradient
-          colors={[Colors.surface, Colors.primary + "1A"]}
-          style={styles.gradient}
-        />
-        <View style={styles.avatarContainer}>
-          <View style={styles.avatarWrapper}>
-            <Avatar width={110} height={110} style={{ opacity: 0.8 }} />
-            <View style={styles.cameraWrapper}>
-              <Camera />
-            </View>
+    <Template
+      textBlockProps={{
+        title: "Edit Profile",
+        body: "Update your personal details. Security-sensitive fields are locked and cannot be changed here.",
+      }}
+      ctaProps={undefined}
+    >
+      <View style={[styles.container, { paddingHorizontal: 24 }]}>
+        {/* Editable Fields Container */}
+        <View style={styles.fieldsContainer}>
+          <View style={styles.inputBox}>
+            <ThemedText size={12} color={Colors.textMidGray}>
+              Full Name
+            </ThemedText>
+            <ThemedTextInput
+              control={control}
+              name="fullName"
+              style={styles.textInput}
+              placeholder="Enter your full name"
+            />
           </View>
-          <ThemedTextInput
-            ref={(el) => {
-              inputRefs.current["username"] = el;
+        </View>
+
+        <Spacer size={24} />
+
+        {/* Locked Fields Container */}
+        <View style={styles.fieldsContainer}>
+          {lockedFields.map((field) => (
+            <View key={field.id} style={styles.lockedBox}>
+              <View style={styles.lockedTextGroup}>
+                <ThemedText size={12} color={Colors.textMidGray}>
+                  {field.label}
+                </ThemedText>
+                <ThemedText size={16} color={Colors.textFaint} weight="medium">
+                  {field.value || field.fallback}
+                </ThemedText>
+              </View>
+              <MaterialCommunityIcons
+                name="lock-outline"
+                size={20}
+                color={Colors.textMidGray}
+              />
+            </View>
+          ))}
+        </View>
+
+        <Spacer size={42} />
+
+        {/* Form Actions */}
+        <View style={styles.ctaRow}>
+          <ThemedButton
+            title="Cancel"
+            variant="secondary"
+            style={styles.flexButton}
+            onPress={() => {
+              reset();
+              router.back();
             }}
-            control={control}
-            name="username"
-            style={[styles.valueInput, styles.usernameInput]}
-            onBlurCustom={() => handleBlur("username", displayName)}
+            disabled={isLoading}
+          />
+          <ThemedButton
+            title="Save Changes"
+            variant="primary"
+            style={styles.flexButton}
+            onPress={handleSubmit(onSubmit)}
+            disabled={isLoading}
+            iconComponent={
+              isLoading ? (
+                <ActivityIndicator color={Colors.surfaceNavy} />
+              ) : undefined
+            }
           />
         </View>
       </View>
-
-      {/* Other fields */}
-      <View style={styles.otherDetails}>
-        {details.map((detail) => (
-          <View style={styles.detail} key={detail.label}>
-            <ThemedText size={12} color={Colors.textMuted}>
-              {detail.label}
-            </ThemedText>
-            <ThemedTextInput
-              ref={(el) => {
-                inputRefs.current[detail.name as keyof EditProfileFormData] =
-                  el;
-              }}
-              control={control}
-              name={detail.name as keyof EditProfileFormData}
-              style={[
-                styles.valueInput,
-                focusedInput === detail.name && {
-                  borderBottomColor: Colors.white,
-                },
-              ]}
-              onBlurCustom={() =>
-                handleBlur(
-                  detail.name as keyof EditProfileFormData,
-                  detail.value ?? "",
-                )
-              }
-              onFocus={() =>
-                setFocusedInput(detail.name as keyof EditProfileFormData)
-              }
-            />
-          </View>
-        ))}
-      </View>
-
-      {/* Save CTA */}
-      <View style={styles.CTA}>
-        <ThemedButton
-          title="Cancel"
-          variant="secondary"
-          style={{ width: "50%" }}
-          onPress={reset}
-        />
-        <ThemedButton
-          title="Save Changes"
-          variant="primary"
-          style={{ width: "50%" }}
-          onPress={handleSubmit(onSubmit)}
-        />
-      </View>
-    </View>
+    </Template>
   );
 };
 
@@ -183,85 +161,51 @@ export default EditProfileScreen;
 
 const styles = StyleSheet.create({
   container: {
+    width: "100%",
     flex: 1,
-    alignItems: "center",
-    gap: 34,
   },
-  imageContainer: {
-    width: "100%",
-    height: 200,
-    justifyContent: "center",
-    alignItems: "center",
-    position: "relative",
-  },
-  gradient: {
-    width: "100%",
-    height: 100,
-    position: "absolute",
-    top: 0,
-  },
-  avatarContainer: {
-    height: "100%",
+  fieldsContainer: {
     gap: 16,
-    justifyContent: "center",
-    alignItems: "center",
-    position: "relative",
-  },
-  avatarWrapper: {
-    position: "relative",
-    justifyContent: "center",
-    alignItems: "center",
-    width: 112,
-    height: 112,
-    borderRadius: 60,
-    borderColor: Colors.white,
-    borderWidth: 1,
-  },
-  cameraWrapper: {
-    position: "absolute",
-    bottom: -4,
-    right: -8,
-    width: 36,
-    height: 36,
-    borderRadius: 20,
-    backgroundColor: Colors.surfaceDim,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-
-  otherDetails: {
-    flex: 1,
-    padding: 30,
-    paddingTop: 0,
-    width: "100%",
-    borderTopWidth: 0.5,
-    borderTopColor: Colors.border + "1A",
-    gap: 30,
-  },
-  detail: {
-    gap: 4,
-    height: 62,
-  },
-  valueInput: {
-    borderBottomWidth: 0.5,
-    borderBottomColor: Colors.border + "1A",
-    color: Colors.white,
     width: "100%",
   },
-  usernameInput: {
-    fontFamily: Fonts.bold,
+  inputBox: {
+    backgroundColor: Colors.backgroundDark,
+    borderRadius: 18,
+    paddingHorizontal: 16,
+    height: 86,
+    justifyContent: "center",
+    gap: 8,
+  },
+  textInput: {
+    color: Colors.snowGray,
     fontSize: 18,
-    textAlign: "center",
+    fontFamily: Fonts.bold,
+    paddingTop: 0,
+    paddingBottom: 0,
+    margin: 0,
     borderBottomWidth: 0,
   },
-  CTA: {
-    paddingBottom: 40,
+  lockedBox: {
+    backgroundColor: Colors.backgroundDark,
+    borderRadius: 18,
+    paddingHorizontal: 16,
+    height: 86,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  lockedTextGroup: {
+    gap: 4,
+    justifyContent: "center",
+  },
+  ctaRow: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "flex-start",
+    alignItems: "center",
     width: "100%",
-    paddingHorizontal: 30,
-    gap: 8,
+    gap: 12,
+  },
+  flexButton: {
     flex: 1,
   },
 });

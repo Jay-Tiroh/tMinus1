@@ -2,6 +2,8 @@ import {
   DepositAddress,
   DepositAddressesResponse,
   GetTransactionsQueryParams,
+  InternalTransferRequest,
+  InternalTransferResponse,
   PortfolioChartPoint,
   PortfolioHistoryMeta,
   PortfolioHistoryResponse,
@@ -107,8 +109,22 @@ const walletsApi = baseApi.injectEndpoints({
       transformResponse: (response: WithdrawalResponse) => response.data,
       invalidatesTags: ["Wallet", "Transaction", "Portfolio"],
     }),
+
+    // POST /wallet/transfers
+    internalTransfer: builder.mutation<
+      InternalTransferResponse["data"],
+      InternalTransferRequest
+    >({
+      query: (transferData) => ({
+        url: "/wallet/transfers",
+        method: "POST",
+        body: transferData,
+      }),
+      transformResponse: (response: InternalTransferResponse) => response.data,
+      invalidatesTags: ["Wallet", "Transaction", "Portfolio"],
+    }),
   }),
-  overrideExisting: false,
+  overrideExisting: true,
 });
 
 export const {
@@ -120,4 +136,5 @@ export const {
   useGetTransactionByIdQuery,
   useSimulateDepositMutation,
   useRequestWithdrawalMutation,
+  useInternalTransferMutation,
 } = walletsApi;

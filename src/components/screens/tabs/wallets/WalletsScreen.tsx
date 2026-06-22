@@ -10,10 +10,9 @@ import { GeneralStyles } from "@/constants/themes";
 import { formatAmount, timeAgo } from "@/helpers/functions";
 import { useAllAssets } from "@/hooks/useAllAssets";
 import { useGoToRoute } from "@/hooks/useGoToRoute";
-import { useSafeBottom } from "@/hooks/useSafeBottom";
 import { useTransactions } from "@/hooks/useTransactions";
 import useWallet from "@/hooks/useWallet";
-import React, { useState } from "react";
+import React from "react";
 import { Dimensions, Pressable, StyleSheet, View } from "react-native";
 
 const SCREEN_HEIGHT = Dimensions.get("window").height;
@@ -59,6 +58,7 @@ const RecentTransactions = () => {
               formatAmount(tx.toAmount + tx.feeAmount) + " " + tx.toAsset
             }
             rightBody={timeAgo(tx.createdAt)}
+            numberOfLines={1}
           />
         ))}
       </View>
@@ -68,17 +68,12 @@ const RecentTransactions = () => {
 
 const WalletsScreen = () => {
   const { coins } = useAllAssets();
-  const { wallet, balances, isLoading, refetch } = useWallet();
+  const { balances } = useWallet();
 
   const assetsHeld = balances.map((balance) => balance.assetSymbol);
   const displayedCoins = coins.filter((coin) =>
     assetsHeld.includes(coin.symbol),
   );
-
-  const bottomPadding = useSafeBottom() + 20;
-  const [headerHeight, setHeaderHeight] = useState(0);
-
-  const listHeight = SCREEN_HEIGHT - headerHeight;
 
   return (
     <Template

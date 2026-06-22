@@ -2,6 +2,7 @@ import { Spacer } from "@/components/Spacer";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
+import { formatAmount } from "@/helpers/functions";
 import { showErrorToast } from "@/hooks/showToast";
 import useWallet from "@/hooks/useWallet";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -16,7 +17,7 @@ const Balance = () => {
   };
   const { portfolioValueUsd, isLoading, isError } = useWallet();
 
-  const balance = isVisible ? portfolioValueUsd : "*******";
+  const balance = isVisible ? formatAmount(portfolioValueUsd) : "*******";
 
   useEffect(() => {
     if (isError) {

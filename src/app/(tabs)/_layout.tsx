@@ -1,6 +1,7 @@
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { TABS, TabBarColors, TabBarStyle } from "@/constants/TabsConfig";
+import { usePushRegistration } from "@/hooks/usePushRegistration";
 import { Tabs } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SvgProps } from "react-native-svg";
@@ -22,6 +23,7 @@ function renderIcon(Icon: React.FC<SvgProps>, focused: boolean) {
 // ──────────────────────────────────────────────────────────────────────────
 
 export default function TabsLayout() {
+  usePushRegistration();
   const insets = useSafeAreaInsets();
   return (
     <Tabs

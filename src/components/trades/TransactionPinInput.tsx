@@ -52,7 +52,12 @@ export default function TransactionPinInput({
   );
 
   return (
-    <Pressable onPress={() => inputRef.current?.focus()} style={styles.row}>
+    <Pressable
+      onPress={() => {
+        inputRef.current?.focus();
+      }}
+      style={styles.row}
+    >
       {Array.from({ length: PIN_LENGTH }).map((_, index) => (
         <View
           key={index}
@@ -91,7 +96,7 @@ const styles = StyleSheet.create({
   },
   box: {
     borderRadius: 14,
-    backgroundColor: Colors.backgroundDark,
+    backgroundColor: Colors.backgroundInk,
     width: 64,
     height: 64,
     alignItems: "center",
@@ -105,6 +110,10 @@ const styles = StyleSheet.create({
   },
   hiddenInput: {
     position: "absolute",
-    opacity: 0,
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    opacity: 0.01, // Sometimes opacity: 0.01 is safer for very old Android versions
   },
 });

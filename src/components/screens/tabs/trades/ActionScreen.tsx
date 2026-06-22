@@ -237,7 +237,7 @@ const ActionScreen = () => {
 
   const { balances, portfolioValue, getBalanceBySymbol } = useWallet();
   const { limits } = useKyc();
-  const push = useAssetRoute();
+  const { push } = useAssetRoute();
   const goToKyc = useGoToRoute("/kyc");
   const scrollRef = useRef<ScrollView>(null);
   const [activeTab, setActiveTab] = useState<Action>(action);

@@ -14,7 +14,7 @@ interface UseKycReturn {
   refetch: () => void;
 }
 
-export function useKyc(pollIntervalMs = 0): UseKycReturn {
+export function useKyc(pollIntervalMs = 10000): UseKycReturn {
   const { data, isLoading, isError, isSuccess, refetch } = useProfileQuery(
     undefined,
     {

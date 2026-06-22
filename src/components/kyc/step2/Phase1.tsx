@@ -10,7 +10,7 @@ import { getDocumentByType, KycFileAsset } from "@/types/kyc";
 import Feather from "@expo/vector-icons/Feather";
 import Fontisto from "@expo/vector-icons/Fontisto";
 import Ionicons from "@expo/vector-icons/Ionicons";
-// import * as DocumentPicker from "expo-document-picker";
+import * as DocumentPicker from "expo-document-picker";
 import React, { useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 export type UploadOption = {
@@ -201,32 +201,32 @@ const Phase1 = () => {
 
   const handlePickDocument = async () => {
     try {
-      // const result = await DocumentPicker.getDocumentAsync({
-      //   type: documentType?.acceptedMimeTypes ?? ["*/*"],
-      //   copyToCacheDirectory: true,
-      // });
+      const result = await DocumentPicker.getDocumentAsync({
+        type: documentType?.acceptedMimeTypes ?? ["*/*"],
+        copyToCacheDirectory: true,
+      });
 
-      // if (!result.canceled && result.assets && result.assets.length > 0) {
-      //   // Small delay to let the app fully resume before dispatching
-      //   await new Promise((resolve) => setTimeout(resolve, 300));
+      if (!result.canceled && result.assets && result.assets.length > 0) {
+        // Small delay to let the app fully resume before dispatching
+        await new Promise((resolve) => setTimeout(resolve, 300));
 
-      //   const asset = result.assets[0];
-      // console.log("Picked document asset:", asset);
-      const debugUri =
-        "file:///data/user/0/com.anonymous.tMinus1/cache/DocumentPicker/9b710e00-1647-4e12-abaa-457a38567a43.jpg";
-      dispatch(
-        setKycFile({
-          key: "document_front",
-          file: {
-            uri: debugUri,
-            name: "test_document.jpg",
-            mimeType: "image/jpeg",
-            size: 5500000,
-          },
-        }),
-      );
-      // console.warn("[KYC] File URI:", asset.uri);
-      // }
+        const asset = result.assets[0];
+        console.log("Picked document asset:", asset);
+        const debugUri =
+          "file:///data/user/0/com.anonymous.tMinus1/cache/DocumentPicker/9b710e00-1647-4e12-abaa-457a38567a43.jpg";
+        dispatch(
+          setKycFile({
+            key: "document_front",
+            file: {
+              uri: asset.uri,
+              name: "test_documents.jpg",
+              mimeType: "image/jpeg",
+              size: 5500000,
+            },
+          }),
+        );
+        console.warn("[KYC] File URI:", asset.uri);
+      }
     } catch (error) {
       console.warn("Document picking failed:", error);
     }
@@ -239,7 +239,7 @@ const Phase1 = () => {
       />
 
       <UploadCTA
-        title={currentConfig?.cta || "Upload document"}
+        title={currentConfig?.cta || "Upload documents"}
         onPress={handlePickDocument}
         file={activeFile}
       />

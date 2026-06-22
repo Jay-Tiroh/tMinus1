@@ -16,9 +16,15 @@ const DepositAssetSelectionScreen = () => {
   // When API is ready, replace DEPOSIT_ASSETS_DATA with:
   // const { data: assets = [] } = useGetDepositAssetsQuery();
 
-  const { getDepositAddressBySymbol, balances } = useWallet();
+  const {
+    getDepositAddressBySymbol,
+    balances,
+    wallet,
+    refetch,
+    depositAddresses,
+  } = useWallet();
   const router = useRouter();
-
+  // console.log(depositAddresses);
   return (
     <Template
       textBlockProps={{
@@ -36,9 +42,11 @@ const DepositAssetSelectionScreen = () => {
     >
       <View style={[GeneralStyles.wrapper, { gap: 12 }]}>
         {balances.map((balance) => {
-          const asset = getDepositAddressBySymbol(balance.assetSymbol);
-          // console.log("Asset info for", balance.assetSymbol, ":", asset);
-          if (!asset.address) return null; // Skip if asset info is not found
+          const asset = depositAddresses.find(
+            (addr) => addr.assetSymbol === balance.assetSymbol,
+          );
+          console.log("Asset info for", balance.assetSymbol, ":", asset);
+          if (!asset?.address) return null;
           return (
             <Pressable
               key={balance.assetSymbol}

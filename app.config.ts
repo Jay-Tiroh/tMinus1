@@ -31,7 +31,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       "android.permission.USE_BIOMETRIC",
       "android.permission.USE_FINGERPRINT",
     ],
-    package: "com.anonymous.tMinus1",
+    package: "com.chizurujethro.tminus1",
+    googleServicesFile: "./google-services.json",
   },
   web: {
     output: "static",
@@ -39,23 +40,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     bundler: "metro",
   },
   plugins: [
-    [
-      "expo-splash-screen",
-      {
-        backgroundColor: "#1B232A",
-        image: "./src/assets/images/splash.png",
-        imageResizeMode: "cover",
-        width: 414,
-        height: 488,
-        dark: {
-          backgroundColor: "#1B232A",
-          image: "./src/assets/images/splash.png",
-          imageResizeMode: "cover",
-          width: 414,
-          height: 488,
-        },
-      },
-    ],
     [
       "expo-file-system",
       [

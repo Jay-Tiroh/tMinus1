@@ -12,7 +12,6 @@ type AssetSubroute =
 type AssetRouteParams = {
   asset?: string;
 } & Record<string, string>;
-
 export function useAssetRoute() {
   const router = useRouter();
   const { asset: currentAsset } = useLocalSearchParams<{ asset: string }>();
@@ -24,6 +23,13 @@ export function useAssetRoute() {
       params: { asset: asset ?? currentAsset, ...rest },
     });
   };
+  const replace = (subroute: AssetSubroute, params?: AssetRouteParams) => {
+    const { asset, ...rest } = params ?? {};
+    router.replace({
+      pathname: `/(tabs)/trades/[asset]/${subroute}`,
+      params: { asset: asset ?? currentAsset, ...rest },
+    });
+  };
 
-  return push;
+  return { push, replace };
 }

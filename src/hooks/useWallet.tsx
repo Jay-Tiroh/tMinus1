@@ -1,5 +1,8 @@
-import { useGetWalletQuery } from "@/store/services/walletsApi";
-import { Balance, DepositAddress } from "@/types/wallets";
+import {
+  useGetDepositAddressesQuery,
+  useGetWalletQuery,
+} from "@/store/services/walletsApi";
+import { Balance } from "@/types/wallets";
 import { useCallback } from "react";
 
 export default function useWallet(pollIntervalMs = 30000) {
@@ -17,28 +20,31 @@ export default function useWallet(pollIntervalMs = 30000) {
     refetchOnReconnect: true,
   });
 
+  const {
+    data: depositAddresses = [],
+    isLoading: isDepositAddressesLoading,
+    refetch: refetchDepositAddresses,
+  } = useGetDepositAddressesQuery();
+
   const wallet = data?.wallet;
   const verification = data?.verification;
   const portfolioValue = data?.portfolioValue ?? 0;
   const portfolioValueUsd = data?.portfolioValueUsd ?? 0;
   const portfolioCurrency = data?.portfolioCurrency ?? "USD";
   const balances: Balance[] = wallet?.balances ?? [];
-  const depositAddresses: DepositAddress[] = wallet?.depositAddresses ?? [];
 
   const getDepositAddressBySymbol = useCallback(
     (symbol: string) => {
       if (!symbol) return {};
-
       const targetSymbol = symbol.toUpperCase();
-      const foundAddress = depositAddresses.find(
+      const found = depositAddresses.find(
         (addr) => addr.assetSymbol === targetSymbol,
       );
-
       return {
-        address: foundAddress?.address,
-        network: foundAddress?.network,
-        qrPayload: foundAddress?.qrPayload,
-        assetSymbol: foundAddress?.assetSymbol,
+        address: found?.address,
+        network: found?.network,
+        qrPayload: found?.qrPayload,
+        assetSymbol: found?.assetSymbol,
       };
     },
     [depositAddresses],
@@ -70,5 +76,8 @@ export default function useWallet(pollIntervalMs = 30000) {
     isSuccess,
     isUninitialized,
     refetch,
+    // deposit addresses state
+    isDepositAddressesLoading,
+    refetchDepositAddresses,
   };
 }

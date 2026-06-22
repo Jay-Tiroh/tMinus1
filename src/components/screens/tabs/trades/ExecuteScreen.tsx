@@ -20,7 +20,7 @@ type ScreenState = "confirm" | "completed" | "failed";
 
 const ExecuteScreen = () => {
   const { asset } = useLocalSearchParams();
-  const push = useAssetRoute();
+  const { push } = useAssetRoute();
   const router = useRouter();
   const { activeQuote, executeQuote, isExecuting, lastTransaction } =
     useTrade();

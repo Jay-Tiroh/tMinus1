@@ -10,7 +10,8 @@ import { ListItem } from "./ProfileScreen"; // Assuming exported from above
 
 const SecuritySettingsScreen = () => {
   const setPin = useGoToRoute("/user/transaction-pin");
-  const seeRecoveryCodes = useGoToRoute("/user/recovery-codes");
+  const seeRecoveryCodes = useGoToRoute("/user/two-factor/recovery-codes");
+  const seeDevices = useGoToRoute("/user/devices");
   const securityItems = [
     {
       title: "Transaction PIN",
@@ -37,6 +38,7 @@ const SecuritySettingsScreen = () => {
       subtitle: "iPhone 15 Pro • push enabled",
       status: "2",
       color: Colors.primaryClean,
+      onPress: seeDevices,
     },
     {
       title: "Biometric login",

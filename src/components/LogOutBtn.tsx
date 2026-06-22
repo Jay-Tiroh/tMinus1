@@ -1,5 +1,7 @@
 import { ThemedButton } from "@/components/ThemedButton";
+import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
+import { showErrorToast, showSuccessToast } from "@/hooks/showToast";
 import { useLogoutMutation } from "@/store/services/authApi";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useRouter } from "expo-router";
@@ -9,14 +11,19 @@ const LogOutBtn = () => {
   const [logout, { isLoading, isError, isSuccess }] = useLogoutMutation();
   const router = useRouter();
   const handleLogout = async () => {
-    const result = await logout();
-    if (isSuccess) {
+    try {
+      const result = await logout().unwrap();
+
+      showSuccessToast({
+        title: "Logged out successfully",
+      });
       router.replace("/(auth)");
-      // console.log("Logged out successfully", result);
-    }
-    if (isError) {
-      // NOTE: Add toast notification for error
-      console.error("Logout failed:", result);
+    } catch (error) {
+      showErrorToast({
+        title: "Logout failed",
+        message:
+          error?.data?.error?.message || "An error occurred while logging out",
+      });
     }
   };
 
@@ -25,6 +32,11 @@ const LogOutBtn = () => {
       <ThemedButton
         title="log out"
         variant="red"
+        style={{
+          backgroundColor: Colors.lossDark + "40",
+          borderColor: Colors.lossDark,
+          borderWidth: 1.5,
+        }}
         textStyle={{ color: "white", fontFamily: Fonts.medium }}
         iconComponent={
           isLoading ? (

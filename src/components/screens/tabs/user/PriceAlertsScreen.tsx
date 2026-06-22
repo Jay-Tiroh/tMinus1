@@ -6,59 +6,91 @@ import Template from "@/components/trades/Template";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
+import { formatAmount, timeAgo } from "@/helpers/functions";
+import { showErrorToast } from "@/hooks/showToast";
+import { useAssetRoute } from "@/hooks/useAssetRoute";
+import {
+  useDeletePriceAlertMutation,
+  useGetPriceAlertsQuery,
+} from "@/store/services/priceAlertsApi";
+import { RTKErrorResponse } from "@/types/utility";
 import React, { useState } from "react";
 import { Modal, Pressable, StyleSheet, View } from "react-native";
 
 const PriceAlertsScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [selectedAlertId, setSelectedAlertId] = useState<string | null>(null);
 
-  const alerts = [
-    {
-      title: "BTC above $72,000",
-      subtitle: "Active • push notification on",
-      status: "On",
-      color: Colors.primaryClean,
-    },
-    {
-      title: "ETH below $2,900",
-      subtitle: "Paused",
-      status: "Off",
-      color: Colors.loss,
-    },
-    {
-      title: "SOL above $170",
-      subtitle: "Triggered today",
-      status: "Read",
-      color: Colors.primaryClean,
-    },
-  ];
+  const { data, isLoading, isError } = useGetPriceAlertsQuery();
+  const alertsData = data?.data ?? [];
+  const [deletePriceAlert, { isError: isDeleteError }] =
+    useDeletePriceAlertMutation();
+
+  const handleLongPressAlert = (alertId: string) => {
+    setModalVisible(true);
+    setSelectedAlertId(alertId);
+  };
+
+  const handleDeleteAlert = async (alertId: string) => {
+    try {
+      await deletePriceAlert(alertId).unwrap();
+      setModalVisible(false);
+    } catch (error: unknown) {
+      const err = error as RTKErrorResponse;
+      showErrorToast({
+        title: "Error",
+        message: err?.data?.message ?? "Failed to delete alert.",
+      });
+    }
+  };
+
+  const handlePressAlert = (alertId: string, asset: string) => {
+    push("alert", {
+      alertAction: "edit",
+      asset: asset,
+      alertId: alertId,
+    });
+  };
+  const { push } = useAssetRoute();
 
   return (
     <>
       <Template
         textBlockProps={{
           title: "Price alerts",
-          body: "Create, edit, pause, or delete market alerts.",
+          body: "View, edit, or delete market alerts. ",
         }}
         ctaProps={undefined}
         topSpacerSize={32}
       >
         <View style={GeneralStyles.wrapper}>
-          <ThemedButton
+          {/*<ThemedButton
             title="Create alert"
             variant="primary"
             style={{ marginBottom: 24 }}
-          />
+          />*/}
 
           <View style={{ gap: 12 }}>
-            {alerts.map((item, index) => (
+            {alertsData.map((item, index) => (
               <ListItem
                 key={index}
-                title={item.title}
-                subtitle={item.subtitle}
-                trailingText={item.status}
-                iconColor={item.color}
-                onPress={() => index === 0 && setModalVisible(true)} // Example: Tap first to delete
+                title={
+                  item.assetSymbol +
+                  " " +
+                  item.direction +
+                  " $" +
+                  formatAmount(item.targetPriceUsd)
+                }
+                subtitle={
+                  item.isActive
+                    ? "Active • push notification on"
+                    : "Triggered " + timeAgo(item.triggeredAt as string)
+                }
+                trailingText={item.isActive ? "Active" : "Triggered"}
+                trailingTextColor={!item.isActive ? Colors.loss : undefined}
+                iconColor={item.isActive ? Colors.primaryClean : Colors.loss}
+                onLongPress={() => handleLongPressAlert(item.id)}
+                onPress={() => handlePressAlert(item.id, item.assetSymbol)}
               />
             ))}
           </View>
@@ -100,7 +132,7 @@ const PriceAlertsScreen = () => {
                   fontFamily: Fonts.medium,
                   color: Colors.white,
                 }}
-                onPress={() => setModalVisible(false)}
+                onPress={() => handleDeleteAlert(selectedAlertId as string)}
               />
             </View>
           </Pressable>

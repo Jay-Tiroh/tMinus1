@@ -59,6 +59,7 @@ const Step3 = () => {
   const handleFinalSubmit = async () => {
     try {
       const uploadedUrls: Record<string, string> = {};
+
       const idempotencyKey = `${Date.now()}-${Math.random()
         .toString(36)
         .slice(2)}`;
@@ -181,7 +182,7 @@ const Step3 = () => {
     <Template
       headerProps={{
         goBack: true,
-        title: "Review submission",
+        title: "Review submission for yahoo",
         body: "Check the details and files before sending them for admin review.",
         stage: 3,
       }}

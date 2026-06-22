@@ -23,9 +23,6 @@ import { Pressable, StyleSheet, TextInput, View } from "react-native";
 
 const Step1 = () => {
   const [isDocTypeModalVisible, setDocTypeModalVisible] = useState(false);
-  const [step1Payload, setStep1Payload] = useState<KycStep1FormValues | null>(
-    null,
-  );
 
   const dispatch = useAppDispatch();
 

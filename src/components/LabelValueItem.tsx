@@ -38,7 +38,14 @@ export const LabelValueItem = ({
       <ThemedText size={labelSize} color={labelColor} weight={labelWeight}>
         {label}
       </ThemedText>
-      <ThemedText size={valueSize} color={valueColor} weight={valueWeight}>
+      <ThemedText
+        size={valueSize}
+        color={valueColor}
+        weight={valueWeight}
+        numberOfLines={1}
+        ellipsizeMode="middle"
+        style={{ maxWidth: 200 }}
+      >
         {value}
       </ThemedText>
     </View>

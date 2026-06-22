@@ -69,7 +69,7 @@ const SimulateDepositScreen = () => {
     } catch (error) {
       showErrorToast({
         title: "Failed to create sandbox deposit",
-        message: error instanceof Error ? error.message : undefined,
+        message: error?.data?.error?.message ?? undefined,
       });
     }
   };

@@ -32,7 +32,7 @@ export type ConfigType = {
 const QuoteScreen = () => {
   const params = useLocalSearchParams<{ asset: string }>();
   const asset = params.asset;
-  const push = useAssetRoute();
+  const { push } = useAssetRoute();
   // console.log("Rendering QuoteScreen for asset:", asset);
   // 1. Bring in the trade hook
   const {

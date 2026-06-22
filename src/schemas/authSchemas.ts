@@ -3,7 +3,7 @@ import { z } from "zod";
 const fullNameSchema = z
   .string()
   .min(1, "Full name is required")
-  .max(100, "Full name must be at most 100 characters")
+  .max(22, "Full name must be at most 22 characters")
   .regex(/^[a-zA-Z]+(\s[a-zA-Z]+)+$/, "Enter at least a first and last name");
 
 const passwordSchema = z
@@ -49,7 +49,10 @@ export const phoneSchema_ = z.object({
 export const emailSchema_ = z.object({
   email: emailSchema,
 });
-
+export const fullNameSchema_ = z.object({
+  fullName: fullNameSchema,
+});
+export type FullNameFormData = z.infer<typeof fullNameSchema_>;
 export type SignupFormData = z.infer<typeof signupSchema>;
 export type EmailPasswordFormData = z.infer<typeof emailPasswordSchema>;
 export type MobilePasswordFormData = z.infer<typeof mobilePasswordSchema>;

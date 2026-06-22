@@ -3,8 +3,13 @@ import { ThemedButton } from "@/components/ThemedButton";
 import { ThemedText } from "@/components/ThemedText";
 import Template from "@/components/trades/Template";
 import { Colors } from "@/constants/Colors";
+import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
-import React, { useState } from "react";
+import { formatAmount } from "@/helpers/functions";
+import { useAssetRoute } from "@/hooks/useAssetRoute";
+import { useGetOrderBookQuery } from "@/store/services/marketsApi";
+import { useLocalSearchParams } from "expo-router";
+import React from "react";
 import { StyleSheet, View } from "react-native";
 
 const SUMMARY_CONFIG = {
@@ -33,18 +38,29 @@ const ORDER_BOOK_ASKS = [
 ];
 
 const OrderBookScreen = () => {
-  const [activeTab, setActiveTab] = useState("Order book");
+  const params = useLocalSearchParams<{ asset?: string }>();
+  const asset = params?.asset ?? "BTC";
+  const { data: orderBookData } = useGetOrderBookQuery(
+    { symbol: asset },
+    { pollingInterval: 5000, refetchOnMountOrArgChange: true },
+  );
+  const Asks = orderBookData?.asks ?? [];
+  const Bids = orderBookData?.bids ?? [];
+  const midPrice = orderBookData?.midPriceUsd ?? 0;
+  const spread = orderBookData?.spreadUsd ?? 0;
+
+  const { replace } = useAssetRoute();
 
   return (
     <Template
       textBlockProps={{
-        title: "BTC order book",
+        title: asset + " order book",
         body: "Bid and ask levels for the trade screen.",
       }}
       ctaProps={{
-        title: "Trade BTC",
+        title: "Trade " + asset,
         variant: "primary",
-        onPress: () => console.log("Trade BTC"),
+        onPress: () => replace("action", { action: "Buy", asset }),
       }}
       topSpacerSize={20}
     >
@@ -53,31 +69,16 @@ const OrderBookScreen = () => {
         <View style={styles.tabsContainer}>
           <ThemedButton
             title="Order book"
-            variant={activeTab === "Order book" ? "primary" : "secondary"}
-            style={[
-              styles.tab,
-              activeTab !== "Order book" && {
-                backgroundColor: Colors.surfaceNavy,
-              },
-            ]}
-            textStyle={[
-              styles.tabText,
-              activeTab !== "Order book" && { color: Colors.snowGray },
-            ]}
-            onPress={() => setActiveTab("Order book")}
+            variant={"primary"}
+            style={[styles.tab]}
+            textStyle={[styles.tabText]}
           />
           <ThemedButton
             title="Trades"
-            variant={activeTab === "Trades" ? "primary" : "secondary"}
-            style={[
-              styles.tab,
-              activeTab !== "Trades" && { backgroundColor: Colors.surfaceNavy },
-            ]}
-            textStyle={[
-              styles.tabText,
-              activeTab !== "Trades" && { color: Colors.snowGray },
-            ]}
-            onPress={() => setActiveTab("Trades")}
+            variant={"secondary"}
+            style={[styles.tab, { backgroundColor: Colors.surfaceNavy }]}
+            textStyle={[styles.tabText, { color: Colors.snowGray }]}
+            onPress={() => replace("recent-trades", { asset })}
           />
         </View>
         <Spacer size={24} />
@@ -89,7 +90,7 @@ const OrderBookScreen = () => {
               Mid price
             </ThemedText>
             <ThemedText size={16} weight="bold" color={Colors.snowGray}>
-              {SUMMARY_CONFIG.midPrice}
+              ${formatAmount(midPrice)}
             </ThemedText>
           </View>
           <View style={styles.summaryRow}>
@@ -97,7 +98,7 @@ const OrderBookScreen = () => {
               Spread
             </ThemedText>
             <ThemedText size={16} weight="bold" color={Colors.snowGray}>
-              {SUMMARY_CONFIG.spread}
+              ${formatAmount(spread)}
             </ThemedText>
           </View>
         </View>
@@ -122,13 +123,13 @@ const OrderBookScreen = () => {
         <View style={styles.tableBody}>
           {/* Bids Column */}
           <View style={{ flex: 1, gap: 16 }}>
-            {ORDER_BOOK_BIDS.map((bid, index) => (
+            {Bids.map((bid, index) => (
               <View key={`bid-${index}`} style={styles.bookRow}>
                 <ThemedText size={13} color={Colors.primaryClean}>
-                  {bid.price}
+                  {formatAmount(bid.priceUsd)}
                 </ThemedText>
                 <ThemedText size={13} color={Colors.textMidGray}>
-                  {bid.size}
+                  {formatAmount(bid.amount)}
                 </ThemedText>
               </View>
             ))}
@@ -136,19 +137,20 @@ const OrderBookScreen = () => {
 
           {/* Asks Column */}
           <View style={{ flex: 1, gap: 16 }}>
-            {ORDER_BOOK_ASKS.map((ask, index) => (
+            {Asks.map((ask, index) => (
               <View key={`ask-${index}`} style={styles.bookRow}>
                 <ThemedText size={13} color={Colors.lossBright}>
-                  {ask.price}
+                  {formatAmount(ask.priceUsd)}
                 </ThemedText>
                 <ThemedText size={13} color={Colors.textMidGray}>
-                  {ask.size}
+                  {ask.amount}
                 </ThemedText>
               </View>
             ))}
           </View>
         </View>
       </View>
+      <Spacer size={40} />
     </Template>
   );
 };
@@ -168,6 +170,7 @@ const styles = StyleSheet.create({
   tabText: {
     fontSize: 13,
     color: Colors.surfaceNavy,
+    fontFamily: Fonts.medium,
   },
   summaryRow: {
     ...GeneralStyles.box,
