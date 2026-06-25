@@ -70,3 +70,20 @@ export interface Disable2FAResponseData {
 export interface Disable2FAResponse {
   data: Disable2FAResponseData;
 }
+
+// Status
+export interface TwoFactorStatusResponseData {
+  twoFactorEnabled: boolean;
+  twoFactorSetupStarted: boolean;
+  recoveryCodesConfigured: boolean;
+  recoveryCodesRemaining: number;
+}
+
+export interface TwoFactorStatusResponseMeta {
+  requestId: string;
+}
+
+export interface TwoFactorStatusResponse {
+  data: TwoFactorStatusResponseData;
+  meta: TwoFactorStatusResponseMeta;
+}

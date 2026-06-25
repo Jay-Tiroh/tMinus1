@@ -4,14 +4,41 @@ import Template from "@/components/trades/Template";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
 import { useGoToRoute } from "@/hooks/useGoToRoute";
+import useOtherSettings from "@/hooks/useOtherSettings";
+import { useStatusQuery } from "@/store/services/2faApi";
+import { useGetDevicesQuery } from "@/store/services/devicesApi";
 import React from "react";
 import { View } from "react-native";
 import { ListItem } from "./ProfileScreen"; // Assuming exported from above
 
 const SecuritySettingsScreen = () => {
   const setPin = useGoToRoute("/user/transaction-pin");
+  const setup2fa = useGoToRoute("/user/two-factor/setup");
+  const disable2fa = useGoToRoute("/user/two-factor/disable");
   const seeRecoveryCodes = useGoToRoute("/user/two-factor/recovery-codes");
   const seeDevices = useGoToRoute("/user/devices");
+  const { data: devices } = useGetDevicesQuery();
+  const activeDevice = React.useMemo(() => {
+    if (!devices?.data?.length) return undefined;
+    const sorted = [...devices.data].sort(
+      (a, b) =>
+        new Date(b.lastSeenAt).getTime() - new Date(a.lastSeenAt).getTime(),
+    );
+    const mostRecentId = sorted[0].id;
+    return devices?.data.find((device) => device.id === mostRecentId);
+  }, [devices]);
+  const devicePlatform =
+    activeDevice?.platform === "android" ? "Android" : "iOS";
+  const deviceCount = devices?.data?.length ?? 0;
+
+  const { toggleBiometricSetting, settings } = useOtherSettings();
+  const { data: twoFactorStatusData } = useStatusQuery();
+  const twoFactorEnabled = twoFactorStatusData?.twoFactorEnabled ?? false;
+  const recoveryCodesRemaining = twoFactorStatusData?.recoveryCodesRemaining;
+  const twoFactorStatus = twoFactorEnabled ? "On" : "Off";
+
+  const biometricStatus = settings?.biometricEnabled ? "On" : "Off";
+  const twoFactorAction = twoFactorEnabled ? disable2fa : setup2fa;
   const securityItems = [
     {
       title: "Transaction PIN",
@@ -19,32 +46,44 @@ const SecuritySettingsScreen = () => {
       status: "Set",
       color: Colors.primaryClean,
       onPress: setPin,
+      trailingTextColor: Colors.primaryClean,
     },
     {
       title: "Authenticator app",
       subtitle: "Enabled for login protection",
-      status: "On",
-      color: Colors.primaryClean,
+      status: twoFactorStatus,
+      color: twoFactorEnabled ? Colors.primaryClean : Colors.loss,
+      onPress: twoFactorAction,
+      trailingTextColor: twoFactorEnabled ? Colors.primaryClean : Colors.loss,
     },
     {
       title: "Recovery codes",
-      subtitle: "8 backup codes remaining",
-      status: "View",
+      subtitle: `${recoveryCodesRemaining} backup codes remaining`,
+      status:
+        recoveryCodesRemaining && recoveryCodesRemaining <= 0
+          ? "Regenerate"
+          : ``,
       color: Colors.primaryClean,
       onPress: seeRecoveryCodes,
+      trailingTextColor: Colors.primaryClean,
     },
     {
       title: "Registered devices",
-      subtitle: "iPhone 15 Pro • push enabled",
-      status: "2",
+      subtitle: devicePlatform + " • push enabled",
+      status: `${deviceCount}`,
       color: Colors.primaryClean,
       onPress: seeDevices,
+      trailingTextColor: Colors.primaryClean,
     },
     {
       title: "Biometric login",
       subtitle: "Face ID enabled on this device",
-      status: "On",
-      color: Colors.primaryClean,
+      status: biometricStatus,
+      color: settings?.biometricEnabled ? Colors.primaryClean : Colors.loss,
+      onPress: toggleBiometricSetting,
+      trailingTextColor: settings?.biometricEnabled
+        ? Colors.primaryClean
+        : Colors.loss,
     },
   ];
 
@@ -67,6 +106,7 @@ const SecuritySettingsScreen = () => {
               trailingText={item.status}
               iconColor={item.color}
               onPress={item.onPress}
+              trailingTextColor={item.color}
             />
           ))}
         </View>

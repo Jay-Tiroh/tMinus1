@@ -22,8 +22,11 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import Add from "@/assets/icons/markets/add-circle.svg";
+import KycLocked from "@/components/KycLocked";
+import { Spacer } from "@/components/Spacer";
 import { showErrorToast, showSuccessToast } from "@/hooks/showToast";
 import { useAssetRoute } from "@/hooks/useAssetRoute";
+import useProfile from "@/hooks/useProfile";
 import { useWatchlist } from "@/hooks/useWatchlist";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { Pressable } from "react-native";
@@ -101,6 +104,9 @@ const AssetScreen = () => {
       });
     }
   };
+
+  const { kycStatus } = useProfile();
+  const isVerified = kycStatus === "approved";
 
   return (
     <ImageBackground
@@ -192,93 +198,100 @@ const AssetScreen = () => {
             symbol={coinDetails?.symbol ?? "btc"}
           />
         </View>
-        <View style={GeneralStyles.wrapper}>
-          <ThemedButton
-            title="Buy"
-            variant="primary"
-            onPress={() => {
-              push("action", { action: "Buy", asset });
-            }}
-          />
-        </View>
-        <View
-          style={[
-            GeneralStyles.wrapper,
-            {
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-            },
-          ]}
-        >
-          {actionConfig.map((item) => (
-            <TouchableOpacity
-              key={item.title}
-              onPress={item.onPress}
-              style={[
-                GeneralStyles.box,
-                {
-                  borderRadius: 14,
-                  backgroundColor: Colors.surfaceNavy,
-                  width: 112,
-                  height: 46,
-                  alignItems: "center",
-                  justifyContent: "center",
-                },
-              ]}
-            >
-              <ThemedText
-                color={
-                  item.title === "Alert" ? Colors.primaryClean : Colors.snowGray
-                }
-                size={12}
-                weight="medium"
-              >
-                {item.title}
-              </ThemedText>
-            </TouchableOpacity>
-          ))}
-        </View>
-
-        <View
-          style={[
-            GeneralStyles.wrapper,
-            {
-              flexDirection: "row",
-              flexWrap: "wrap",
-              justifyContent: "center",
-              alignItems: "center",
-              width: "100%",
-              gap: 16,
-            },
-          ]}
-        >
-          {stats.map((stat) => (
-            <View
-              key={stat.name}
-              style={[
-                GeneralStyles.box,
-                {
-                  width: "48%",
-                  padding: 16,
-                  gap: 8,
-                },
-              ]}
-            >
-              <ThemedText color={Colors.textMidGray} size={12}>
-                {stat.name}
-              </ThemedText>
-              <ThemedText
-                color={Colors.snowGray}
-                size={15}
-                weight="bold"
-                style={{ alignSelf: "flex-end" }}
-              >
-                {stat.value}
-              </ThemedText>
+        {isVerified && (
+          <>
+            <View style={GeneralStyles.wrapper}>
+              <ThemedButton
+                title="Buy"
+                variant="primary"
+                onPress={() => {
+                  push("action", { action: "Buy", asset });
+                }}
+              />
             </View>
-          ))}
-        </View>
+
+            <View
+              style={[
+                GeneralStyles.wrapper,
+                {
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                },
+              ]}
+            >
+              {actionConfig.map((item) => (
+                <TouchableOpacity
+                  key={item.title}
+                  onPress={item.onPress}
+                  style={[
+                    GeneralStyles.box,
+                    {
+                      borderRadius: 14,
+                      backgroundColor: Colors.surfaceNavy,
+                      width: 112,
+                      height: 46,
+                      alignItems: "center",
+                      justifyContent: "center",
+                    },
+                  ]}
+                >
+                  <ThemedText
+                    color={
+                      item.title === "Alert"
+                        ? Colors.primaryClean
+                        : Colors.snowGray
+                    }
+                    size={12}
+                    weight="medium"
+                  >
+                    {item.title}
+                  </ThemedText>
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            <View
+              style={[
+                GeneralStyles.wrapper,
+                {
+                  flexDirection: "row",
+                  flexWrap: "wrap",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  width: "100%",
+                  gap: 16,
+                },
+              ]}
+            >
+              {stats.map((stat) => (
+                <View
+                  key={stat.name}
+                  style={[
+                    GeneralStyles.box,
+                    {
+                      width: "48%",
+                      padding: 16,
+                      gap: 8,
+                    },
+                  ]}
+                >
+                  <ThemedText color={Colors.textMidGray} size={12}>
+                    {stat.name}
+                  </ThemedText>
+                  <ThemedText
+                    color={Colors.snowGray}
+                    size={15}
+                    weight="bold"
+                    style={{ alignSelf: "flex-end" }}
+                  >
+                    {stat.value}
+                  </ThemedText>
+                </View>
+              ))}
+            </View>
+          </>
+        )}
 
         {!inWatchlist && (
           <View style={GeneralStyles.wrapper}>
@@ -296,6 +309,8 @@ const AssetScreen = () => {
             />
           </View>
         )}
+        <KycLocked />
+        <Spacer size={24} />
       </ScrollView>
     </ImageBackground>
   );

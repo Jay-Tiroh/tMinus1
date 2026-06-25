@@ -1,3 +1,4 @@
+import KycLocked from "@/components/KycLocked";
 import { Spacer } from "@/components/Spacer";
 import { ThemedText } from "@/components/ThemedText";
 import Template from "@/components/trades/Template";
@@ -10,6 +11,7 @@ import { GeneralStyles } from "@/constants/themes";
 import { formatAmount, timeAgo } from "@/helpers/functions";
 import { useAllAssets } from "@/hooks/useAllAssets";
 import { useGoToRoute } from "@/hooks/useGoToRoute";
+import useProfile from "@/hooks/useProfile";
 import { useTransactions } from "@/hooks/useTransactions";
 import useWallet from "@/hooks/useWallet";
 import React from "react";
@@ -67,6 +69,8 @@ const RecentTransactions = () => {
 };
 
 const WalletsScreen = () => {
+  const { kycStatus } = useProfile();
+  const isVerified = kycStatus === "approved";
   const { coins } = useAllAssets();
   const { balances } = useWallet();
 
@@ -87,10 +91,14 @@ const WalletsScreen = () => {
         <Balance />
       </View>
       <Spacer size={32} />
-      <View style={GeneralStyles.wrapper}>
-        <ActionTabs />
-      </View>
-      <Spacer size={32} />
+      {isVerified && (
+        <>
+          <View style={GeneralStyles.wrapper}>
+            <ActionTabs />
+          </View>
+          <Spacer size={32} />
+        </>
+      )}
       <View
         style={{
           ...GeneralStyles.wrapper,
@@ -117,8 +125,12 @@ const WalletsScreen = () => {
         })}
       </View>
       <Spacer size={32} />
+
       <View style={GeneralStyles.wrapper}>
         <RecentTransactions />
+      </View>
+      <View style={GeneralStyles.wrapper}>
+        <KycLocked />
       </View>
     </Template>
   );

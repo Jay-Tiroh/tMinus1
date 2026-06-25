@@ -3,6 +3,8 @@ import * as SecureStore from "expo-secure-store";
 const KEYS = {
   ACCESS_TOKEN: "access_token",
   REFRESH_TOKEN: "refresh_token",
+  BIOMETRIC_ENABLED: "biometric_enabled",
+  SESSION_LOCKED: "session_locked",
 } as const;
 
 export async function saveToken(key: keyof typeof KEYS, value: string) {

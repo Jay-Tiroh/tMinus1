@@ -1,131 +1,84 @@
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import React, { useRef, useState } from "react";
-import {
-  NativeSyntheticEvent,
-  StyleSheet,
-  TextInput,
-  TextInputKeyPressEventData,
-  View,
-} from "react-native";
+import { StyleSheet, TextInput, View } from "react-native";
 
 type OTPInputProps = {
   length?: number;
-  onComplete?: (code: string) => void;
   onChange?: (code: string) => void;
+  onComplete: (code: string) => void;
 };
 
-export function OTPInput({ length = 4, onComplete, onChange }: OTPInputProps) {
-  const [values, setValues] = useState<string[]>(Array(length).fill(""));
-  const [focusedIndex, setFocusedIndex] = useState<number | null>(null);
-  const inputRefs = useRef<(TextInput | null)[]>([]);
+export const OTPInput = ({
+  length = 6,
+  onChange,
+  onComplete,
+}: OTPInputProps) => {
+  const [code, setCode] = useState<string[]>(Array(length).fill(""));
+  const inputs = useRef<Array<TextInput | null>>([]);
 
-  const updateValues = (next: string[]) => {
-    setValues(next);
-    const code = next.join("");
-    onChange?.(code);
-    if (!next.includes("") && code.length === length) {
-      onComplete?.(code);
+  const handleChange = (text: string, index: number) => {
+    const newCode = [...code];
+    newCode[index] = text;
+    setCode(newCode);
+
+    if (onChange) onChange(newCode.join(""));
+
+    if (text && index < length - 1) {
+      inputs.current[index + 1]?.focus();
+    }
+
+    if (newCode.every((c) => c !== "")) {
+      onComplete(newCode.join(""));
     }
   };
 
-  const handleChangeText = (text: string, index: number) => {
-    if (text.length > 1) {
-      const digits = text.replace(/\D/g, "").slice(0, length).split("");
-      const next = [...values];
-      digits.forEach((d, i) => {
-        if (index + i < length) next[index + i] = d;
-      });
-      updateValues(next);
-      const lastIndex = Math.min(index + digits.length - 1, length - 1);
-      inputRefs.current[lastIndex]?.focus();
-      return;
-    }
-
-    const digit = text.replace(/\D/g, "").slice(-1);
-    const next = [...values];
-    next[index] = digit;
-    updateValues(next);
-
-    if (digit && index < length - 1) {
-      inputRefs.current[index + 1]?.focus();
-    } else if (digit && index === length - 1) {
-      inputRefs.current[index]?.blur();
-    }
-  };
-
-  const handleKeyPress = (
-    e: NativeSyntheticEvent<TextInputKeyPressEventData>,
-    index: number,
-  ) => {
-    if (e.nativeEvent.key === "Backspace") {
-      if (values[index]) {
-        const next = [...values];
-        next[index] = "";
-        updateValues(next);
-      } else if (index > 0) {
-        const next = [...values];
-        next[index - 1] = "";
-        updateValues(next);
-        inputRefs.current[index - 1]?.focus();
-      }
+  const handleKeyPress = (e: any, index: number) => {
+    if (e.nativeEvent.key === "Backspace" && !code[index] && index > 0) {
+      inputs.current[index - 1]?.focus();
     }
   };
 
   return (
-    <View style={styles.row}>
-      {Array(length)
-        .fill(null)
-        .map((_, i) => (
-          <TextInput
-            key={i}
-            ref={(ref) => {
-              inputRefs.current[i] = ref;
-            }}
-            style={[styles.cell, focusedIndex === i && styles.cellFocused]}
-            value={values[i]}
-            onChangeText={(text) => handleChangeText(text, i)}
-            onKeyPress={(e) => handleKeyPress(e, i)}
-            onFocus={() => setFocusedIndex(i)}
-            onBlur={() => setFocusedIndex(null)}
-            keyboardType="number-pad"
-            maxLength={length}
-            textAlign="center"
-            caretHidden
-            selectTextOnFocus
-            cursorColor={Colors.primary}
-          />
-        ))}
+    <View style={styles.container}>
+      {code.map((char, index) => (
+        <TextInput
+          key={index}
+          ref={(ref) => {
+            inputs.current[index] = ref;
+          }}
+          style={[styles.box, char !== "" && styles.boxFilled]}
+          value={char}
+          onChangeText={(text) =>
+            handleChange(text.replace(/[^0-9]/g, ""), index)
+          }
+          onKeyPress={(e) => handleKeyPress(e, index)}
+          keyboardType="number-pad"
+          maxLength={1}
+          selectTextOnFocus
+        />
+      ))}
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  row: {
+  container: {
     flexDirection: "row",
-    width: "100%",
     justifyContent: "space-between",
-    alignSelf: "center",
+    width: "100%",
   },
-  cell: {
-    height: 54,
-    width: 60,
+  box: {
+    width: 48,
+    height: 56,
+    backgroundColor: Colors.surfaceNavy,
     borderRadius: 12,
-    backgroundColor: Colors.surfaceCard,
-    fontSize: 32,
-    lineHeight: 34,
-    color: Colors.white,
-    borderWidth: 1.5,
-    borderColor: "transparent",
+    color: Colors.snowGray,
+    fontSize: 24,
     fontFamily: Fonts.bold,
     textAlign: "center",
-    textAlignVertical: "center",
-    paddingVertical: 0,
-    paddingHorizontal: 0,
-    includeFontPadding: false,
   },
-  cellFocused: {
-    borderColor: Colors.primaryForest,
-    borderWidth: 1.5,
+  boxFilled: {
+    backgroundColor: Colors.surfaceDark, // Slightly different shade when filled to match mockup
   },
 });

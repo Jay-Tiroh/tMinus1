@@ -37,7 +37,7 @@ export const kycApi = baseApi.injectEndpoints({
       invalidatesTags: ["Kyc"],
     }),
   }),
-  overrideExisting: false,
+  overrideExisting: true,
 });
 
 export const { useSubmitKYCMutation, useGetKYCUploadInstructionsMutation } =

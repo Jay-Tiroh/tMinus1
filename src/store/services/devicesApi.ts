@@ -31,7 +31,7 @@ const devicesApi = baseApi.injectEndpoints({
       invalidatesTags: ["Devices"],
     }),
   }),
-  overrideExisting: false,
+  overrideExisting: true,
 });
 
 export const {

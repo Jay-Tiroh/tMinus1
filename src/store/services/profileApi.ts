@@ -1,7 +1,5 @@
 import {
   ProfileResponse,
-  RegisterDeviceRequest,
-  RegisterDeviceResponse,
   SettingsResponse,
   UpdatePinRequest,
   UpdatePinResponse,
@@ -37,7 +35,7 @@ const profileApi = baseApi.injectEndpoints({
         body: updateData,
       }),
       transformResponse: (response: SettingsResponse) => response.data,
-      invalidatesTags: ["User"],
+      invalidatesTags: ["User", "Wallet", "Kyc", "Notifications"],
     }),
     updatePin: builder.mutation<UpdatePinResponse, UpdatePinRequest>({
       query: (pinData) => ({
@@ -46,18 +44,8 @@ const profileApi = baseApi.injectEndpoints({
         body: pinData,
       }),
     }),
-    registerDevice: builder.mutation<
-      RegisterDeviceResponse,
-      RegisterDeviceRequest
-    >({
-      query: (deviceData) => ({
-        url: "/me/devices",
-        method: "POST",
-        body: deviceData,
-      }),
-    }),
   }),
-  overrideExisting: false,
+  overrideExisting: true,
 });
 
 export const {
@@ -66,5 +54,4 @@ export const {
   useUpdateProfileMutation,
   useUpdateSettingsMutation,
   useUpdatePinMutation,
-  useRegisterDeviceMutation,
 } = profileApi;

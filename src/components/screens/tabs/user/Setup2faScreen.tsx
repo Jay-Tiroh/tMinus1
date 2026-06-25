@@ -3,18 +3,73 @@ import { Spacer } from "@/components/Spacer";
 import { ThemedText } from "@/components/ThemedText";
 import Template from "@/components/trades/Template";
 import { Colors } from "@/constants/Colors";
+import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
-import React, { useState } from "react";
-import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
+import { showErrorToast, showSuccessToast } from "@/hooks/showToast";
+import {
+  useEnable2FAMutation,
+  useSetup2FAMutation,
+} from "@/store/services/2faApi";
+import { Setup2FAResponseData } from "@/types/2fa";
+import * as Clipboard from "expo-clipboard";
+import { useRouter } from "expo-router";
+import React, { useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import QRCode from "react-native-qrcode-svg";
-
-const SETUP_CONFIG = {
-  qrPayload: "otpauth://totp/tMinus1?secret=JBSWY3DPEHPK3PXP",
-  manualKey: "JBSWY3DPEHPK3PXP",
-};
 
 const Setup2FAScreen = () => {
   const [authCode, setAuthCode] = useState("");
+  const [setupResponse, setSetupResponse] =
+    useState<Setup2FAResponseData | null>(null);
+
+  const [setup, { isLoading: settingUp, isError: setupFailed }] =
+    useSetup2FAMutation();
+  const [enable, { isLoading: enabling }] = useEnable2FAMutation();
+
+  const router = useRouter();
+
+  useEffect(() => {
+    const runSetup = async () => {
+      try {
+        const response: Setup2FAResponseData = await setup().unwrap();
+        setSetupResponse(response);
+      } catch (error) {
+        console.error("2FA setup failed:", error);
+        showErrorToast({
+          title: "Failed to initialize 2FA. Please try again.",
+        });
+      }
+    };
+
+    runSetup();
+  }, []);
+
+  const handleCopyKey = async () => {
+    if (setupResponse?.secret) {
+      await Clipboard.setStringAsync(setupResponse.secret);
+      showSuccessToast({ title: "Secret key copied to clipboard!" });
+    } else {
+      showErrorToast({ title: "No key available to copy." });
+    }
+  };
+
+  const handleEnable2FA = async () => {
+    try {
+      const result = await enable({ code: authCode }).unwrap();
+      showSuccessToast({ title: "2FA enabled successfully!" });
+      const code = result?.recoveryCodes;
+      router.push(`/user/two-factor/recovery-codes?codes=${code}`);
+    } catch (error) {
+      console.error("Enable 2FA failed:", error);
+      showErrorToast({ title: "Invalid code. Please try again." });
+    }
+  };
 
   return (
     <Template
@@ -23,22 +78,26 @@ const Setup2FAScreen = () => {
         body: "Scan the QR code with your authenticator app, then enter the code.",
       }}
       ctaProps={{
-        title: "Enable 2FA",
+        title: enabling ? "Enabling..." : "Enable 2FA",
         variant: "primary",
-        onPress: () => console.log("Enable 2FA"),
-        disabled: authCode.length < 6,
+        onPress: handleEnable2FA,
+        disabled: authCode.length < 6 || enabling || settingUp,
       }}
       topSpacerSize={32}
     >
       <View style={GeneralStyles.wrapper}>
         {/* QR Code Card */}
         <View style={styles.qrCard}>
-          <QRCode
-            value={SETUP_CONFIG.qrPayload}
-            size={200}
-            color="black"
-            backgroundColor="white"
-          />
+          {settingUp || !setupResponse?.otpauthUri ? (
+            <ActivityIndicator size="large" color={Colors.primaryClean} />
+          ) : (
+            <QRCode
+              value={setupResponse.otpauthUri}
+              size={200}
+              color="black"
+              backgroundColor="white"
+            />
+          )}
         </View>
         <Spacer size={16} />
         <ThemedText
@@ -46,7 +105,9 @@ const Setup2FAScreen = () => {
           color={Colors.textMidGray}
           style={{ textAlign: "center" }}
         >
-          Scan to link authenticator
+          {setupFailed
+            ? "Failed to load QR code. Please go back and retry."
+            : "Scan to link authenticator"}
         </ThemedText>
 
         <Spacer size={32} />
@@ -57,10 +118,10 @@ const Setup2FAScreen = () => {
         </ThemedText>
         <Spacer size={8} />
         <View style={styles.inputBox}>
-          <ThemedText size={16} color={Colors.snowGray}>
-            {SETUP_CONFIG.manualKey}
+          <ThemedText size={14} color={Colors.textFaint} weight="medium">
+            {setupResponse?.secret ?? "Loading..."}
           </ThemedText>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={handleCopyKey}>
             <Copy width={20} height={20} color={Colors.primaryClean} />
           </TouchableOpacity>
         </View>
@@ -99,6 +160,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     width: "100%",
     maxWidth: 280,
+    minHeight: 248, // prevents layout shift between spinner and QR
   },
   inputBox: {
     ...GeneralStyles.box,
@@ -111,7 +173,8 @@ const styles = StyleSheet.create({
   textInput: {
     flex: 1,
     color: Colors.snowGray,
-    fontSize: 16,
+    fontSize: 14,
     marginLeft: 12,
+    fontFamily: Fonts.medium,
   },
 });

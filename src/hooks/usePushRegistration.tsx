@@ -7,6 +7,16 @@ import * as Notifications from "expo-notifications";
 import { useEffect } from "react";
 import { Platform } from "react-native";
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+    shouldShowBanner: true,
+    shouldShowList: true,
+  }),
+});
+
 export function usePushRegistration() {
   const token = useAppSelector((s) => s.auth.token);
   const [registerDevice] = useRegisterDeviceMutation();
@@ -14,7 +24,18 @@ export function usePushRegistration() {
   useEffect(() => {
     if (!token || !Device.isDevice) return;
 
-    (async () => {
+    const setupPushNotifications = async () => {
+      // 1. Configure Android channel first
+      if (Platform.OS === "android") {
+        await Notifications.setNotificationChannelAsync("default", {
+          name: "default",
+          importance: Notifications.AndroidImportance.MAX,
+          vibrationPattern: [0, 250, 250, 250],
+          lightColor: "#FF231F7C",
+        });
+      }
+
+      // 2. Check and request permissions
       const { status: existing } = await Notifications.getPermissionsAsync();
       let finalStatus = existing;
 
@@ -25,12 +46,14 @@ export function usePushRegistration() {
 
       if (finalStatus !== "granted") return;
 
+      // 3. Grab the Expo push token
       const { data: expoPushToken } = await Notifications.getExpoPushTokenAsync(
         {
           projectId: Constants.expoConfig?.extra?.eas?.projectId,
         },
       );
 
+      // 4. Register the device with your backend
       try {
         await registerDevice({
           expoPushToken,
@@ -39,6 +62,8 @@ export function usePushRegistration() {
       } catch (err) {
         console.warn("Failed to register push device:", err);
       }
-    })();
+    };
+
+    setupPushNotifications();
   }, [token, registerDevice]);
 }

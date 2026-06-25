@@ -47,7 +47,7 @@ const priceAlertsApi = baseApi.injectEndpoints({
       invalidatesTags: ["PriceAlerts"],
     }),
   }),
-  overrideExisting: false,
+  overrideExisting: true,
 });
 
 export const {

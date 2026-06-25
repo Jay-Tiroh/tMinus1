@@ -4,6 +4,7 @@ import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
 import { formatAmount } from "@/helpers/functions";
 import { showErrorToast } from "@/hooks/showToast";
+import useFiat from "@/hooks/useFiat";
 import useWallet from "@/hooks/useWallet";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import React, { useEffect } from "react";
@@ -15,10 +16,11 @@ const Balance = () => {
   const toggleVisibility = () => {
     setIsVisible((prev) => !prev);
   };
-  const { portfolioValueUsd, isLoading, isError } = useWallet();
+  const { portfolioValueUsd, portfolioValue, isLoading, isError } =
+    useWallet(5000);
 
-  const balance = isVisible ? formatAmount(portfolioValueUsd) : "*******";
-
+  const balance = isVisible ? formatAmount(portfolioValue) : "*******";
+  const { symbol } = useFiat();
   useEffect(() => {
     if (isError) {
       showErrorToast({
@@ -54,7 +56,7 @@ const Balance = () => {
             <ActivityIndicator />
           ) : (
             <ThemedText size={32} weight="bold" color={Colors.snowGray}>
-              ${balance}
+              {(symbol ?? "$") + balance}
             </ThemedText>
           )}
           <Spacer size={6} />

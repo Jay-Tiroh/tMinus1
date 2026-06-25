@@ -2,6 +2,8 @@ import SheetController from "@/components/SheetController";
 import { Colors } from "@/constants/Colors";
 import { toastConfig } from "@/constants/toastConfig";
 import { store } from "@/store";
+import { clearCredentials, setCredentials } from "@/store/slices/authSlice";
+import { getToken, saveToken } from "@/utils/secureStore";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFonts } from "expo-font";
@@ -15,13 +17,17 @@ import Toast from "react-native-toast-message";
 import { Provider } from "react-redux";
 
 SplashScreen.preventAutoHideAsync();
-
 enableScreens(true);
 
-export default function RootLayout() {
+const BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
+type BootstrapRoute = "onboarding" | "auth" | "locked";
+
+function RootLayoutNav() {
   const router = useRouter();
   const [isBootstrapped, setIsBootstrapped] = useState(false);
-  const [shouldRedirectToSignIn, setShouldRedirectToSignIn] = useState(false);
+  const [bootstrapRoute, setBootstrapRoute] = useState<BootstrapRoute | null>(
+    null,
+  );
 
   const [fontsLoaded, fontError] = useFonts({
     "NeueMontreal-Light": require("@/assets/fonts/NeueMontreal-Light.otf"),
@@ -30,16 +36,49 @@ export default function RootLayout() {
     "NeueMontreal-Bold": require("@/assets/fonts/NeueMontreal-Bold.otf"),
   });
 
-  // 1. Check storage status safely without executing immediate routing
   useEffect(() => {
     const bootstrap = async () => {
       try {
         const hasOnboarded = await AsyncStorage.getItem("has_onboarded");
-        if (hasOnboarded === "true") {
-          setShouldRedirectToSignIn(true);
+        if (hasOnboarded !== "true") {
+          setBootstrapRoute("onboarding");
+          return;
+        }
+
+        const token = await getToken("ACCESS_TOKEN");
+        if (!token) {
+          store.dispatch(clearCredentials());
+          setBootstrapRoute("auth");
+          return;
+        }
+
+        try {
+          const res = await fetch(`${BASE_URL}/auth/session`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+
+          if (!res.ok) throw new Error("Session invalid");
+
+          const json = await res.json();
+          store.dispatch(
+            setCredentials({
+              user: json.data.user,
+              token: json.data.accessToken,
+              refreshToken: json.data.refreshToken,
+            }),
+          );
+
+          setBootstrapRoute("locked");
+        } catch {
+          store.dispatch(clearCredentials());
+          await saveToken("ACCESS_TOKEN", "");
+          await saveToken("SESSION_LOCKED", "false");
+          setBootstrapRoute("auth");
         }
       } catch (error) {
-        console.error("Error reading onboarding status:", error);
+        console.error("Bootstrap error:", error);
+        store.dispatch(clearCredentials());
+        setBootstrapRoute("auth");
       } finally {
         setIsBootstrapped(true);
       }
@@ -49,45 +88,58 @@ export default function RootLayout() {
   }, []);
 
   useEffect(() => {
-    if (fontsLoaded && isBootstrapped) {
-      if (shouldRedirectToSignIn) {
+    if (!fontsLoaded || !isBootstrapped || bootstrapRoute === null) return;
+
+    switch (bootstrapRoute) {
+      case "onboarding":
+        break;
+      case "auth":
         router.replace("/(auth)");
-      }
-      SplashScreen.hideAsync();
+        break;
+      case "locked":
+        router.replace("/welcome-back");
+        break;
     }
-  }, [fontsLoaded, isBootstrapped, shouldRedirectToSignIn]);
+
+    SplashScreen.hideAsync();
+  }, [fontsLoaded, isBootstrapped, bootstrapRoute]);
 
   useEffect(() => {
-    if (fontError) {
-      SplashScreen.hideAsync();
-    }
-  }, [fontError]);
+    if (fontError && isBootstrapped) SplashScreen.hideAsync();
+  }, [fontError, isBootstrapped]);
 
   if (!fontsLoaded && !fontError) return null;
+  if (!isBootstrapped) return null;
 
   return (
+    <SafeAreaProvider>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <BottomSheetModalProvider>
+          <Stack
+            screenOptions={{
+              headerShown: false,
+              animation: "slide_from_right",
+              animationDuration: 200,
+              contentStyle: { backgroundColor: Colors.surface },
+            }}
+          >
+            <Stack.Screen name="index" />
+            <Stack.Screen name="(auth)" />
+            <Stack.Screen name="(tabs)" />
+            <Stack.Screen name="kyc" />
+          </Stack>
+          <SheetController />
+        </BottomSheetModalProvider>
+        <Toast config={toastConfig} />
+      </GestureHandlerRootView>
+    </SafeAreaProvider>
+  );
+}
+
+export default function RootLayout() {
+  return (
     <Provider store={store}>
-      <SafeAreaProvider>
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <BottomSheetModalProvider>
-            <Stack
-              screenOptions={{
-                headerShown: false,
-                animation: "slide_from_right",
-                animationDuration: 200,
-                contentStyle: { backgroundColor: Colors.surface },
-              }}
-            >
-              <Stack.Screen name="index" />
-              <Stack.Screen name="(auth)" />
-              <Stack.Screen name="(tabs)" />
-              <Stack.Screen name="kyc" />
-            </Stack>
-            <SheetController />
-          </BottomSheetModalProvider>
-          <Toast config={toastConfig} />
-        </GestureHandlerRootView>
-      </SafeAreaProvider>
+      <RootLayoutNav />
     </Provider>
   );
 }

@@ -26,6 +26,12 @@ const phoneSchema = z
     "Enter a valid international mobile number (e.g., +2347059233891)",
   );
 
+const secureUrlSchema = z
+  .string()
+  .min(1, "URL is required")
+  .url("Please enter a valid URL")
+  .startsWith("https://", "URL must start with https://");
+
 export const signupSchema = z.object({
   fullName: fullNameSchema,
   email: emailSchema,
@@ -49,10 +55,11 @@ export const phoneSchema_ = z.object({
 export const emailSchema_ = z.object({
   email: emailSchema,
 });
-export const fullNameSchema_ = z.object({
+export const editProfileSchema = z.object({
   fullName: fullNameSchema,
+  avatarUrl: secureUrlSchema.optional(),
 });
-export type FullNameFormData = z.infer<typeof fullNameSchema_>;
+export type EditProfileFormData = z.infer<typeof editProfileSchema>;
 export type SignupFormData = z.infer<typeof signupSchema>;
 export type EmailPasswordFormData = z.infer<typeof emailPasswordSchema>;
 export type MobilePasswordFormData = z.infer<typeof mobilePasswordSchema>;

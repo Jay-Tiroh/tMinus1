@@ -7,7 +7,7 @@ import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import useMisc from "@/constants/misc";
 import { showErrorToast, showSuccessToast } from "@/hooks/showToast";
-import { FullNameFormData, fullNameSchema_ } from "@/schemas/authSchemas";
+import { EditProfileFormData, editProfileSchema } from "@/schemas/authSchemas";
 import { useUpdateProfileMutation } from "@/store/services/profileApi";
 import { UpdateProfileRequest } from "@/types/profile";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
@@ -19,13 +19,16 @@ import { ActivityIndicator, StyleSheet, View } from "react-native";
 
 const EditProfileScreen = () => {
   const { profileData } = useMisc();
-  const { email, phone, fullName: displayName } = profileData;
+  const { email, phone, fullName: displayName, avatarUrl } = profileData;
+  const url =
+    "https://i.pinimg.com/736x/5b/be/ee/5bbeee93769cc27ca229e3b2a3025d4c.jpg";
 
-  const { control, handleSubmit, reset } = useForm<FullNameFormData>({
-    resolver: zodResolver(fullNameSchema_),
+  const { control, handleSubmit, reset } = useForm<EditProfileFormData>({
+    resolver: zodResolver(editProfileSchema),
     mode: "onChange",
     defaultValues: {
       fullName: displayName || "",
+      avatarUrl: url || "",
     },
   });
 
@@ -39,12 +42,13 @@ const EditProfileScreen = () => {
   const [updateProfile, { isLoading }] = useUpdateProfileMutation();
 
   const router = useRouter();
-  const onSubmit = async (data: FullNameFormData) => {
+  const onSubmit = async (data: EditProfileFormData) => {
     // Avoid unnecessary API calls if the name hasn't changed
-    if (data.fullName.trim() === displayName) return;
+    // if (data.fullName.trim() === displayName) return;
 
     const payload: UpdateProfileRequest = {
       fullName: data.fullName.trim(),
+      avatarUrl: data.avatarUrl?.trim() || undefined,
     };
     try {
       const result = await updateProfile(payload).unwrap();
@@ -98,6 +102,17 @@ const EditProfileScreen = () => {
               name="fullName"
               style={styles.textInput}
               placeholder="Enter your full name"
+            />
+          </View>
+          <View style={styles.inputBox}>
+            <ThemedText size={12} color={Colors.textMidGray}>
+              Avatar URL (optional)
+            </ThemedText>
+            <ThemedTextInput
+              control={control}
+              name="avatarUrl"
+              style={styles.textInput}
+              placeholder="Enter your profile picture URL"
             />
           </View>
         </View>
@@ -179,7 +194,7 @@ const styles = StyleSheet.create({
   textInput: {
     color: Colors.snowGray,
     fontSize: 18,
-    fontFamily: Fonts.bold,
+    fontFamily: Fonts.medium,
     paddingTop: 0,
     paddingBottom: 0,
     margin: 0,

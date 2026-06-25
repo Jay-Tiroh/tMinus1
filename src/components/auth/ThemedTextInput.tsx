@@ -1,123 +1,129 @@
-import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import React, { useState } from "react";
 import { Control, Controller, FieldValues, Path } from "react-hook-form";
 import {
-  StyleProp,
   StyleSheet,
+  Text,
   TextInput,
   TextInputProps,
-  TextStyle,
+  TouchableOpacity,
   View,
-  ViewStyle,
 } from "react-native";
 
-type ThemedTextInputProps<T extends FieldValues> = TextInputProps & {
-  control: Control<T>;
-  name: Path<T>;
-  placeholder?: string;
-  containerStyle?: StyleProp<ViewStyle>;
-  inputStyle?: StyleProp<TextStyle>;
-  errorStyle?: StyleProp<TextStyle>;
-};
-
-export function ThemedTextInput<T extends FieldValues>({
-  control,
-  name,
-  placeholder,
-  containerStyle,
-  inputStyle,
-  errorStyle,
-  ...rest
-}: ThemedTextInputProps<T>) {
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const isEditable = rest.editable !== false;
-
-  return (
-    <Controller
-      control={control}
-      name={name}
-      render={({
-        field: { onChange, onBlur, value },
-        fieldState: { error },
-      }) => (
-        <View style={[{ gap: 6 }, containerStyle]}>
-          {name !== "password" ? (
-            <TextInput
-              placeholder={placeholder}
-              onChangeText={onChange}
-              onBlur={onBlur}
-              value={value}
-              style={[
-                styles.input,
-                !isEditable && styles.inputDisabled,
-                inputStyle,
-              ]}
-              placeholderTextColor={Colors.textMuted}
-              {...rest}
-            />
-          ) : (
-            <View
-              style={[
-                styles.input,
-                styles.password,
-                !isEditable && styles.inputDisabled,
-              ]}
-            >
-              <TextInput
-                placeholder={placeholder}
-                onChangeText={onChange}
-                onBlur={onBlur}
-                value={value}
-                style={[{ width: "80%", color: Colors.textFaint }, inputStyle]}
-                placeholderTextColor={Colors.textMuted}
-                // secureTextEntry={!isPasswordVisible}
-                autoCapitalize="none"
-                {...rest}
-              />
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Ionicons
-                  name={isPasswordVisible ? "eye-sharp" : "eye-off-sharp"}
-                  size={24}
-                  color={Colors.textMuted}
-                  onPress={() => setIsPasswordVisible((v) => !v)}
-                />
-              </View>
-            </View>
-          )}
-          {error?.message && (
-            <ThemedText
-              weight="regular"
-              size={12}
-              style={[{ color: "#EF4444" }, errorStyle]}
-            >
-              {error.message}
-            </ThemedText>
-          )}
-        </View>
-      )}
-    />
-  );
+interface ThemedInputProps<
+  T extends FieldValues = FieldValues,
+> extends TextInputProps {
+  icon: React.ReactNode;
+  hasToggle?: boolean;
+  control?: Control<T>;
+  name?: Path<T>;
 }
 
+export const ThemedInput = <T extends FieldValues>({
+  icon,
+  hasToggle,
+  secureTextEntry,
+  control,
+  name,
+  ...props
+}: ThemedInputProps<T>) => {
+  const [isHidden, setIsHidden] = useState(secureTextEntry);
+
+  const renderInput = (
+    value?: string,
+    onChangeText?: (text: string) => void,
+    onBlur?: () => void,
+  ) => (
+    <View style={styles.container}>
+      <View style={styles.iconCircle}>{icon}</View>
+
+      <TextInput
+        style={styles.input}
+        placeholderTextColor={Colors.textMidGray}
+        secureTextEntry={isHidden}
+        value={value ?? ""}
+        onChangeText={onChangeText}
+        onBlur={onBlur}
+        {...props}
+      />
+
+      {hasToggle && (
+        <TouchableOpacity
+          onPress={() => setIsHidden((prev) => !prev)}
+          style={styles.toggle}
+        >
+          <MaterialCommunityIcons
+            name={isHidden ? "eye-off-outline" : "eye-outline"}
+            size={20}
+            color={Colors.textMidGray}
+          />
+        </TouchableOpacity>
+      )}
+    </View>
+  );
+
+  if (control && name) {
+    return (
+      <Controller
+        control={control}
+        name={name}
+        render={({
+          field: { onChange, onBlur, value },
+          fieldState: { error },
+        }) => (
+          <View>
+            {renderInput(value, onChange, onBlur)}
+
+            {error && <Text style={styles.errorText}>{error.message}</Text>}
+          </View>
+        )}
+      />
+    );
+  }
+
+  return renderInput();
+};
+
 const styles = StyleSheet.create({
-  input: {
-    backgroundColor: Colors.surfaceCard,
-    borderRadius: 12,
-    paddingHorizontal: 14,
-    height: 54,
-    justifyContent: "center",
-    color: Colors.textFaint,
-    fontFamily: Fonts.regular,
-  },
-  inputDisabled: {
-    opacity: 0.5,
-  },
-  password: {
+  container: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
+    backgroundColor: Colors.surfaceNavy,
+    borderRadius: 16,
+    height: 60,
+    paddingHorizontal: 16,
+  },
+
+  iconCircle: {
+    width: 38,
+    height: 38,
+    borderRadius: 16,
+    backgroundColor: Colors.surfaceDark,
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 12,
+  },
+
+  input: {
+    flex: 1,
+    color: Colors.snowGray,
+    fontFamily: Fonts.regular,
+    fontSize: 16,
+    height: "100%",
+  },
+
+  toggle: {
+    padding: 8,
+    marginRight: -8,
+  },
+
+  errorText: {
+    color: Colors.lossAlt,
+    marginTop: 6,
+    marginLeft: 4,
+    fontSize: 12,
+    fontFamily: Fonts.regular,
   },
 });

@@ -1,15 +1,18 @@
-import LogOutBtn from "@/components/LogOutBtn";
+import LockAppBtn from "@/components/LockAppBtn";
+import { ModalSelector } from "@/components/OptionPicker";
 import { Spacer } from "@/components/Spacer";
 import { ThemedText } from "@/components/ThemedText";
 import Template from "@/components/trades/Template";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
+import useOtherSettings from "@/hooks/useOtherSettings";
 import useProfile from "@/hooks/useProfile";
 import { useNotificationsQuery } from "@/store/services/notificationsApi";
 import { useGetPriceAlertsQuery } from "@/store/services/priceAlertsApi";
+import { FIAT_CURRENCIES, FiatCurrency } from "@/types/profile";
 import { Href, useRouter } from "expo-router";
 import React from "react";
-import { TouchableOpacity, View } from "react-native";
+import { Image, TouchableOpacity, View } from "react-native";
 
 const ProfileScreen = () => {
   const route: Href[] = [
@@ -31,9 +34,34 @@ const ProfileScreen = () => {
 
   const { data: notifications } = useNotificationsQuery();
   const unreadCount = notifications?.meta?.unread ?? 0;
-  const { data, isLoading, isError } = useGetPriceAlertsQuery();
-  const activeAlerts = data?.meta?.active ?? [];
+  const { data: priceAlerts, isError } = useGetPriceAlertsQuery();
+  const activeAlerts = priceAlerts?.meta?.active ?? [];
+
+  const { changeFiatCurrency, settings } = useOtherSettings();
+  const [isModalVisible, setModalVisible] = React.useState(false);
+  const [selectedCurrency, setSelectedCurrency] = React.useState<FiatCurrency>(
+    settings?.fiatCurrency ?? "USD",
+  );
+
+  const handleCurrencySelect = (currency: FiatCurrency) => {
+    setSelectedCurrency(currency);
+    changeFiatCurrency(currency);
+    setModalVisible(false);
+  };
+
+  const currentFiat = FIAT_CURRENCIES.find(
+    (currency) => currency.value === selectedCurrency,
+  );
+
   const menuItems = [
+    {
+      title: "Fiat currency",
+      subtitle: `${currentFiat?.label} (${currentFiat?.description})`,
+      onPress: () => {
+        setModalVisible(true);
+      },
+      trailing: "Change",
+    },
     {
       title: "Edit profile",
       subtitle: "Name, email, phone",
@@ -82,20 +110,41 @@ const ProfileScreen = () => {
       <View style={GeneralStyles.wrapper}>
         {/* User Header */}
         <View style={{ flexDirection: "row", alignItems: "center", gap: 16 }}>
-          <View
-            style={{
-              width: 72,
-              height: 72,
-              borderRadius: 36,
-              backgroundColor: Colors.primary,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <ThemedText size={32} weight="bold" color={Colors.backgroundInk}>
-              {initials}
-            </ThemedText>
-          </View>
+          {user?.avatarUrl ? (
+            <View
+              style={{
+                width: 72,
+                height: 72,
+                borderRadius: 36,
+                alignItems: "center",
+                justifyContent: "center",
+                overflow: "hidden",
+              }}
+            >
+              <Image
+                source={{
+                  uri: user?.avatarUrl,
+                }}
+                width={72}
+                height={72}
+              />
+            </View>
+          ) : (
+            <View
+              style={{
+                width: 72,
+                height: 72,
+                borderRadius: 36,
+                backgroundColor: Colors.primary,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <ThemedText size={32} weight="bold" color={Colors.backgroundInk}>
+                {initials}
+              </ThemedText>
+            </View>
+          )}
           <View style={{ gap: 4 }}>
             <ThemedText size={20} weight="bold" color={Colors.white}>
               {fullName}
@@ -158,8 +207,17 @@ const ProfileScreen = () => {
           flex: 1,
         }}
       >
-        <LogOutBtn />
+        <LockAppBtn />
       </View>
+
+      <ModalSelector
+        visible={isModalVisible}
+        onClose={() => setModalVisible(false)}
+        title="Pick a fiat currency"
+        data={FIAT_CURRENCIES}
+        selected={selectedCurrency}
+        handleSelect={handleCurrencySelect}
+      />
     </Template>
   );
 };

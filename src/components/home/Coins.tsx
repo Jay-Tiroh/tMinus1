@@ -20,7 +20,7 @@ const SkeletonRow = memo(function SkeletonRow() {
   );
 });
 
-const CoinList = memo(function CoinList({
+export const CoinList = memo(function CoinList({
   data,
   isLoading,
   isUninitialized,
@@ -64,7 +64,7 @@ const CoinList = memo(function CoinList({
   );
 });
 
-const Coins = () => {
+export const Coins = () => {
   const {
     coins,
     isSearching: coinsLoading,
@@ -74,7 +74,7 @@ const Coins = () => {
     trending,
     isLoading: trendingLoading,
     isUninitialized: trendingUninitialized,
-  } = useTrendingAssets(10000);
+  } = useTrendingAssets(undefined, 10000);
 
   return (
     <View style={styles.container}>

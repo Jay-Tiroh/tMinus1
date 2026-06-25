@@ -33,9 +33,9 @@ export const CoinCard = memo(function CoinCard({ coin }: CoinCardProps) {
 
       <View style={styles.middle}>
         <ThemedText
-          size={14}
+          size={12}
           letterSpacing={2.64}
-          style={{ color: Colors.surface }}
+          style={{ color: Colors.snowGray }}
         >
           {`${coin.symbol}/BUSD`}
         </ThemedText>
@@ -63,10 +63,11 @@ const styles = StyleSheet.create({
     width: 163,
     // height: 118,
     borderRadius: 16,
-    padding: 8,
+    padding: 12,
     justifyContent: "space-between",
     overflow: "hidden",
     boxShadow: "0px 16px 50px rgba(22, 28, 34, 0.08)",
+    backgroundColor: Colors.surfaceNavy,
   },
   top: {
     flexDirection: "row",
@@ -77,6 +78,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 4,
+    justifyContent: "space-between",
+    marginTop: 10,
   },
   bottom: {
     marginTop: 10,

@@ -49,14 +49,14 @@ const Template = ({
 
         {children}
 
-        {ctaProps && (
+        {(ctaProps || ctaFooter) && (
           <View
             style={[
               GeneralStyles.wrapper,
               { gap: 14, flex: 1, justifyContent: "center" },
             ]}
           >
-            <ThemedButton {...ctaProps} />
+            {ctaProps && <ThemedButton {...ctaProps} />}
             {ctaFooter}
           </View>
         )}

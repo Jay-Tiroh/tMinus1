@@ -122,7 +122,7 @@ const marketsApi = baseApi.injectEndpoints({
       transformResponse: (response: PricesResponse) => response.data,
     }),
   }),
-  overrideExisting: false,
+  overrideExisting: true,
 });
 
 export const {

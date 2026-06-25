@@ -1,13 +1,11 @@
-import Fingerprint from "@/assets/icons/fingerprint.svg";
-import CTA from "@/components/auth/CTA";
-import { ThemedTextInput } from "@/components/auth/ThemedTextInput";
-import Loader from "@/components/Loader";
+import { InfoBanner } from "@/components/auth/InfoBanner";
+import { ThemedInput } from "@/components/auth/ThemedTextInput";
 import { Spacer } from "@/components/Spacer";
+import { ThemedButton } from "@/components/ThemedButton";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
-import { Spacing } from "@/constants/Spacing";
+import { Fonts } from "@/constants/Fonts";
 import { showErrorToast, showSuccessToast } from "@/hooks/showToast";
-import { useBiometrics } from "@/hooks/useBiometrics";
 import {
   EmailPasswordFormData,
   emailPasswordSchema,
@@ -15,52 +13,70 @@ import {
   mobilePasswordSchema,
 } from "@/schemas/authSchemas";
 import { useAppDispatch } from "@/store/hooks";
-import { authApi, useLoginMutation } from "@/store/services/authApi";
+import { useLoginMutation } from "@/store/services/authApi";
 import { setCredentials } from "@/store/slices/authSlice";
 import { LoginRequest } from "@/types/auth";
-import { getToken, saveToken } from "@/utils/secureStore";
+import { saveToken } from "@/utils/secureStore";
+import Feather from "@expo/vector-icons/Feather";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { Pressable, StyleSheet, View } from "react-native";
+import { Control, FieldValues, useForm } from "react-hook-form";
+import {
+  ActivityIndicator,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
-type FormData = EmailPasswordFormData | MobilePasswordFormData;
-
-// Interfaces for strict typing to replace `any`
 interface ApiError {
-  data?: {
-    message?: string;
-  };
+  data?: { message?: string };
 }
 
-interface StatusError {
-  status: number;
-}
-
-interface RefreshResponse {
-  accessToken?: string;
-  token?: string;
-  refreshToken?: string;
-  user?: never;
-}
-
-export default function SignInForm() {
+const SignInForm = () => {
   const [isEmail, setIsEmail] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
+  const isTwoFactorResponse = (
+    data: unknown,
+  ): data is {
+    requiresTwoFactor: true;
+    challengeId: string;
+    expiresAt: string;
+    attemptsRemaining: number;
+  } => {
+    return (
+      typeof data === "object" && data !== null && "requiresTwoFactor" in data
+    );
+  };
+
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const [errorMessage, setErrorMessage] = useState("");
-  const [biometricLoading, setBiometricLoading] = useState(false);
 
-  const { control, handleSubmit, reset } = useForm<FormData>({
-    resolver: zodResolver(isEmail ? emailPasswordSchema : mobilePasswordSchema),
+  const emailForm = useForm<EmailPasswordFormData>({
+    resolver: zodResolver(emailPasswordSchema),
     mode: "onChange",
   });
 
-  const [login, { isLoading, isError, error }] = useLoginMutation();
-  const { isSupported, isEnrolled, authenticate } = useBiometrics();
+  const phoneForm = useForm<MobilePasswordFormData>({
+    resolver: zodResolver(mobilePasswordSchema),
+    mode: "onChange",
+  });
 
-  const onSubmit = async (data: FormData) => {
+  const activeForm = isEmail ? emailForm : phoneForm;
+  const typedControl = activeForm.control as Control<FieldValues>;
+
+  const [login, { isLoading, isError }] = useLoginMutation();
+
+  const handleToggle = () => {
+    emailForm.reset();
+    phoneForm.reset();
+    setIsEmail((prev) => !prev);
+  };
+
+  const onSubmit = async (
+    data: EmailPasswordFormData | MobilePasswordFormData,
+  ) => {
     const formattedData: LoginRequest = {
       loginType: isEmail ? "email" : "phone",
       identifier: "email" in data ? data.email : data.phone,
@@ -68,8 +84,21 @@ export default function SignInForm() {
     };
 
     const result = await login(formattedData);
-
+    console.log("LOGIN RESULT", result);
     if ("data" in result && result.data) {
+      if (isTwoFactorResponse(result.data)) {
+        router.push({
+          pathname: "/verify-2fa",
+          params: {
+            challengeId: result.data.challengeId,
+            expiresAt: result.data.expiresAt,
+            attemptsRemaining: String(result.data.attemptsRemaining),
+          },
+        });
+
+        return;
+      }
+
       dispatch(
         setCredentials({
           user: result.data.user,
@@ -77,266 +106,144 @@ export default function SignInForm() {
           refreshToken: result.data.refreshToken,
         }),
       );
+
       await saveToken("ACCESS_TOKEN", result.data.accessToken);
+
       await saveToken("REFRESH_TOKEN", result.data.refreshToken);
+
+      await saveToken(
+        "BIOMETRIC_ENABLED",
+        String(result.data.user.settings.biometricEnabled),
+      );
+
       showSuccessToast({
         title: "Login Successful",
         message: "Welcome back! You have been logged in successfully.",
       });
-      router.replace("/(tabs)/home");
-    }
 
-    if (error) {
+      router.replace("/(tabs)/home");
+
+      return;
+    }
+    if ("error" in result) {
       const isApiError = (err: unknown): err is ApiError =>
         typeof err === "object" && err !== null;
 
       const loginError =
-        (isApiError(error) && error.data) || "Something went wrong";
+        (isApiError(result.error) && result.error.data?.message) ||
+        "Something went wrong";
       setErrorMessage(loginError);
-      showErrorToast({
-        title: "Login Failed",
-        message: loginError,
-      });
+      showErrorToast({ title: "Login Failed", message: loginError });
     }
   };
 
-  const handleToggle = () => {
-    reset();
-    setIsEmail((prev) => !prev);
-  };
-
-  const handleBiometricAuth = async () => {
-    if (!isSupported || !isEnrolled) return;
-
-    setBiometricLoading(true);
-
-    const result = await authenticate("Unlock tMinus1");
-    if (!result.success) {
-      setBiometricLoading(false);
-      setErrorMessage(
-        "Biometric authentication failed, login with email and password instead",
-      );
-      showErrorToast({
-        title: "Authentication Failed",
-        message:
-          "Biometric authentication failed, login with email and password instead",
-      });
-      return;
-    }
-
-    const token = await getToken("ACCESS_TOKEN");
-    const refreshToken = await getToken("REFRESH_TOKEN");
-
-    if (!token || !refreshToken) {
-      setBiometricLoading(false);
-      setErrorMessage("No saved session — please sign in first.");
-      showErrorToast({
-        title: "No Saved Session",
-        message: "No saved session — please sign in first.",
-      });
-      return;
-    }
-
-    try {
-      // Attempt to use the stored access token directly
-      const sessionData = await dispatch(
-        authApi.endpoints.getSession.initiate(undefined, {
-          forceRefetch: true,
-        }),
-      ).unwrap();
-
-      dispatch(
-        setCredentials({
-          user: sessionData.user || sessionData,
-          token: sessionData.accessToken || token,
-          refreshToken: sessionData.refreshToken || refreshToken,
-        }),
-      );
-
-      await saveToken("ACCESS_TOKEN", sessionData.accessToken || token);
-      await saveToken(
-        "REFRESH_TOKEN",
-        sessionData.refreshToken || refreshToken,
-      );
-
-      router.replace("/(tabs)/home");
-    } catch {
-      // Access token expired — try refresh before giving up
-      try {
-        const refreshData = await dispatch(
-          authApi.endpoints.refreshToken.initiate({ refreshToken }),
-        ).unwrap();
-
-        const newToken = refreshData.accessToken || refreshData.token || token;
-        const newRefreshToken = refreshData.refreshToken || refreshToken;
-
-        dispatch(
-          setCredentials({
-            user: refreshData.user || (null as never),
-            token: newToken,
-            refreshToken: newRefreshToken,
-          }),
-        );
-
-        await saveToken("ACCESS_TOKEN", newToken);
-        await saveToken("REFRESH_TOKEN", newRefreshToken);
-        showSuccessToast({
-          title: "Login Successful",
-          message: "Welcome back! You have been logged in successfully.",
-        });
-        router.replace("/(tabs)/home");
-      } catch {
-        dispatch({ type: "auth/clearCredentials" });
-        setBiometricLoading(false);
-        setErrorMessage("Session expired, please sign in again.");
-        showErrorToast({
-          title: "Session Expired",
-          message: "Session expired, please sign in again.",
-        });
-      }
-    }
-  };
   return (
-    <View style={styles.container}>
-      <ThemedText size={32} weight="bold" style={styles.headerText}>
-        Sign In
-      </ThemedText>
-
-      <Spacer size={14} />
-
-      {isError && (
-        <ThemedText color={Colors.lossAlt} style={styles.errorText}>
-          {errorMessage}
-        </ThemedText>
-      )}
-      {!isError && errorMessage !== "" && (
-        <ThemedText color={Colors.lossAlt} style={styles.errorText}>
+    <View style={{ flex: 1 }}>
+      {(isError || errorMessage !== "") && (
+        <ThemedText
+          color={Colors.lossAlt}
+          style={{ width: "100%", marginBottom: 8 }}
+        >
           {errorMessage}
         </ThemedText>
       )}
 
-      <Spacer size={44} />
-
-      <View style={styles.formFields}>
-        <View style={styles.inputContainer}>
-          <View style={styles.labelRow}>
-            <ThemedText size={14} style={styles.label}>
-              {isEmail ? "Email" : "Mobile Number"}
-            </ThemedText>
-            <ThemedText
-              size={14}
-              style={styles.toggleLink}
-              onPress={handleToggle}
-            >
-              {isEmail ? "Sign in with mobile" : "Sign in with email"}
-            </ThemedText>
-          </View>
-
-          {isEmail ? (
-            <ThemedTextInput
-              control={control}
-              name="email"
-              placeholder="Enter your email"
-              keyboardType="email-address"
-              autoCapitalize="none"
-            />
-          ) : (
-            <ThemedTextInput
-              control={control}
-              name="phone"
-              placeholder="Enter your mobile number"
-              keyboardType="phone-pad"
-              autoCapitalize="none"
-            />
-          )}
-        </View>
-
-        <View style={styles.inputContainer}>
-          <ThemedText size={14} style={styles.label}>
-            Password
+      <View style={{ gap: 16 }}>
+        <View style={styles.labelRow}>
+          <ThemedText size={14} color={Colors.textSecondary}>
+            {isEmail ? "Email" : "Mobile Number"}
           </ThemedText>
-          <ThemedTextInput
-            control={control}
-            name="password"
-            placeholder="Enter your password"
-          />
-          <ThemedText size={14} style={styles.toggleLink}>
-            Forgot password?
+          <ThemedText
+            size={14}
+            color={Colors.primaryClean}
+            onPress={handleToggle}
+          >
+            {isEmail ? "Sign in with mobile" : "Sign in with email"}
           </ThemedText>
         </View>
+
+        <ThemedInput
+          control={typedControl}
+          name={isEmail ? "email" : "phone"}
+          icon={
+            <Feather
+              name={isEmail ? "mail" : "phone"}
+              size={20}
+              color={Colors.primaryClean}
+            />
+          }
+          placeholder={
+            isEmail ? "student@cryptoclass.test" : "Enter your mobile number"
+          }
+          keyboardType={isEmail ? "email-address" : "phone-pad"}
+          autoCapitalize="none"
+        />
+
+        <ThemedInput
+          control={typedControl}
+          name="password"
+          icon={
+            <MaterialIcons
+              name="lock-outline"
+              size={20}
+              color={Colors.primaryClean}
+            />
+          }
+          placeholder="Password"
+          secureTextEntry
+          hasToggle
+        />
+      </View>
+
+      <TouchableOpacity style={styles.forgotRow}>
+        <ThemedText color={Colors.primaryClean} size={14} weight="medium">
+          Forgot password?
+        </ThemedText>
+      </TouchableOpacity>
+
+      <Spacer size={32} />
+
+      <View style={{ gap: 16 }}>
+        <ThemedButton
+          title="Sign in"
+          variant="primary"
+          onPress={activeForm.handleSubmit(onSubmit, (errors) => {
+            console.log("VALIDATION ERRORS", errors);
+          })}
+          disabled={isLoading}
+          iconComponent={
+            isLoading ? (
+              <ActivityIndicator color={Colors.backgroundInk} />
+            ) : null
+          }
+          textStyle={{ fontFamily: Fonts.medium }}
+        />
       </View>
 
       <Spacer size={40} />
-
-      <CTA
-        page="signin"
-        onPress={handleSubmit(onSubmit)}
-        isLoading={isLoading}
+      <InfoBanner
+        type="success"
+        title="Secure session"
+        desc="We will request 2FA when your account has it enabled."
       />
+      <Spacer size={40} />
 
-      <Spacer size={55} />
-
-      {isSupported && isEnrolled && !biometricLoading && (
-        <Pressable
-          onPress={handleBiometricAuth}
-          style={styles.biometricContainer}
-        >
-          <Fingerprint color={Colors.primary} style={styles.fingerprintIcon} />
-          <ThemedText
-            size={14}
-            letterSpacing={2.64}
-            style={styles.biometricText}
-          >
-            Use fingerprint instead?
+      <View style={styles.centerRow}>
+        <ThemedText color={Colors.textMidGray} size={14}>
+          New here?{" "}
+          <ThemedText color={Colors.snowGray} weight="medium">
+            Create an account
           </ThemedText>
-        </Pressable>
-      )}
-      {biometricLoading && <Loader />}
+        </ThemedText>
+      </View>
     </View>
   );
-}
+};
+
+export default SignInForm;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: Spacing.lg,
-    alignItems: "center",
-  },
-  headerText: {
-    color: Colors.white,
-    lineHeight: 46,
-    alignSelf: "flex-start",
-  },
-  errorText: {
-    width: "100%",
-  },
-  formFields: {
-    gap: Spacing.lg,
-    width: "100%",
-  },
-  inputContainer: {
-    width: "100%",
-    gap: 12,
-  },
-  labelRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  label: {
-    color: Colors.textSecondary,
-  },
-  toggleLink: {
-    color: Colors.primary,
-  },
-  biometricContainer: {
-    gap: 20,
-    alignItems: "center",
-  },
-  biometricText: {
-    color: Colors.textSecondary,
-  },
-  fingerprintIcon: {
-    width: 40,
-    height: 40,
-  },
+  forgotRow: { alignItems: "flex-end", width: "100%", marginTop: 12 },
+  centerRow: { alignItems: "center", width: "100%" },
+  labelRow: { flexDirection: "row", justifyContent: "space-between" },
 });

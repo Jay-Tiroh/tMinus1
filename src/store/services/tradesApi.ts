@@ -44,7 +44,7 @@ const tradesApi = baseApi.injectEndpoints({
       invalidatesTags: ["Wallet", "Transaction", "Portfolio"],
     }),
   }),
-  overrideExisting: false,
+  overrideExisting: true,
 });
 
 export const {

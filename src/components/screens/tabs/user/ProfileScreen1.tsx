@@ -1,5 +1,5 @@
 import Avatar from "@/assets/icons/user/avatar.svg";
-import LogOutBtn from "@/components/LogOutBtn";
+import LogOutBtn from "@/components/LockAppBtn";
 import { ThemedText } from "@/components/ThemedText";
 import Item from "@/components/user/Item";
 import { Colors } from "@/constants/Colors";

@@ -1,164 +1,205 @@
-import CTA from "@/components/auth/CTA";
-import { ThemedTextInput } from "@/components/auth/ThemedTextInput";
+import { ThemedInput } from "@/components/auth/ThemedTextInput";
 import { Spacer } from "@/components/Spacer";
+import { ThemedButton } from "@/components/ThemedButton";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
-import { Spacing } from "@/constants/Spacing";
-import { useTempUser } from "@/hooks/useTempUser";
-import { SignupFormData, signupSchema } from "@/schemas/authSchemas";
-import { useAppDispatch } from "@/store/hooks";
-import { useRegisterMutation } from "@/store/services/authApi";
-import { setCredentials } from "@/store/slices/authSlice";
-import { saveToken } from "@/utils/secureStore";
+import { showErrorToast } from "@/hooks/showToast"; // Adjust import path if needed
+import { signupSchema } from "@/schemas/authSchemas";
+import {
+  useRegisterMutation,
+  useValidateSignupMutation,
+} from "@/store/services/authApi"; // Adjust import path if needed
+
+import Feather from "@expo/vector-icons/Feather";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
-import { useEffect } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { StyleSheet, View } from "react-native";
+import { z } from "zod";
 
-type FormData = SignupFormData;
+// 1. Extend your base schema to handle the confirm password check
+const signUpFormSchema = signupSchema
+  .extend({
+    confirm: z.string().min(1, "Please confirm your password"),
+  })
+  .refine((data) => data.password === data.confirm, {
+    message: "Passwords do not match",
+    path: ["confirm"],
+  });
 
-export default function SignUpForm() {
-  const dispatch = useAppDispatch();
-  const { email, phone } = useTempUser();
+type SignUpFormValues = z.infer<typeof signUpFormSchema>;
 
-  const { control, handleSubmit, setValue } = useForm<FormData>({
-    resolver: zodResolver(signupSchema),
+const SignUpForm = () => {
+  const router = useRouter();
+
+  // 2. Initialize React Hook Form
+  const { control, handleSubmit } = useForm<SignUpFormValues>({
+    resolver: zodResolver(signUpFormSchema),
+    defaultValues: {
+      fullName: "",
+      email: "",
+      phone: "",
+      password: "",
+      confirm: "",
+    },
     mode: "onChange",
   });
 
-  const [register, { isLoading, isError, error }] = useRegisterMutation();
-  const router = useRouter();
+  // 3. Initialize API Mutations
+  const [validateSignup, { isLoading: isValidating }] =
+    useValidateSignupMutation();
+  const [register, { isLoading: isRegistering }] = useRegisterMutation();
 
-  useEffect(() => {
-    if (email) setValue("email", email, { shouldValidate: true });
-  }, [email]);
+  const isLoading = isValidating || isRegistering;
 
-  useEffect(() => {
-    if (phone) setValue("phone", phone, { shouldValidate: true });
-  }, [phone]);
+  // 4. Form Submission Flow
+  const onSubmit = async (data: SignUpFormValues) => {
+    try {
+      // Step A: Validate the details first
+      const validationResult = await validateSignup({
+        email: data.email,
+        phone: data.phone,
+      }).unwrap();
 
-  const onSubmit = async (data: FormData) => {
-    const result = await register(data);
-    if ("data" in result && result.data) {
-      dispatch(
-        setCredentials({
-          user: result.data.user,
-          token: result.data.accessToken,
-          refreshToken: result.data.refreshToken,
-        }),
-      );
-      await saveToken("ACCESS_TOKEN", result.data.accessToken);
-      await saveToken("REFRESH_TOKEN", result.data.refreshToken);
-      router.replace("/success");
+      if (!validationResult.canRegister) {
+        // Extract specific error messages from the backend validation response
+        const emailError = !validationResult.email?.available
+          ? validationResult.email?.message
+          : null;
+        const phoneError = !validationResult.phone?.available
+          ? validationResult.phone?.message
+          : null;
+
+        showErrorToast({
+          title: "Registration Unavailable",
+          message:
+            emailError ||
+            phoneError ||
+            "These details cannot be used to register.",
+        });
+        return; // Halt registration
+      }
+
+      // Step B: Proceed with actual registration
+      const registerResult = await register({
+        fullName: data.fullName,
+        email: data.email,
+        phone: data.phone,
+        password: data.password,
+      }).unwrap();
+
+      // Step C: Route to Verify OTP screen, passing the email for context
+      router.push({
+        pathname: "/verify",
+        params: { email: data.email },
+      });
+    } catch (error: any) {
+      showErrorToast({
+        title: "Registration Failed",
+        message:
+          error?.data?.message ||
+          "An unexpected error occurred. Please try again.",
+      });
     }
   };
 
   return (
-    <View style={styles.container}>
-      <View style={{ gap: Spacing.md, width: "100%" }}>
-        <ThemedText
-          size={32}
-          weight="bold"
-          style={{
-            color: Colors.white,
-            lineHeight: 46,
-          }}
-        >
-          Complete your sign up
-        </ThemedText>
+    <View style={{ flex: 1 }}>
+      <View style={{ gap: 16 }}>
+        <ThemedInput
+          control={control}
+          name="fullName"
+          icon={<Feather name="user" size={20} color={Colors.primaryClean} />}
+          placeholder="Full name"
+        />
+        <ThemedInput
+          control={control}
+          name="email"
+          icon={<Feather name="mail" size={20} color={Colors.primaryClean} />}
+          placeholder="Email address"
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
+        <ThemedInput
+          control={control}
+          name="phone"
+          icon={<Feather name="phone" size={20} color={Colors.primaryClean} />}
+          placeholder="Phone number"
+          keyboardType="phone-pad"
+        />
+        <ThemedInput
+          control={control}
+          name="password"
+          icon={
+            <MaterialIcons
+              name="lock-outline"
+              size={20}
+              color={Colors.primaryClean}
+            />
+          }
+          placeholder="Create password"
+          secureTextEntry
+          hasToggle
+        />
+        <ThemedInput
+          control={control}
+          name="confirm"
+          icon={
+            <MaterialIcons
+              name="lock-outline"
+              size={20}
+              color={Colors.primaryClean}
+            />
+          }
+          placeholder="Confirm password"
+          secureTextEntry
+          hasToggle
+        />
+      </View>
 
-        <ThemedText
-          size={14}
-          letterSpacing={0.5}
-          weight="regular"
-          style={{ color: Colors.textSecondary, lineHeight: 24 }}
-        >
-          Fill in your details below to create your account and get started.
-        </ThemedText>
-      </View>
-      <Spacer size={14} />
-      {isError && (
-        <ThemedText color={Colors.lossAlt} style={{ width: "100%" }}>
-          {(error as any)?.data?.message ?? "Something went wrong"}
-        </ThemedText>
-      )}
-      <Spacer size={44} />
-      <View style={{ gap: Spacing.lg, width: "100%" }}>
-        <View style={styles.inputContainer}>
-          <View style={styles.labelRow}>
-            <ThemedText size={14} style={styles.label}>
-              Email
-            </ThemedText>
-          </View>
-          <ThemedTextInput
-            control={control}
-            name="email"
-            placeholder="Enter your email"
-            keyboardType="email-address"
-            autoCapitalize="none"
-            editable={!email}
-          />
-        </View>
-        <View style={styles.inputContainer}>
-          <ThemedText size={14} style={styles.label}>
-            Fullname
-          </ThemedText>
-          <ThemedTextInput
-            control={control}
-            name="fullName"
-            placeholder="Enter your fullname"
-          />
-        </View>
-        <View style={styles.inputContainer}>
-          <ThemedText size={14} style={styles.label}>
-            Mobile Number
-          </ThemedText>
-          <ThemedTextInput
-            control={control}
-            name="phone"
-            placeholder="Enter your phone number"
-            keyboardType="phone-pad"
-            autoCapitalize="none"
-            editable={!phone}
-          />
-        </View>
-        <View style={styles.inputContainer}>
-          <ThemedText size={14} style={styles.label}>
-            Password
-          </ThemedText>
-          <ThemedTextInput
-            control={control}
-            name="password"
-            placeholder="Enter your password"
-          />
-        </View>
-      </View>
-      <Spacer size={40} />
-      <CTA
-        page="signup"
+      <Spacer size={16} />
+
+      <ThemedText
+        color={Colors.textMidGray}
+        size={13}
+        style={{ lineHeight: 18 }}
+      >
+        Use your real name and an international phone number for verification.
+      </ThemedText>
+
+      <Spacer size={32} />
+
+      <ThemedButton
+        title={isLoading ? "Signing up..." : "Sign up"}
+        variant="primary"
+        disabled={isLoading}
         onPress={handleSubmit(onSubmit)}
-        isLoading={isLoading}
       />
+
+      <Spacer size={40} />
+
+      <View style={styles.centerRow}>
+        <ThemedText color={Colors.textMidGray} size={14}>
+          Already have an account?{" "}
+          <ThemedText
+            color={Colors.snowGray}
+            weight="medium"
+            // onPress={() => router.push("/login")}
+            // Add actual route for sign-in
+            style={{ padding: 4 }}
+          >
+            Sign in
+          </ThemedText>
+        </ThemedText>
+      </View>
     </View>
   );
-}
+};
+
+export default SignUpForm;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: Spacing.lg,
-    alignItems: "center",
-  },
-  inputContainer: {
-    width: "100%",
-    gap: 12,
-  },
-  labelRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  label: {
-    color: Colors.textSecondary,
-  },
+  centerRow: { alignItems: "center", width: "100%" },
 });

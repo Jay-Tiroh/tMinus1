@@ -1,10 +1,40 @@
-import { User } from "@/types/user";
+// ── Validation ─────────────────────────────────────────────────────────────
 
-// Expanded to match your new API response containing refresh tokens and expiration
+import { User } from "@/types/profile";
+
+export interface ValidateSignupRequest {
+  email?: string;
+  phone?: string;
+}
+
+export interface ValidationFieldInfo {
+  value: string;
+  normalized: string;
+  valid: boolean;
+  available: boolean;
+  code: string;
+  message: string;
+}
+
+export interface ValidateSignupResponseData {
+  email?: ValidationFieldInfo;
+  phone?: ValidationFieldInfo;
+  canRegister: boolean;
+}
+
+export interface ValidateSignupResponse {
+  data: ValidateSignupResponseData;
+  meta?: {
+    requestId: string;
+  };
+}
+
+// ── Authentication ─────────────────────────────────────────────────────────
+
 export interface AuthResponseData {
   user: User;
   accessToken: string;
-  token: string; // Often duplicates accessToken depending on backend setup
+  token: string;
   refreshToken: string;
   tokenType: string;
   expiresAt: string;
@@ -12,14 +42,6 @@ export interface AuthResponseData {
   refreshTokenExpiresAt: string;
 }
 
-export interface AuthResponse {
-  data: AuthResponseData;
-  meta?: {
-    requestId: string;
-  };
-}
-
-// Replaced LoginRequestEmail/Mobile with a unified LoginRequest
 export interface LoginRequest {
   loginType: "email" | "phone";
   identifier: string;
@@ -32,6 +54,26 @@ export interface RegisterRequest {
   phone: string;
   password: string;
 }
+
+export interface RegisterResponseData {
+  user: User;
+  emailVerificationRequired: boolean;
+  nextStep: string;
+  otp: {
+    requestPath: string;
+    verifyPath: string;
+    expiresInSeconds: number;
+  };
+}
+
+export interface RegisterResponse {
+  data: RegisterResponseData;
+  meta?: {
+    requestId: string;
+  };
+}
+
+// ── OTP ────────────────────────────────────────────────────────────────────
 
 export interface VerifyOTPRequest {
   code: string;
@@ -56,24 +98,27 @@ export interface VerifyOTPResponse {
   data: VerifyOTPResponseData;
 }
 
-// Session — Can now just extend AuthResponseData or match its shape
+// ── Session & Token ────────────────────────────────────────────────────────
+
 export interface SessionResponseData extends AuthResponseData {
   authenticated: boolean;
 }
 
 export interface SessionResponse {
   data: SessionResponseData;
+  meta?: {
+    requestId: string;
+  };
 }
 
-// Logout
 export interface LogoutResponseData {
   loggedOut: boolean;
 }
+
 export interface LogoutResponse {
   data: LogoutResponseData;
 }
 
-// Refresh
 export interface RefreshRequestBody {
   refreshToken: string;
 }
@@ -82,4 +127,24 @@ export interface RefreshResponseData extends AuthResponseData {}
 
 export interface RefreshResponse {
   data: RefreshResponseData;
+}
+
+export interface TwoFactorChallengeData {
+  requiresTwoFactor: true;
+  challengeId: string;
+  expiresAt: string;
+  attemptsRemaining: number;
+}
+
+export type LoginResponseData = AuthResponseData | TwoFactorChallengeData;
+
+export interface LoginResponse {
+  data: LoginResponseData;
+  meta?: {
+    requestId: string;
+  };
+}
+
+export interface AuthResponse {
+  data: LoginResponseData;
 }

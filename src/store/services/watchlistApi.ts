@@ -36,7 +36,7 @@ export const watchlistApi = baseApi.injectEndpoints({
       invalidatesTags: ["Watchlist"],
     }),
   }),
-  overrideExisting: false,
+  overrideExisting: true,
 });
 
 export const {

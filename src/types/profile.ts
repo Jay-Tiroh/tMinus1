@@ -1,8 +1,69 @@
+import { SelectorOption } from "@/components/OptionPicker";
 import { RequireAtLeastOne } from "@/types/utility";
 
+export type FiatCurrency =
+  | "USD"
+  | "NGN"
+  | "EUR"
+  | "GBP"
+  | "CAD"
+  | "AUD"
+  | "JPY"
+  | "CHF";
+
+export const FIAT_CURRENCIES: SelectorOption<FiatCurrency>[] = [
+  {
+    label: "USD",
+    value: "USD",
+    description: "United States Dollar",
+    symbol: "$",
+  },
+  {
+    label: "NGN",
+    value: "NGN",
+    description: "Nigerian Naira",
+    symbol: "₦",
+  },
+  {
+    label: "EUR",
+    value: "EUR",
+    description: "Euro",
+    symbol: "€",
+  },
+  {
+    label: "GBP",
+    value: "GBP",
+    description: "British Pound Sterling",
+    symbol: "£",
+  },
+  {
+    label: "CAD",
+    value: "CAD",
+    description: "Canadian Dollar",
+    symbol: "$", // or "C$"
+  },
+  {
+    label: "AUD",
+    value: "AUD",
+    description: "Australian Dollar",
+    symbol: "$", // or "A$"
+  },
+  {
+    label: "JPY",
+    value: "JPY",
+    description: "Japanese Yen",
+    symbol: "¥",
+  },
+  {
+    label: "CHF",
+    value: "CHF",
+    description: "Swiss Franc",
+    symbol: "CHF", // or "Fr."
+  },
+];
 export interface UserSettings {
   language: string;
-  fiatCurrency: string;
+  fiatCurrency: FiatCurrency;
   theme: string;
   priceAlerts: boolean;
   pushNotifications: boolean;

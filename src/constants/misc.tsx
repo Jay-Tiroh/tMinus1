@@ -3,13 +3,13 @@ import { useProfileQuery } from "@/store/services/profileApi";
 type DetailsType = {
   name: string;
   label: string;
-  value: string | undefined;
+  value: string | undefined | null;
 };
 
 const useMisc = () => {
   const { data: profile, isLoading, isError, error } = useProfileQuery();
-  const { fullName, email, phone } = profile?.data || {};
-  const profileData = { fullName, email, phone };
+  const { fullName, email, phone, avatarUrl } = profile?.data || {};
+  const profileData = { fullName, email, phone, avatarUrl };
   const displayName = fullName ? fullName.split(" ")[0] : "User123";
   const details: DetailsType[] = [
     {
@@ -26,6 +26,11 @@ const useMisc = () => {
       name: "phone",
       label: "Mobile Number",
       value: phone,
+    },
+    {
+      name: "avatarUrl",
+      label: "Avatar URL",
+      value: avatarUrl,
     },
   ] as const;
 

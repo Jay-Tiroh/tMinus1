@@ -3,8 +3,8 @@ import { Spacer } from "@/components/Spacer";
 import { ThemedText } from "@/components/ThemedText";
 
 import Template from "@/components/trades/Template";
-import TransactionPinInput from "@/components/trades/TransactionPinInput";
 import { Colors } from "@/constants/Colors";
+import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
 import { formatAmount } from "@/helpers/functions";
 import { useGoToRoute } from "@/hooks/useGoToRoute";
@@ -17,6 +17,7 @@ import {
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { View } from "react-native";
+import { OtpInput } from "react-native-otp-entry";
 
 const WithdrawConfirmationScreen = () => {
   const dispatch = useAppDispatch();
@@ -27,6 +28,7 @@ const WithdrawConfirmationScreen = () => {
   const [pinAttempt, setPinAttempt] = useState(0);
   const [requestWithdrawal, { isLoading }] = useRequestWithdrawalMutation();
   const router = useRouter();
+
   if (!draft) {
     return (
       <Template
@@ -111,9 +113,25 @@ const WithdrawConfirmationScreen = () => {
             Transaction PIN
           </ThemedText>
           <Spacer size={8} />
-          <TransactionPinInput
+
+          <OtpInput
             key={pinAttempt}
-            onComplete={handlePinComplete}
+            numberOfDigits={4}
+            onFilled={handlePinComplete}
+            secureTextEntry
+            theme={{
+              pinCodeTextStyle: {
+                color: Colors.snowGray,
+                fontFamily: Fonts.bold,
+              },
+              focusedPinCodeContainerStyle: {
+                borderColor: Colors.primaryClean,
+              },
+              pinCodeContainerStyle: {
+                minWidth: 80,
+                borderColor: Colors.surface,
+              },
+            }}
           />
         </View>
       </View>

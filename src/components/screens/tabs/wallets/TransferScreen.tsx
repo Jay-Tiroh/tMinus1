@@ -5,7 +5,6 @@ import { Spacer } from "@/components/Spacer";
 import { ThemedText } from "@/components/ThemedText";
 
 import Template from "@/components/trades/Template";
-import TransactionPinInput from "@/components/trades/TransactionPinInput";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
@@ -26,6 +25,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { OtpInput } from "react-native-otp-entry";
 
 // ─── Configuration ────────────────────────────────────────────────
 
@@ -102,8 +102,6 @@ const TransferScreen = () => {
     [balances],
   );
 
-  // Replace pin state and the PIN modal section in TransferScreen with this:
-
   const handleNext = () => {
     if (currentStep === 1) {
       if (!recipient.trim())
@@ -135,7 +133,7 @@ const TransferScreen = () => {
       dispatch(addRecentContact({ address: recipient }));
       setPinModalVisible(false);
       toSuccess();
-    } catch (error) {
+    } catch (error: any) {
       if (error?.data?.error?.code === "INVALID_PIN") {
         setPinError("Invalid pin. Check your PIN and try again. ");
         setPinAttempt((n) => n + 1);
@@ -146,7 +144,6 @@ const TransferScreen = () => {
         });
         setPinModalVisible(false);
       }
-      // remounts TransactionPinInput, clearing dots
       console.log(error);
     }
   };
@@ -428,10 +425,27 @@ const TransferScreen = () => {
               to {recipient}.
             </ThemedText>
             <Spacer size={16} />
-            <TransactionPinInput
+
+            <OtpInput
               key={pinAttempt}
-              onComplete={executeTransfer}
+              numberOfDigits={4}
+              onFilled={executeTransfer}
+              secureTextEntry
+              theme={{
+                pinCodeTextStyle: {
+                  color: Colors.snowGray,
+                  fontFamily: Fonts.bold,
+                },
+                focusedPinCodeContainerStyle: {
+                  borderColor: Colors.primaryClean,
+                },
+                pinCodeContainerStyle: {
+                  minWidth: 80,
+                  borderColor: Colors.surface,
+                },
+              }}
             />
+
             {pinError && (
               <ThemedText
                 size={12}

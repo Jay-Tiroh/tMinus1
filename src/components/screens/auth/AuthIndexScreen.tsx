@@ -1,12 +1,12 @@
-import EmailMobile from "@/components/auth/EmailMobilePhase";
 import SignInForm from "@/components/auth/SignInForm";
+import SignUpForm from "@/components/auth/SignUpForm"; // Assuming you rename EmailMobile to this
 import { Spacer } from "@/components/Spacer";
+import TextBlock from "@/components/TextBlock";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { Colors } from "@/constants/Colors";
 import { Spacing } from "@/constants/Spacing";
-import { useRouter } from "expo-router";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import {
   Dimensions,
   ImageBackground,
@@ -24,10 +24,9 @@ const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const AuthIndexScreen = () => {
   const insets = useSafeAreaInsets();
   const scrollRef = useRef<ScrollView>(null);
-  const [page, setPage] = React.useState<"sign in" | "sign up">("sign in");
+  const [page, setPage] = useState<"sign in" | "sign up">("sign in");
 
   const handleTabPress = (newPage: "sign in" | "sign up") => {
-    // Only scroll — let onMomentumScrollEnd update the tab state
     scrollRef.current?.scrollTo({
       x: newPage === "sign in" ? 0 : SCREEN_WIDTH,
       animated: true,
@@ -41,26 +40,36 @@ const AuthIndexScreen = () => {
     setPage(x < SCREEN_WIDTH / 2 ? "sign in" : "sign up");
   };
 
-  const navigation = useRouter();
+  const titles = {
+    "sign in": {
+      title: "Sign in",
+      body: "Use your email or phone number to access your portfolio.",
+    },
+    "sign up": {
+      title: "Create account",
+      body: "Start your crypto trading sandbox with secure identity checks.",
+    },
+  };
+
   return (
     <ImageBackground
-      source={require("@/assets/images/auth-bg.png")}
-      style={[
-        styles.container,
-        {
-          paddingTop: insets.top,
-          paddingLeft: insets.left,
-          paddingRight: insets.right,
-          paddingBottom: insets.bottom,
-        },
-      ]}
+      source={require("@/assets/images/new-bg.png")}
+      style={[styles.container, { paddingTop: insets.top + 24 }]}
     >
-      <ThemedView avoiding>
-        {/*<View style={{ padding: Spacing.lg }}>
-          <Cross color={Colors.textMuted} onPress={() => navigation.back()} />
-        </View>*/}
-        <Spacer size={34} />
-        {/* Tabs */}
+      <ThemedView avoiding style={{ flex: 1, backgroundColor: "transparent" }}>
+        {/* Dynamic Header */}
+        <View style={{ paddingHorizontal: Spacing.lg }}>
+          <TextBlock
+            title={titles[page].title}
+            body={titles[page].body}
+            titleStyle={{ fontSize: 32 }}
+            bodyStyle={{ fontSize: 14, lineHeight: 20 }}
+          />
+        </View>
+
+        <Spacer size={32} />
+
+        {/* Segmented Control Tabs */}
         <View style={{ paddingHorizontal: Spacing.lg }}>
           <View style={styles.tabContainer}>
             <Pressable
@@ -89,7 +98,9 @@ const AuthIndexScreen = () => {
             </Pressable>
           </View>
         </View>
-        <Spacer size={40} />
+
+        <Spacer size={32} />
+
         {/* Paged horizontal scroll */}
         <ScrollView
           ref={scrollRef}
@@ -98,30 +109,22 @@ const AuthIndexScreen = () => {
           showsHorizontalScrollIndicator={false}
           scrollEventThrottle={16}
           onMomentumScrollEnd={handleMomentumScrollEnd}
-          removeClippedSubviews={false}
           contentContainerStyle={{ flexGrow: 1 }}
         >
-          <View style={{ width: SCREEN_WIDTH }}>
+          <View style={{ width: SCREEN_WIDTH, paddingHorizontal: Spacing.lg }}>
             <ScrollView
               showsVerticalScrollIndicator={false}
-              contentContainerStyle={{
-                paddingBottom: Spacing.lg,
-                flexGrow: 1,
-              }}
+              contentContainerStyle={styles.scrollContent}
             >
               <SignInForm />
             </ScrollView>
           </View>
-          <View style={{ width: SCREEN_WIDTH }}>
+          <View style={{ width: SCREEN_WIDTH, paddingHorizontal: Spacing.lg }}>
             <ScrollView
               showsVerticalScrollIndicator={false}
-              contentContainerStyle={{
-                paddingBottom: Spacing.lg,
-                flexGrow: 1,
-              }}
+              contentContainerStyle={styles.scrollContent}
             >
-              {/*<SignUpForm />*/}
-              <EmailMobile />
+              <SignUpForm />
             </ScrollView>
           </View>
         </ScrollView>
@@ -135,33 +138,36 @@ export default AuthIndexScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.surface,
+    backgroundColor: Colors.background,
+  },
+  scrollContent: {
+    paddingBottom: Spacing.lg + 50,
+    flexGrow: 1,
   },
   tabContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: Spacing.xs,
-    backgroundColor: Colors.surfaceCard,
-    height: 46,
-    borderRadius: 16,
+    backgroundColor: Colors.surfaceNavy,
+    borderRadius: 14,
+    padding: 4,
+    height: 48,
   },
   tab: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 12,
-    height: 38,
+    borderRadius: 10,
   },
   activeTab: {
-    backgroundColor: Colors.surface,
+    backgroundColor: Colors.surfaceDark,
   },
   tabText: {
-    color: Colors.textMuted,
+    color: Colors.textMidGray,
     fontSize: 14,
+    fontWeight: "500",
   },
   activeTabText: {
-    color: Colors.textFaint,
+    color: Colors.snowGray,
     fontSize: 14,
+    fontWeight: "600",
   },
 });

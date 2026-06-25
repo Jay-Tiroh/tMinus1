@@ -1,47 +1,70 @@
+// authApi.ts
 import {
-  AuthResponse,
-  AuthResponseData,
   LoginRequest,
+  LoginResponse,
+  LoginResponseData,
   LogoutResponse,
   LogoutResponseData,
   RefreshRequestBody,
   RefreshResponse,
   RefreshResponseData,
   RegisterRequest,
+  RegisterResponse,
+  RegisterResponseData,
   RequestOTPResponse,
+  RequestOTPResponseData,
   SessionResponse,
   SessionResponseData,
+  ValidateSignupRequest,
+  ValidateSignupResponse,
+  ValidateSignupResponseData,
   VerifyOTPRequest,
   VerifyOTPResponse,
+  VerifyOTPResponseData,
 } from "@/types/auth";
 import { baseApi } from "./baseApi";
 
 export const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    // Unified login endpoint using the new LoginRequest structure
-    login: builder.mutation<AuthResponseData, LoginRequest>({
+    // ── Pre-registration ───────────────────────────────────────────────────
+
+    validateSignup: builder.mutation<
+      ValidateSignupResponseData,
+      ValidateSignupRequest
+    >({
+      query: (body) => ({ url: "/auth/validate-signup", method: "POST", body }),
+      transformResponse: (response: ValidateSignupResponse) => response.data,
+    }),
+
+    // ── Authentication ─────────────────────────────────────────────────────
+
+    login: builder.mutation<LoginResponseData, LoginRequest>({
       query: (body) => ({ url: "/auth/login", method: "POST", body }),
-      transformResponse: (response: AuthResponse) => response.data,
+      transformResponse: (response: LoginResponse) => response.data,
     }),
 
-    register: builder.mutation<AuthResponseData, RegisterRequest>({
+    register: builder.mutation<RegisterResponseData, RegisterRequest>({
       query: (body) => ({ url: "/auth/register", method: "POST", body }),
-      transformResponse: (response: AuthResponse) => response.data,
+      transformResponse: (response: RegisterResponse) => response.data,
     }),
 
-    requestOTP: builder.mutation<RequestOTPResponse, string>({
+    // ── OTP ────────────────────────────────────────────────────────────────
+
+    requestOTP: builder.mutation<RequestOTPResponseData, string>({
       query: (email) => ({
         url: "/auth/otp/request",
         method: "POST",
         body: { email },
       }),
+      transformResponse: (response: RequestOTPResponse) => response.data,
     }),
 
-    verifyOTP: builder.mutation<VerifyOTPResponse, VerifyOTPRequest>({
+    verifyOTP: builder.mutation<VerifyOTPResponseData, VerifyOTPRequest>({
       query: (body) => ({ url: "/auth/otp/verify", method: "POST", body }),
+      transformResponse: (response: VerifyOTPResponse) => response.data,
     }),
 
-    // ── Session & Token endpoints ──────────────────────────────────────────────
+    // ── Session & Tokens ───────────────────────────────────────────────────
 
     getSession: builder.query<SessionResponseData, void>({
       query: () => ({ url: "/auth/session", method: "GET" }),
@@ -59,11 +82,12 @@ export const authApi = baseApi.injectEndpoints({
       transformResponse: (response: RefreshResponse) => response.data,
     }),
   }),
-  overrideExisting: false,
+  overrideExisting: true,
 });
 
 export const {
-  useLoginMutation, // Replaces useLoginEmailMutation and useLoginMobileMutation
+  useValidateSignupMutation,
+  useLoginMutation,
   useRegisterMutation,
   useRequestOTPMutation,
   useVerifyOTPMutation,

@@ -4,7 +4,6 @@ import { ConfigType } from "@/components/screens/tabs/trades/QuoteScreen";
 import { Spacer } from "@/components/Spacer";
 import { ThemedText } from "@/components/ThemedText";
 import Template from "@/components/trades/Template";
-import TransactionPinInput from "@/components/trades/TransactionPinInput";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
@@ -15,6 +14,7 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
+import { OtpInput } from "react-native-otp-entry";
 
 type ScreenState = "confirm" | "completed" | "failed";
 
@@ -166,7 +166,24 @@ const Confirm = ({
 
       <Spacer size={28} />
 
-      <TransactionPinInput onComplete={onPinComplete} />
+      <OtpInput
+        numberOfDigits={4}
+        onFilled={onPinComplete}
+        secureTextEntry
+        theme={{
+          pinCodeTextStyle: {
+            color: Colors.snowGray,
+            fontFamily: Fonts.bold,
+          },
+          focusedPinCodeContainerStyle: {
+            borderColor: Colors.primaryClean,
+          },
+          pinCodeContainerStyle: {
+            minWidth: 80,
+            borderColor: Colors.surface,
+          },
+        }}
+      />
 
       <Spacer size={50} />
       <View
