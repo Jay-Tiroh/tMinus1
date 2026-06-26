@@ -28,10 +28,13 @@ const phoneSchema = z
 
 const secureUrlSchema = z
   .string()
-  .min(1, "URL is required")
-  .url("Please enter a valid URL")
-  .startsWith("https://", "URL must start with https://");
-
+  .optional()
+  .refine(
+    (val) =>
+      !val ||
+      (val.startsWith("https://") && z.string().url().safeParse(val).success),
+    "URL must be a valid https:// address",
+  );
 export const signupSchema = z.object({
   fullName: fullNameSchema,
   email: emailSchema,
@@ -57,7 +60,7 @@ export const emailSchema_ = z.object({
 });
 export const editProfileSchema = z.object({
   fullName: fullNameSchema,
-  avatarUrl: secureUrlSchema.optional(),
+  avatarUrl: secureUrlSchema,
 });
 export type EditProfileFormData = z.infer<typeof editProfileSchema>;
 export type SignupFormData = z.infer<typeof signupSchema>;

@@ -10,6 +10,7 @@ import { GeneralStyles } from "@/constants/themes";
 // Make sure formatAmount is imported here alongside timeAgo
 import { formatAmount, timeAgo } from "@/helpers/functions";
 import { useAllAssets } from "@/hooks/useAllAssets";
+import useFiat from "@/hooks/useFiat";
 import { useGoToRoute } from "@/hooks/useGoToRoute";
 import useProfile from "@/hooks/useProfile";
 import { useTransactions } from "@/hooks/useTransactions";
@@ -79,6 +80,8 @@ const WalletsScreen = () => {
     assetsHeld.includes(coin.symbol),
   );
 
+  const { symbol, fiat, convertFromUSD } = useFiat();
+
   return (
     <Template
       textBlockProps={{
@@ -118,7 +121,7 @@ const WalletsScreen = () => {
               iconSymbol={coin.symbol}
               leftTitle={coin.name}
               leftBody={coin.symbol}
-              rightTitle={`$${formatAmount(fiatValue)}`}
+              rightTitle={`${symbol + formatAmount(convertFromUSD(fiatValue))}`}
               rightBody={`${formatAmount(availableBalance)} ${coin.symbol}`}
             />
           );

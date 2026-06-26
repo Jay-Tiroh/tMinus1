@@ -25,14 +25,14 @@ export type ConfigType = {
     style?: ViewStyle;
     textStyle?: TextStyle;
   };
-  content: React.FC;
+  content: React.ReactNode;
   topSpacerSize: number;
 };
 
 const QuoteScreen = () => {
   const params = useLocalSearchParams<{ asset: string }>();
   const asset = params.asset;
-  const { push } = useAssetRoute();
+  const { replace } = useAssetRoute();
   // console.log("Rendering QuoteScreen for asset:", asset);
   // 1. Bring in the trade hook
   const {
@@ -87,7 +87,7 @@ const QuoteScreen = () => {
           style: { backgroundColor: Colors.warningAmber },
           textStyle: { color: Colors.backgroundInk },
         },
-        content: () => <Expired quote={activeQuote} />,
+        content: <Expired quote={activeQuote} />,
         topSpacerSize: 42,
       }
     : {
@@ -95,12 +95,12 @@ const QuoteScreen = () => {
         body: "Confirm the rate before this quote expires.",
         cta: {
           title: "Confirm with PIN",
-          onPress: () => push("execute"),
+          onPress: () => replace("execute"),
           variant: "primary",
           style: undefined,
           textStyle: undefined,
         },
-        content: () => <Preview quote={activeQuote} timeLeft={localTimeLeft} />,
+        content: <Preview quote={activeQuote} timeLeft={localTimeLeft} />,
         topSpacerSize: 14,
       };
 
@@ -123,9 +123,7 @@ const QuoteScreen = () => {
       }}
       topSpacerSize={activeConfig.topSpacerSize}
     >
-      <View style={GeneralStyles.wrapper}>
-        <activeConfig.content />
-      </View>
+      <View style={GeneralStyles.wrapper}>{activeConfig.content}</View>
     </Template>
   );
 };

@@ -6,6 +6,8 @@ import { ThemedButton } from "@/components/ThemedButton";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
+import { formatAmount } from "@/helpers/functions";
+import useFiat from "@/hooks/useFiat";
 import { useSafeBottom } from "@/hooks/useSafeBottom";
 import { useTrendingAssets } from "@/hooks/useTrendingAssets";
 import { Asset, FeaturedMeta } from "@/types/assets";
@@ -24,6 +26,7 @@ const TopGainer = ({ topGainer, featured }: TopGainerProps) => {
   const handlePress = () => {
     router.push(route as Href);
   };
+  const { symbol, convertFromUSD } = useFiat();
   return (
     <View style={styles.topGainerContainer}>
       <View>
@@ -65,7 +68,7 @@ const TopGainer = ({ topGainer, featured }: TopGainerProps) => {
         }}
       >
         <ThemedText weight="medium" size={11} color={Colors.primaryFrost}>
-          $152
+          {symbol + formatAmount(convertFromUSD(topGainer?.priceUsd as number))}
         </ThemedText>
         <View style={{ alignItems: "flex-end", gap: 4 }}>
           <ThemedText weight="bold" size={12} color={Colors.primaryClean}>

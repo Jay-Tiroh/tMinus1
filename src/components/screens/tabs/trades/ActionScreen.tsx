@@ -5,7 +5,8 @@ import { Spacer } from "@/components/Spacer";
 import TextBlock from "@/components/TextBlock";
 import { ThemedButton } from "@/components/ThemedButton";
 import { ThemedText } from "@/components/ThemedText";
-import { buildActionConfig } from "@/constants/actionConfig";
+import { BuildActionConfig } from "@/constants/actionConfig";
+
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
@@ -471,7 +472,7 @@ const ActionScreen = () => {
   };
 
   // Build the configuration
-  const config = buildActionConfig({
+  const config = BuildActionConfig({
     // General Data
     portfolioValue,
     limits,

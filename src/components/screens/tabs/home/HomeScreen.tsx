@@ -8,7 +8,9 @@ import Balance from "@/components/wallets/Balance";
 import CryptoAssetItem from "@/components/wallets/CryptoAsset";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
+import { formatAmount } from "@/helpers/functions";
 import useProfile from "@/hooks/useProfile";
+import { useTransactions } from "@/hooks/useTransactions";
 import { useTrendingAssets } from "@/hooks/useTrendingAssets";
 import { useWatchlist } from "@/hooks/useWatchlist";
 import { Asset } from "@/types/assets";
@@ -64,7 +66,8 @@ export default function HomeScreen() {
   const topGainer = trending.find((asset) => asset.symbol === featured?.symbol);
   // const isVerified = true;
   const isVerified = kycStatus === "approved";
-
+  const { transactions } = useTransactions();
+  const tx = transactions?.[0];
   const DASHBOARD_ACTIONS_CONFIG = [
     {
       id: "trending",
@@ -83,8 +86,9 @@ export default function HomeScreen() {
     {
       id: "recent_tx",
       title: "Recent transaction",
-      subtitle: "USDT deposit completed",
-      statusText: "+$250",
+      subtitle: tx?.note,
+      statusText:
+        "+" + formatAmount(tx?.toAmount + tx?.feeAmount) + " " + tx?.toAsset,
       route: "/wallets/transaction-history" as Href,
     },
     {
@@ -134,6 +138,7 @@ export default function HomeScreen() {
                     leftBody={action.subtitle}
                     rightTitle={action.statusText ?? ""}
                     rightBody=""
+                    numberOfLines={1}
                   />
                 </TouchableOpacity>
               ))}

@@ -28,7 +28,7 @@ const EditProfileScreen = () => {
     mode: "onChange",
     defaultValues: {
       fullName: displayName || "",
-      avatarUrl: url || "",
+      avatarUrl: avatarUrl || "",
     },
   });
 
@@ -48,7 +48,7 @@ const EditProfileScreen = () => {
 
     const payload: UpdateProfileRequest = {
       fullName: data.fullName.trim(),
-      avatarUrl: data.avatarUrl?.trim() || undefined,
+      avatarUrl: data.avatarUrl?.trim() ? data.avatarUrl?.trim() : url,
     };
     try {
       const result = await updateProfile(payload).unwrap();

@@ -58,7 +58,7 @@ export const FIAT_CURRENCIES: SelectorOption<FiatCurrency>[] = [
     label: "CHF",
     value: "CHF",
     description: "Swiss Franc",
-    symbol: "CHF", // or "Fr."
+    symbol: "Fr.",
   },
 ];
 export interface UserSettings {

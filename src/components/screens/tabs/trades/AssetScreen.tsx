@@ -26,6 +26,7 @@ import KycLocked from "@/components/KycLocked";
 import { Spacer } from "@/components/Spacer";
 import { showErrorToast, showSuccessToast } from "@/hooks/showToast";
 import { useAssetRoute } from "@/hooks/useAssetRoute";
+import useFiat from "@/hooks/useFiat";
 import useProfile from "@/hooks/useProfile";
 import { useWatchlist } from "@/hooks/useWatchlist";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
@@ -42,6 +43,7 @@ const AssetScreen = () => {
   const insets = useSafeAreaInsets();
   const bottomPadding = useSafeBottom();
   const { push } = useAssetRoute();
+  const { symbol, convertFromUSD } = useFiat();
   const actionConfig = [
     {
       title: "Sell",
@@ -66,15 +68,27 @@ const AssetScreen = () => {
   const stats = [
     {
       name: "Market cap",
-      value: "$" + formatCompactNumber(coinDetails?.stats?.marketCapUsd ?? NaN),
+      value:
+        symbol +
+        formatCompactNumber(
+          convertFromUSD(coinDetails?.stats?.marketCapUsd ?? NaN),
+        ),
     },
     {
       name: "24h volume",
-      value: "$" + formatCompactNumber(coinDetails?.stats?.volume24hUsd ?? NaN),
+      value:
+        symbol +
+        formatCompactNumber(
+          convertFromUSD(coinDetails?.stats?.volume24hUsd ?? NaN),
+        ),
     },
     {
       name: "24h high",
-      value: "$" + formatCompactNumber(coinDetails?.stats?.high24hUsd ?? NaN),
+      value:
+        symbol +
+        formatCompactNumber(
+          convertFromUSD(coinDetails?.stats?.high24hUsd ?? NaN),
+        ),
     },
     {
       name: "Circulating",
@@ -186,7 +200,8 @@ const AssetScreen = () => {
           ]}
         >
           <ThemedText size={32} weight="bold" color={"#fff"}>
-            ${formatCurrency(coinDetails?.priceUsd as number)}
+            {symbol +
+              formatCurrency(convertFromUSD(coinDetails?.priceUsd as number))}
           </ThemedText>
           <ChangeText change={coinDetails?.change24h ?? 0} />
         </View>

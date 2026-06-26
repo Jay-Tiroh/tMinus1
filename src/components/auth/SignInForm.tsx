@@ -64,7 +64,6 @@ const SignInForm = () => {
   });
 
   const activeForm = isEmail ? emailForm : phoneForm;
-  const typedControl = activeForm.control as Control<FieldValues>;
 
   const [login, { isLoading, isError }] = useLoginMutation();
 
@@ -162,25 +161,31 @@ const SignInForm = () => {
           </ThemedText>
         </View>
 
-        <ThemedInput
-          control={typedControl}
-          name={isEmail ? "email" : "phone"}
-          icon={
-            <Feather
-              name={isEmail ? "mail" : "phone"}
-              size={20}
-              color={Colors.primaryClean}
-            />
-          }
-          placeholder={
-            isEmail ? "student@cryptoclass.test" : "Enter your mobile number"
-          }
-          keyboardType={isEmail ? "email-address" : "phone-pad"}
-          autoCapitalize="none"
-        />
+        {isEmail ? (
+          <ThemedInput
+            control={emailForm.control}
+            name={"email"}
+            icon={
+              <Feather name={"mail"} size={20} color={Colors.primaryClean} />
+            }
+            placeholder={"student@cryptoclass.test"}
+            keyboardType={"email-address"}
+            autoCapitalize="none"
+          />
+        ) : (
+          <ThemedInput
+            control={phoneForm.control}
+            name="phone"
+            icon={
+              <Feather name="phone" size={20} color={Colors.primaryClean} />
+            }
+            placeholder="Enter your mobile number"
+            keyboardType="phone-pad"
+          />
+        )}
 
         <ThemedInput
-          control={typedControl}
+          control={activeForm.control as unknown as Control<FieldValues>}
           name="password"
           icon={
             <MaterialIcons

@@ -1,6 +1,7 @@
 import { ButtonVariant } from "@/components/ThemedButton";
 import { Colors } from "@/constants/Colors";
 import { formatAmount } from "@/helpers/functions";
+import useFiat from "@/hooks/useFiat";
 
 // ─── Utility Types ─────────────────────────────────────────────────────────────
 type Action = "Buy" | "Sell" | "Swap";
@@ -78,9 +79,10 @@ export interface ActionPageConfig {
 }
 
 // ─── Config Builder Function ───────────────────────────────────────────────────
-export const buildActionConfig = (
+export const BuildActionConfig = (
   params: ActionConfigParams,
 ): ActionPageConfig[] => {
+  const { symbol, convertFromUSD } = useFiat();
   return [
     {
       label: "Buy",
@@ -110,7 +112,7 @@ export const buildActionConfig = (
         },
         {
           label: "Verification limit",
-          value: `$ ${params.limits?.tradePerTransactionUsd || "0.00"}`,
+          value: `${symbol} ${formatAmount(convertFromUSD(params.limits?.tradePerTransactionUsd || 0))}`,
           valueColor: Colors.primaryClean,
         },
       ],
@@ -182,7 +184,7 @@ export const buildActionConfig = (
         },
         {
           label: "Fee estimate",
-          value: "$4.84", // Update to dynamic fees later
+          value: `${symbol} ${formatAmount(convertFromUSD(4.84))}`, // Update to dynamic fees later
         },
         {
           label: "Quote expires",

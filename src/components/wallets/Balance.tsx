@@ -20,6 +20,7 @@ const Balance = () => {
     useWallet(5000);
 
   const balance = isVisible ? formatAmount(portfolioValue) : "*******";
+  const balanceUSD = isVisible ? formatAmount(portfolioValueUsd) : "*******";
   const { symbol } = useFiat();
   useEffect(() => {
     if (isError) {
@@ -60,9 +61,9 @@ const Balance = () => {
             </ThemedText>
           )}
           <Spacer size={6} />
-          {/*<ThemedText color={Colors.textSecondary} size={14}>
-            {balanceUSD}
-          </ThemedText>*/}
+          <ThemedText color={Colors.textSecondary} size={14}>
+            ${balanceUSD}
+          </ThemedText>
         </View>
         {isVisible ? (
           <Ionicons

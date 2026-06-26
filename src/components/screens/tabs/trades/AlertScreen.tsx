@@ -223,7 +223,6 @@ const CreateAlert = ({
           data: {
             direction: activeDirection.toLocaleLowerCase() as "above" | "below",
             targetPriceUsd: parseFloat(amount),
-            isActive: alertToEdit?.isActive ?? true,
           },
         }).unwrap();
 

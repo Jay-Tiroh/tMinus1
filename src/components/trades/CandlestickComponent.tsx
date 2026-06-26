@@ -5,6 +5,7 @@ import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { formatCurrency } from "@/helpers/functions";
 import { useAssetCandle } from "@/hooks/useAssetCandle";
+import useFiat from "@/hooks/useFiat";
 import React from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 
@@ -42,6 +43,8 @@ const CandlestickComponent = ({ symbol, priceUsd, change24h }: props) => {
     setComponentWidth(width);
   };
 
+  const { symbol: currency, fiat, convertFromUSD } = useFiat();
+
   return (
     <View style={styles.container} onLayout={handleLayout}>
       <View
@@ -53,14 +56,14 @@ const CandlestickComponent = ({ symbol, priceUsd, change24h }: props) => {
         }}
       >
         <TextBlock
-          title={symbol + " / USD"}
+          title={symbol + " / " + fiat.label}
           body={timeOptions[timeControl] + " · simulated candles"}
           titleStyle={{ color: Colors.textMidGray, fontSize: 12 }}
           bodyStyle={{ color: Colors.textCool, fontSize: 10, marginTop: -4 }}
         />
         <View style={{ alignItems: "flex-end", gap: 4 }}>
           <ThemedText size={14} weight="bold" color={"#fff"}>
-            ${formatCurrency(priceUsd as number)}
+            {currency + formatCurrency(convertFromUSD(priceUsd as number))}
           </ThemedText>
           <ChangeText
             change={change24h ?? 0}

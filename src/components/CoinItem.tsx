@@ -8,6 +8,7 @@ import { Colors } from "@/constants/Colors";
 import { formatCurrency } from "@/helpers/functions";
 import { showErrorToast, showSuccessToast } from "@/hooks/showToast";
 import { useAssetChart } from "@/hooks/useAssetChart";
+import useFiat from "@/hooks/useFiat";
 import { useWatchlist } from "@/hooks/useWatchlist";
 import { Href, useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -87,7 +88,7 @@ const CoinItem = ({
       setModalVisible(true);
     }
   };
-
+  const { symbol, convertFromUSD } = useFiat();
   return (
     <>
       <Pressable
@@ -114,8 +115,8 @@ const CoinItem = ({
         )}
 
         <View style={styles.right}>
-          <ThemedText weight="bold" size={14} color={Colors.white}>
-            ${formatCurrency(amountInUsd as number)}
+          <ThemedText weight="bold" size={12} color={Colors.white}>
+            {symbol + formatCurrency(convertFromUSD(amountInUsd as number))}
           </ThemedText>
 
           {showChange && change != null && <ChangeText change={change} />}

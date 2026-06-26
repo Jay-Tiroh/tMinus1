@@ -18,7 +18,13 @@ import { saveToken } from "@/utils/secureStore";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 const isTwoFactorResponse = (
   data: unknown,
@@ -198,11 +204,32 @@ const WelcomeBackScreen = () => {
     >
       <View style={GeneralStyles.wrapper}>
         <View style={styles.profileSection}>
-          <View style={styles.avatar}>
-            <ThemedText size={42} weight="bold" color={Colors.backgroundDeep}>
-              {initials}
-            </ThemedText>
-          </View>
+          {user?.avatarUrl ? (
+            <View
+              style={{
+                width: 100,
+                height: 100,
+                borderRadius: 50,
+                alignItems: "center",
+                justifyContent: "center",
+                overflow: "hidden",
+              }}
+            >
+              <Image
+                source={{
+                  uri: user?.avatarUrl,
+                }}
+                width={100}
+                height={100}
+              />
+            </View>
+          ) : (
+            <View style={styles.avatar}>
+              <ThemedText size={42} weight="bold" color={Colors.backgroundDeep}>
+                {initials}
+              </ThemedText>
+            </View>
+          )}
 
           <Spacer size={20} />
 

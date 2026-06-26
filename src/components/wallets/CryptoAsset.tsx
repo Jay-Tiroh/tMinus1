@@ -36,6 +36,7 @@ export const CryptoAssetItem = ({
           titleStyle={styles.titleStyle}
           bodyStyle={styles.bodyStyle}
           numberOfLines={numberOfLines}
+          numberOfLinesBody={numberOfLines}
         />
       </View>
 
@@ -46,6 +47,7 @@ export const CryptoAssetItem = ({
           titleStyle={[styles.titleStyle, styles.rightAlign]}
           bodyStyle={[styles.bodyStyle, styles.rightAlign]}
           numberOfLines={numberOfLines}
+          numberOfLinesBody={numberOfLines}
         />
       </View>
     </View>

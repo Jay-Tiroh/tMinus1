@@ -4,6 +4,7 @@ import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { formatCurrency } from "@/helpers/functions";
 import { useAssetChart } from "@/hooks/useAssetChart";
+import useFiat from "@/hooks/useFiat";
 import { Asset } from "@/types/assets";
 import { memo, useState } from "react";
 import { StyleSheet, View } from "react-native";
@@ -16,17 +17,17 @@ export const CoinCard = memo(function CoinCard({ coin }: CoinCardProps) {
   const { chart: chartData } = useAssetChart(coin.symbol);
   const isPositive = coin.change24h > 0;
   const [chartVisible, setChartVisible] = useState(false);
-
+  const { symbol, convertFromUSD, fiat } = useFiat();
   return (
     <View style={styles.card} onLayout={() => setChartVisible(true)}>
       <View style={styles.top}>
         <ThemedText
           weight="bold"
-          size={16}
+          size={12}
           letterSpacing={2.64}
           style={{ color: isPositive ? Colors.primary : Colors.loss }}
         >
-          {formatCurrency(coin.priceUsd)}
+          {symbol + formatCurrency(convertFromUSD(coin.priceUsd))}
         </ThemedText>
         <CryptoIcon symbol={coin.symbol} size={24} />
       </View>
@@ -37,7 +38,7 @@ export const CoinCard = memo(function CoinCard({ coin }: CoinCardProps) {
           letterSpacing={2.64}
           style={{ color: Colors.snowGray }}
         >
-          {`${coin.symbol}/BUSD`}
+          {`${coin.symbol}/${fiat.label}`}
         </ThemedText>
         <ThemedText
           size={12}

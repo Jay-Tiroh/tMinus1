@@ -1,10 +1,8 @@
-import SheetController from "@/components/SheetController";
 import { Colors } from "@/constants/Colors";
 import { toastConfig } from "@/constants/toastConfig";
 import { store } from "@/store";
 import { clearCredentials, setCredentials } from "@/store/slices/authSlice";
 import { getToken, saveToken } from "@/utils/secureStore";
-import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFonts } from "expo-font";
 import { Stack, useRouter } from "expo-router";
@@ -114,22 +112,20 @@ function RootLayoutNav() {
   return (
     <SafeAreaProvider>
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <BottomSheetModalProvider>
-          <Stack
-            screenOptions={{
-              headerShown: false,
-              animation: "slide_from_right",
-              animationDuration: 200,
-              contentStyle: { backgroundColor: Colors.surface },
-            }}
-          >
-            <Stack.Screen name="index" />
-            <Stack.Screen name="(auth)" />
-            <Stack.Screen name="(tabs)" />
-            <Stack.Screen name="kyc" />
-          </Stack>
-          <SheetController />
-        </BottomSheetModalProvider>
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            animation: "slide_from_right",
+            animationDuration: 200,
+            contentStyle: { backgroundColor: Colors.surface },
+          }}
+        >
+          <Stack.Screen name="index" />
+          <Stack.Screen name="(auth)" />
+          <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="kyc" />
+        </Stack>
+
         <Toast config={toastConfig} />
       </GestureHandlerRootView>
     </SafeAreaProvider>

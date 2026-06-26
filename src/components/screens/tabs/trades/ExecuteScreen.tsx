@@ -13,7 +13,7 @@ import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
-import { ActivityIndicator, View } from "react-native";
+import { ActivityIndicator, Keyboard, View } from "react-native";
 import { OtpInput } from "react-native-otp-entry";
 
 type ScreenState = "confirm" | "completed" | "failed";
@@ -28,10 +28,11 @@ const ExecuteScreen = () => {
   const [pin, setPin] = useState("");
   const idempotencyKey = useRef(Date.now().toString());
 
-  const handleExecute = async () => {
-    if (pin.length < 4) return;
+  const handleExecute = async (submittedPin?: string) => {
+    const activePin = submittedPin ?? pin;
+    if (activePin.length < 4) return;
     try {
-      await executeQuote(pin, idempotencyKey.current);
+      await executeQuote(activePin, idempotencyKey.current);
       setScreenState("completed");
     } catch {
       setScreenState("failed");
@@ -40,7 +41,8 @@ const ExecuteScreen = () => {
 
   const handleOnPinComplete = (enteredPin: string) => {
     setPin(enteredPin);
-    handleExecute();
+    handleExecute(enteredPin); // pass directly, no stale closure
+    Keyboard.dismiss();
   };
 
   const Config: Record<ScreenState, ConfigType> = {
@@ -54,7 +56,7 @@ const ExecuteScreen = () => {
         style: undefined,
         textStyle: undefined,
       },
-      content: () => (
+      content: (
         <Confirm quote={activeQuote} onPinComplete={handleOnPinComplete} />
       ),
       topSpacerSize: 42,
@@ -72,7 +74,7 @@ const ExecuteScreen = () => {
         style: undefined,
         textStyle: undefined,
       },
-      content: () => <Completed transaction={lastTransaction} />,
+      content: <Completed transaction={lastTransaction} />,
       topSpacerSize: 42,
     },
     failed: {
@@ -86,7 +88,7 @@ const ExecuteScreen = () => {
         style: undefined,
         textStyle: undefined,
       },
-      content: () => <Failed transaction={lastTransaction} />,
+      content: <Failed transaction={lastTransaction} />,
       topSpacerSize: 42,
     },
   };
@@ -112,9 +114,7 @@ const ExecuteScreen = () => {
       }}
       topSpacerSize={activeConfig.topSpacerSize}
     >
-      <View style={GeneralStyles.wrapper}>
-        <activeConfig.content />
-      </View>
+      <View style={GeneralStyles.wrapper}>{activeConfig.content}</View>
     </Template>
   );
 };

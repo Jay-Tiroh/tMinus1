@@ -9,6 +9,7 @@ export type TextBlockProps = {
   titleStyle?: StyleProp<TextStyle>;
   bodyStyle?: StyleProp<TextStyle>;
   numberOfLines?: number;
+  numberOfLinesBody?: number;
 };
 
 const TextBlock = ({
@@ -17,6 +18,7 @@ const TextBlock = ({
   titleStyle,
   bodyStyle,
   numberOfLines,
+  numberOfLinesBody,
 }: TextBlockProps) => {
   return (
     <View style={styles.container}>
@@ -37,7 +39,7 @@ const TextBlock = ({
           size={14}
           color={Colors.textMidGray}
           style={bodyStyle}
-          numberOfLines={numberOfLines}
+          numberOfLines={numberOfLinesBody}
           ellipsizeMode="tail"
         >
           {body}

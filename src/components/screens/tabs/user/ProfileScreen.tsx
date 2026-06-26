@@ -12,7 +12,7 @@ import { useGetPriceAlertsQuery } from "@/store/services/priceAlertsApi";
 import { FIAT_CURRENCIES, FiatCurrency } from "@/types/profile";
 import { Href, useRouter } from "expo-router";
 import React from "react";
-import { Image, TouchableOpacity, View } from "react-native";
+import { Image, Pressable, View } from "react-native";
 
 const ProfileScreen = () => {
   const route: Href[] = [
@@ -240,7 +240,7 @@ export const ListItem = ({
   onPress?: () => void;
   onLongPress?: () => void;
 }) => (
-  <TouchableOpacity
+  <Pressable
     onPress={onPress}
     onLongPress={onLongPress}
     style={[
@@ -250,6 +250,7 @@ export const ListItem = ({
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
+        flex: 1,
       },
     ]}
   >
@@ -280,7 +281,7 @@ export const ListItem = ({
         {trailingText}
       </ThemedText>
     )}
-  </TouchableOpacity>
+  </Pressable>
 );
 
 export default ProfileScreen;
