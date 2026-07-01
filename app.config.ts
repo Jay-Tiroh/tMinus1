@@ -32,7 +32,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       "android.permission.USE_FINGERPRINT",
     ],
     package: "com.chizurujethro.tminus1",
-    googleServicesFile: "./google-services.json",
+    googleServicesFile:
+      process.env.GOOGLE_SERVICES_JSON ?? "./google-services.json",
   },
   web: {
     output: "static",
