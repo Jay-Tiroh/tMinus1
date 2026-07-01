@@ -9,11 +9,13 @@ import CryptoAssetItem from "@/components/wallets/CryptoAsset";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
 import { formatAmount } from "@/helpers/functions";
+import { useExitOnDoubleBack } from "@/hooks/useExitOnDoubleBack";
 import useProfile from "@/hooks/useProfile";
 import { useTransactions } from "@/hooks/useTransactions";
 import { useTrendingAssets } from "@/hooks/useTrendingAssets";
 import { useWatchlist } from "@/hooks/useWatchlist";
 import { Asset } from "@/types/assets";
+import { ms, s, vs } from "@/utils/responsive";
 import { Href, useRouter } from "expo-router";
 import React from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
@@ -50,23 +52,25 @@ const TrendingCoins = ({
 
 // ─── MAIN SCREEN ────────────────────────────────────────────────────────────
 export default function HomeScreen() {
+  useExitOnDoubleBack();
   const router = useRouter();
-  const { user, kycStatus } = useProfile();
+  const { user, kycStatus, refetch: refetchKyc } = useProfile();
   const firstName = user?.fullName?.split(" ")[0] || "User";
   const {
     trending,
     featured,
     isLoading: trendingLoading,
     isUninitialized: trendingUninitialized,
+    refetch: refetchTrending,
   } = useTrendingAssets(undefined, 10000);
 
-  const { watchlist } = useWatchlist();
+  const { watchlist, refetch: refetchWatchlist } = useWatchlist();
   const watchlistItems =
     watchlist?.map((asset) => asset.symbol).join(", ") || "BTC, ETH";
   const topGainer = trending.find((asset) => asset.symbol === featured?.symbol);
   // const isVerified = true;
   const isVerified = kycStatus === "approved";
-  const { transactions } = useTransactions();
+  const { transactions, refetch: refetchTransactions } = useTransactions();
   const tx = transactions?.[0];
   const DASHBOARD_ACTIONS_CONFIG = [
     {
@@ -99,6 +103,13 @@ export default function HomeScreen() {
     },
   ];
 
+  const handleRefetch = () => {
+    refetchKyc();
+    refetchTrending();
+    refetchWatchlist();
+    refetchTransactions();
+  };
+
   return (
     <Template
       textBlockProps={{
@@ -120,7 +131,9 @@ export default function HomeScreen() {
               title="Deposit"
               variant="primary"
               onPress={() =>
-                router.push("/wallets/deposit/deposit-asset-selection" as Href)
+                router.replace(
+                  "/wallets/deposit/deposit-asset-selection" as Href,
+                )
               }
             />
             <Spacer size={32} />
@@ -130,7 +143,7 @@ export default function HomeScreen() {
                 <TouchableOpacity
                   key={action.id}
                   activeOpacity={0.7}
-                  onPress={() => router.push(action.route)}
+                  onPress={() => router.replace(action.route)}
                 >
                   <CryptoAssetItem
                     iconComponent={<CircleIcon />}
@@ -161,17 +174,17 @@ const styles = StyleSheet.create({
   balanceCard: {
     ...GeneralStyles.box,
     backgroundColor: Colors.surfaceGreenDark,
-    padding: 24,
+    padding: s(24),
     width: "100%",
-    borderRadius: 24, // Matches the larger radius seen in the design
+    borderRadius: ms(24), // Matches the larger radius seen in the design
   },
   circleIcon: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: s(32),
+    height: vs(32),
+    borderRadius: ms(16),
     backgroundColor: Colors.primaryClean,
   },
   actionList: {
-    gap: 12,
+    gap: vs(12),
   },
 });

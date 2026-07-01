@@ -43,7 +43,7 @@ const Item = ({
   );
 
   const handlePushTo = () => {
-    if (pushTo) router.push(`/user/edit-profile?edit=${pushTo}`);
+    if (pushTo) router.replace(`/user/edit-profile?edit=${pushTo}`);
   };
 
   // Tracks the last confirmed server value so we can revert on failure

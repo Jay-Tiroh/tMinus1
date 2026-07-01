@@ -103,7 +103,7 @@ const ThemedHeader = ({
 const NormalRight = () => {
   const router = useRouter();
   const pushTo = (route: Href) => {
-    router.push(route);
+    router.replace(route);
   };
   return (
     <View style={{ flexDirection: "row", alignItems: "center", gap: 34 }}>
@@ -122,7 +122,7 @@ const NormalRight = () => {
 const TradeRight = () => {
   const router = useRouter();
   const pushTo = (route: Href) => {
-    router.push(route);
+    router.replace(route);
   };
   return (
     <View style={{ flexDirection: "row", alignItems: "center", gap: 34 }}>

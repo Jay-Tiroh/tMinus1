@@ -6,9 +6,11 @@ import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
 import { useKyc } from "@/hooks/useKyc";
+import { ms, vs } from "@/utils/responsive";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import React from "react";
 import { View } from "react-native";
+
 const Failed = () => {
   const { verification } = useKyc();
   const config = [
@@ -38,7 +40,7 @@ const Failed = () => {
           style={[
             GeneralStyles.box,
             {
-              padding: 16,
+              padding: ms(16),
             },
           ]}
         >
@@ -46,11 +48,11 @@ const Failed = () => {
             title="Reason"
             titleStyle={{
               color: Colors.textMidGray,
-              fontSize: 11,
+              fontSize: ms(11),
               fontFamily: Fonts.regular,
             }}
             body="Document photo was blurry. Upload a clearer image with all corners visible."
-            bodyStyle={{ color: Colors.snowGray, fontSize: 13 }}
+            bodyStyle={{ color: Colors.snowGray, fontSize: ms(13) }}
           />
         </View>
       </View>
@@ -58,7 +60,7 @@ const Failed = () => {
       <View
         style={{
           ...GeneralStyles.wrapper,
-          gap: 14,
+          gap: vs(14),
         }}
       >
         {config.map((item) => (

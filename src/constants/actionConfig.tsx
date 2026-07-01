@@ -20,6 +20,7 @@ export interface ActionConfigParams {
   limits: KycLimits | null | undefined;
   openAssetPicker: (target: PickerTarget) => void;
   pushQuote: () => void;
+  assetAvailable: number;
 
   // Buy State
   buyAmount: string;
@@ -142,7 +143,7 @@ export const BuildActionConfig = (
       meta: [
         {
           label: "Available",
-          value: `1.25 ${params.sellInputSymbol}`, // Update with real wallet balance hook later
+          value: `${formatAmount(params.assetAvailable)} ${params.sellInputSymbol}`, // Update with real wallet balance hook later
         },
         {
           label: "Fee estimate",

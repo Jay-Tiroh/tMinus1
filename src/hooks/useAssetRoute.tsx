@@ -18,7 +18,7 @@ export function useAssetRoute() {
 
   const push = (subroute: AssetSubroute, params?: AssetRouteParams) => {
     const { asset, ...rest } = params ?? {};
-    router.push({
+    router.replace({
       pathname: `/(tabs)/trades/[asset]/${subroute}`,
       params: { asset: asset ?? currentAsset, ...rest },
     });

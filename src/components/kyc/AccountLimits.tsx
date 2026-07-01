@@ -1,4 +1,3 @@
-// app/kyc/AccountLimits.tsx
 import Template from "@/components/kyc/Template";
 import { Spacer } from "@/components/Spacer";
 import TextBlock from "@/components/TextBlock";
@@ -7,6 +6,7 @@ import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
 import { useGoToRoute } from "@/hooks/useGoToRoute";
+import { ms, s, vs } from "@/utils/responsive";
 import React from "react";
 import { View } from "react-native";
 
@@ -51,7 +51,7 @@ const AccountLimits = ({
         title: "Continue",
         onPress: handlePush,
         textStyle: {
-          fontSize: 14,
+          fontSize: ms(14),
           fontFamily: Fonts.bold,
         },
       }}
@@ -61,11 +61,11 @@ const AccountLimits = ({
           style={[
             GeneralStyles.box,
             {
-              padding: 24,
+              padding: ms(24),
               justifyContent: "flex-end",
               alignItems: "center",
-              borderRadius: 18,
-              minHeight: 168,
+              borderRadius: ms(18),
+              minHeight: vs(168),
               position: "relative",
             },
           ]}
@@ -73,24 +73,24 @@ const AccountLimits = ({
           <TextBlock
             title="Starter Account"
             body="Browse markets now. Verify to trade, withdraw, and raise sandbox deposit limits."
-            titleStyle={{ textAlign: "center", fontSize: 22, zIndex: 1 }}
+            titleStyle={{ textAlign: "center", fontSize: ms(22), zIndex: 1 }}
             bodyStyle={{
               textAlign: "center",
-              fontSize: 12,
+              fontSize: ms(12),
               zIndex: 1,
-              maxWidth: 270,
+              maxWidth: s(270),
             }}
           />
           <View
             style={{
-              width: 92,
-              height: 92,
-              borderRadius: 46,
+              width: s(92),
+              height: vs(92),
+              borderRadius: ms(46),
               backgroundColor: Colors.surfaceGreenDeep,
               alignItems: "center",
-              paddingTop: 24,
+              paddingTop: vs(24),
               position: "absolute",
-              top: 16,
+              top: vs(16),
             }}
           >
             <ThemedText weight="bold" color={Colors.primaryClean} size={12}>
@@ -100,7 +100,7 @@ const AccountLimits = ({
         </View>
       </View>
       <Spacer size={30} />
-      <View style={[GeneralStyles.wrapper, { gap: 14 }]}>
+      <View style={[GeneralStyles.wrapper, { gap: vs(14) }]}>
         {steps.map((item) => (
           <View
             key={item.title}
@@ -108,12 +108,12 @@ const AccountLimits = ({
               GeneralStyles.box,
               {
                 flexDirection: "row",
-                padding: 20,
+                padding: ms(20),
                 backgroundColor:
                   item.number === steps.length - 1
                     ? Colors.surfaceGreenDeep
                     : Colors.backgroundDark,
-                gap: 20,
+                gap: s(20),
               },
             ]}
           >
@@ -121,9 +121,9 @@ const AccountLimits = ({
               style={[
                 GeneralStyles.box,
                 {
-                  width: 32,
-                  height: 32,
-                  borderRadius: 16,
+                  width: s(32),
+                  height: vs(32),
+                  borderRadius: ms(16),
                   justifyContent: "center",
                   alignItems: "center",
                   backgroundColor:
@@ -148,10 +148,10 @@ const AccountLimits = ({
             <TextBlock
               title={item.title}
               body={item.body}
-              titleStyle={{ fontSize: 16 }}
+              titleStyle={{ fontSize: ms(16) }}
               bodyStyle={{
-                fontSize: 12,
-                maxWidth: 240,
+                fontSize: ms(12),
+                maxWidth: s(240),
               }}
             />
           </View>
@@ -163,11 +163,11 @@ const AccountLimits = ({
           style={[
             GeneralStyles.box,
             {
-              padding: 16,
+              padding: ms(16),
               justifyContent: "center",
               alignItems: "center",
-              borderRadius: 16,
-              minHeight: 86,
+              borderRadius: ms(16),
+              minHeight: vs(86),
             },
           ]}
         >
@@ -175,8 +175,8 @@ const AccountLimits = ({
             body="Verification is required before executing quotes or requesting withdrawals."
             bodyStyle={{
               color: Colors.snowGray,
-              fontSize: 13,
-              maxWidth: 300,
+              fontSize: ms(13),
+              maxWidth: s(300),
             }}
           />
         </View>

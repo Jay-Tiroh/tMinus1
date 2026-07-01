@@ -1,11 +1,12 @@
 import SignInForm from "@/components/auth/SignInForm";
-import SignUpForm from "@/components/auth/SignUpForm"; // Assuming you rename EmailMobile to this
+import SignUpForm from "@/components/auth/SignUpForm";
 import { Spacer } from "@/components/Spacer";
 import TextBlock from "@/components/TextBlock";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { Colors } from "@/constants/Colors";
 import { Spacing } from "@/constants/Spacing";
+import { ms, s, vs } from "@/utils/responsive";
 import React, { useRef, useState } from "react";
 import {
   Dimensions,
@@ -54,23 +55,21 @@ const AuthIndexScreen = () => {
   return (
     <ImageBackground
       source={require("@/assets/images/new-bg.png")}
-      style={[styles.container, { paddingTop: insets.top + 24 }]}
+      style={[styles.container, { paddingTop: insets.top + vs(24) }]}
     >
       <ThemedView avoiding style={{ flex: 1, backgroundColor: "transparent" }}>
-        {/* Dynamic Header */}
-        <View style={{ paddingHorizontal: Spacing.lg }}>
+        <View style={{ paddingHorizontal: s(Spacing.lg) }}>
           <TextBlock
             title={titles[page].title}
             body={titles[page].body}
-            titleStyle={{ fontSize: 32 }}
-            bodyStyle={{ fontSize: 14, lineHeight: 20 }}
+            titleStyle={{ fontSize: ms(32) }}
+            bodyStyle={{ fontSize: ms(14), lineHeight: ms(20) }}
           />
         </View>
 
         <Spacer size={32} />
 
-        {/* Segmented Control Tabs */}
-        <View style={{ paddingHorizontal: Spacing.lg }}>
+        <View style={{ paddingHorizontal: s(Spacing.lg) }}>
           <View style={styles.tabContainer}>
             <Pressable
               style={[styles.tab, page === "sign in" && styles.activeTab]}
@@ -101,7 +100,6 @@ const AuthIndexScreen = () => {
 
         <Spacer size={32} />
 
-        {/* Paged horizontal scroll */}
         <ScrollView
           ref={scrollRef}
           horizontal
@@ -111,7 +109,9 @@ const AuthIndexScreen = () => {
           onMomentumScrollEnd={handleMomentumScrollEnd}
           contentContainerStyle={{ flexGrow: 1 }}
         >
-          <View style={{ width: SCREEN_WIDTH, paddingHorizontal: Spacing.lg }}>
+          <View
+            style={{ width: SCREEN_WIDTH, paddingHorizontal: s(Spacing.lg) }}
+          >
             <ScrollView
               showsVerticalScrollIndicator={false}
               contentContainerStyle={styles.scrollContent}
@@ -119,7 +119,9 @@ const AuthIndexScreen = () => {
               <SignInForm />
             </ScrollView>
           </View>
-          <View style={{ width: SCREEN_WIDTH, paddingHorizontal: Spacing.lg }}>
+          <View
+            style={{ width: SCREEN_WIDTH, paddingHorizontal: s(Spacing.lg) }}
+          >
             <ScrollView
               showsVerticalScrollIndicator={false}
               contentContainerStyle={styles.scrollContent}
@@ -141,33 +143,33 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.background,
   },
   scrollContent: {
-    paddingBottom: Spacing.lg + 50,
+    paddingBottom: vs(Spacing.lg + 50),
     flexGrow: 1,
   },
   tabContainer: {
     flexDirection: "row",
     backgroundColor: Colors.surfaceNavy,
-    borderRadius: 14,
-    padding: 4,
-    height: 48,
+    borderRadius: ms(14),
+    padding: ms(4),
+    height: vs(48),
   },
   tab: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 10,
+    borderRadius: ms(10),
   },
   activeTab: {
     backgroundColor: Colors.surfaceDark,
   },
   tabText: {
     color: Colors.textMidGray,
-    fontSize: 14,
+    fontSize: ms(14),
     fontWeight: "500",
   },
   activeTabText: {
     color: Colors.snowGray,
-    fontSize: 14,
+    fontSize: ms(14),
     fontWeight: "600",
   },
 });

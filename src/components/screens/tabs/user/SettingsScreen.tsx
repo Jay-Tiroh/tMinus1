@@ -43,6 +43,7 @@ const SettingsScreen = () => {
             onRefresh={refetch}
             tintColor={Colors.primary}
             colors={[Colors.primary]}
+            progressBackgroundColor={Colors.backgroundDark}
           />
         }
       >

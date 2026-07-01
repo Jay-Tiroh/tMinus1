@@ -17,6 +17,7 @@ export default function useOtherSettings() {
     isLoading: fetchingSettings,
     isSuccess: fetched,
     isError: fetchFailed,
+    refetch: refetch,
   } = useSettingsQuery();
   const dispatch = useAppDispatch();
 
@@ -75,5 +76,6 @@ export default function useOtherSettings() {
     updateFailed,
     toggleBiometricSetting,
     changeFiatCurrency,
+    refetch,
   };
 }

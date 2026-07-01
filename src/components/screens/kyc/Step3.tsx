@@ -18,6 +18,7 @@ import {
   setUploadedUrls,
 } from "@/store/slices/kycSlice";
 import { getDocumentByType } from "@/types/kyc";
+import { ms, s, vs } from "@/utils/responsive";
 import React from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 
@@ -27,6 +28,7 @@ const Step3 = () => {
   const kycData = useAppSelector(selectKycData);
   const selectedFiles = useAppSelector(selectKycFiles);
   const selfieFile = selectedFiles.selfie;
+
   const Config = [
     {
       title: "Legal Name",
@@ -49,12 +51,12 @@ const Step3 = () => {
       value: selfieFile ? "Uploaded" : "Not uploaded",
     },
   ];
+
   const handlePushTo = useGoToRoute("/kyc/status");
 
-  const [getUploadInstructions, { isLoading, isError, isSuccess }] =
+  const [getUploadInstructions, { isLoading }] =
     useGetKYCUploadInstructionsMutation();
   const [submitKYC] = useSubmitKYCMutation();
-  const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL ?? "";
 
   const handleFinalSubmit = async () => {
     try {
@@ -67,75 +69,25 @@ const Step3 = () => {
       for (const [docKind, fileAsset] of Object.entries(selectedFiles)) {
         if (!fileAsset) continue;
 
-        const localFileResponse = await fetch(fileAsset.uri);
-        const rawBlob = await localFileResponse.blob();
-
-        const fileBlob = rawBlob.type
-          ? rawBlob
-          : new Blob([rawBlob], {
-              type: fileAsset.mimeType || "image/jpeg",
-            });
-
-        const instructionRes = await getUploadInstructions({
-          fileName: fileAsset.name,
-          contentType: fileAsset.mimeType || "image/jpeg",
-          documentKind: docKind,
-        }).unwrap();
-
-        const { uploadUrl, publicUrl, method, formFields } = instructionRes;
-
-        const uploadEndpoint = uploadUrl.startsWith("http")
-          ? uploadUrl
-          : `${API_BASE_URL}${uploadUrl}`;
-
-        const resolvedPublicUrl = publicUrl.startsWith("http")
-          ? publicUrl
-          : `${API_BASE_URL}${publicUrl}`;
-
-        console.log(`[KYC] Uploading ${docKind}`);
-        console.log(`[KYC] Upload URL: ${uploadEndpoint}`);
-        console.log(`[KYC] Public URL: ${resolvedPublicUrl}`);
-
         const formData = new FormData();
+        formData.append("documentKind", docKind);
 
-        // Append Cloudinary required fields first
-        if (formFields) {
-          for (const [key, value] of Object.entries(formFields)) {
-            formData.append(key, String(value));
-          }
-        }
-
-        // React Native FormData expects this shape for files, NOT a Blob
         formData.append("file", {
           uri: fileAsset.uri,
           name: fileAsset.name,
           type: fileAsset.mimeType || "image/jpeg",
         } as any);
 
-        const uploadResponse = await fetch(uploadEndpoint, {
-          method: (method ?? "POST").toUpperCase(),
-          body: formData,
-          // Do NOT set Content-Type — fetch sets it with the correct multipart boundary
-        });
+        const uploadRes = await getUploadInstructions(formData).unwrap();
 
-        if (!uploadResponse.ok) {
-          const errorBody = await uploadResponse.text();
-          showErrorToast({
-            title: "Upload Failed",
-            message: `Failed to upload ${docKind}. Please try again.`,
-          });
-          console.error(
-            `[KYC] Upload failed for ${docKind}: ${uploadResponse.status} ${uploadResponse.statusText}`,
-            errorBody,
-          );
-          throw new Error(`Failed to upload ${docKind} to cloud storage.`);
+        if (!uploadRes.uploaded) {
+          throw new Error(`API failed to upload ${docKind}`);
         }
 
-        uploadedUrls[docKind] = resolvedPublicUrl;
+        uploadedUrls[docKind] = uploadRes.publicUrl;
       }
 
       const documentImageUrl = uploadedUrls.document_front ?? "";
-
       const selfieImageUrl = uploadedUrls.selfie ?? "";
 
       dispatch(
@@ -164,8 +116,6 @@ const Step3 = () => {
       dispatch(resetKycData());
       handlePushTo();
     } catch (error) {
-      console.error("[KYC] Submission failed:", error);
-
       showErrorToast({
         title: "Upload Failed",
         message:
@@ -173,16 +123,18 @@ const Step3 = () => {
       });
     }
   };
+
   const handlePress = () => {
     if (selectedFiles.document_front && selfieFile) {
       handleFinalSubmit();
     }
   };
+
   return (
     <Template
       headerProps={{
         goBack: true,
-        title: "Review submission for yahoo",
+        title: "Review submission",
         body: "Check the details and files before sending them for admin review.",
         stage: 3,
       }}
@@ -192,7 +144,7 @@ const Step3 = () => {
         disabled: !selectedFiles.document_front || !selfieFile || isLoading,
         iconComponent: isLoading ? <ActivityIndicator /> : null,
         textStyle: {
-          fontSize: 14,
+          fontSize: ms(14),
           fontFamily: Fonts.bold,
         },
         onPress: () => handlePress(),
@@ -200,7 +152,7 @@ const Step3 = () => {
     >
       <View style={styles.container}>
         <Spacer size={12} />
-        <View style={[GeneralStyles.wrapper, { gap: 14 }]}>
+        <View style={[GeneralStyles.wrapper, { gap: vs(14) }]}>
           {Config.map((item) => (
             <LabelValueItem
               key={item.title}
@@ -217,20 +169,19 @@ const Step3 = () => {
             style={[
               GeneralStyles.box,
               {
-                padding: 16,
+                padding: ms(16),
                 justifyContent: "center",
                 alignItems: "center",
-                borderRadius: 16,
-                minHeight: 86,
+                borderRadius: ms(16),
+                minHeight: vs(86),
               },
             ]}
           >
             <TextBlock
               body="After submission your status changes to pending and trade/withdraw remain locked until approved."
               bodyStyle={{
-                // color: Colors.snowGray,
-                fontSize: 13,
-                maxWidth: 300,
+                fontSize: ms(13),
+                maxWidth: s(300),
               }}
             />
           </View>

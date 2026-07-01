@@ -3,6 +3,7 @@ import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
 import { Notification } from "@/types/notification";
+import { s, vs } from "@/utils/responsive";
 import React from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 
@@ -64,8 +65,8 @@ const styles = StyleSheet.create({
     flex: 1,
     width: "100%",
     justifyContent: "center",
-    gap: 4,
-    height: 84,
+    gap: vs(4),
+    height: vs(84),
     borderBottomWidth: 1,
     borderBottomColor: Colors.white + "08",
     // alignItems: "center",
@@ -73,7 +74,7 @@ const styles = StyleSheet.create({
   notificationTitleBlock: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 6,
+    gap: s(6),
   },
   details: {
     flexShrink: 1,

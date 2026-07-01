@@ -15,6 +15,7 @@ import {
   KYC_DOCUMENT_LABELS,
   KycDocumentType,
 } from "@/types/kyc";
+import { ms, s, vs } from "@/utils/responsive";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState } from "react";
@@ -43,7 +44,6 @@ const Step1 = () => {
 
   const handlePress = useGoToRoute("/kyc/step2");
   const onSubmit = (data: KycStep1FormValues) => {
-    console.log("Validated Data:", data);
     const strictDocumentType = (getDocumentByLabel(data.documentType)?.type ||
       data.documentType) as KycDocumentType;
     dispatch(
@@ -70,7 +70,7 @@ const Step1 = () => {
         onPress: handleSubmit(onSubmit),
         disabled: !isValid,
         textStyle: {
-          fontSize: 14,
+          fontSize: ms(14),
           fontFamily: Fonts.bold,
         },
       }}
@@ -79,12 +79,11 @@ const Step1 = () => {
         style={[
           GeneralStyles.wrapper,
           {
-            gap: 20,
-            paddingVertical: 8,
+            gap: vs(20),
+            paddingVertical: vs(8),
           },
         ]}
       >
-        {/* Legal Name */}
         <Controller
           control={control}
           name="legalName"
@@ -114,7 +113,6 @@ const Step1 = () => {
           )}
         />
 
-        {/* Country */}
         <View style={styles.inputContainer}>
           <ThemedText
             style={[styles.input, { color: Colors.textMidGray }]}
@@ -124,7 +122,6 @@ const Step1 = () => {
           </ThemedText>
         </View>
 
-        {/* Document Type */}
         <Controller
           control={control}
           name="documentType"
@@ -141,7 +138,7 @@ const Step1 = () => {
                 <ThemedText
                   style={[
                     styles.input,
-                    { paddingLeft: 2 },
+                    { paddingLeft: s(2) },
                     !value && { color: Colors.textMidGray },
                   ]}
                 >
@@ -153,7 +150,7 @@ const Step1 = () => {
                   options={KYC_DOCUMENT_LABELS}
                   value={value}
                   setValue={onChange}
-                  width={200}
+                  width={s(200)}
                 />
               </Pressable>
               {errors.documentType && (
@@ -165,7 +162,6 @@ const Step1 = () => {
           )}
         />
 
-        {/* Document Number */}
         <Controller
           control={control}
           name="documentNumber"
@@ -203,16 +199,16 @@ const Step1 = () => {
             ...GeneralStyles.box,
             flexDirection: "row",
             alignItems: "center",
-            padding: 16,
-            gap: 8,
-            minHeight: 82,
+            padding: ms(16),
+            gap: s(8),
+            minHeight: vs(82),
           }}
         >
           <View
             style={{
-              width: 28,
-              height: 28,
-              borderRadius: 14,
+              width: s(28),
+              height: vs(28),
+              borderRadius: ms(14),
               backgroundColor: Colors.warningAmber + "59",
               justifyContent: "center",
               alignItems: "center",
@@ -227,8 +223,8 @@ const Step1 = () => {
           <TextBlock
             body="Mismatched details can delay approval or require resubmission."
             bodyStyle={{
-              fontSize: 12,
-              maxWidth: 250,
+              fontSize: ms(12),
+              maxWidth: s(250),
             }}
           />
         </View>
@@ -242,13 +238,13 @@ export default Step1;
 
 const styles = StyleSheet.create({
   inputContainer: {
-    borderRadius: 12,
+    borderRadius: ms(12),
     justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: Colors.backgroundDark,
     flexDirection: "row",
-    paddingHorizontal: 16,
-    height: 52,
+    paddingHorizontal: s(16),
+    height: vs(52),
     borderWidth: 1,
     borderColor: "transparent",
   },
@@ -256,15 +252,15 @@ const styles = StyleSheet.create({
     flex: 1,
     fontFamily: Fonts.regular,
     color: Colors.snowGray,
-    fontSize: 14,
+    fontSize: ms(14),
   },
   inputError: {
     borderColor: Colors.lossBright,
   },
   errorText: {
     color: Colors.lossBright,
-    fontSize: 11,
-    marginTop: 6,
-    marginLeft: 8,
+    fontSize: ms(11),
+    marginTop: vs(6),
+    marginLeft: s(8),
   },
 });

@@ -50,13 +50,22 @@ export default function TabsLayout() {
             tabBarIcon: ({ color, focused }) => renderIcon(tab.icon, focused),
             headerShown: false,
           }}
+          // TabsLayout.tsx
+
           listeners={({ navigation }) => ({
             tabPress: (e) => {
               e.preventDefault();
-              navigation.navigate(tab.name, {
-                screen: tab.initialRoute,
-                ...(tab.initialParams ? { params: tab.initialParams } : {}),
-              });
+
+              if (tab.name === "trades") {
+                navigation.navigate("trades", {
+                  screen: "[asset]",
+                  params: { asset: "BTC", screen: "asset" },
+                });
+              } else {
+                navigation.navigate(tab.name, {
+                  screen: tab.initialRoute ?? "index",
+                });
+              }
             },
           })}
         />

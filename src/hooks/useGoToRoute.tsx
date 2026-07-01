@@ -18,7 +18,7 @@ export const useGoToRoute = (href?: Href, type: NavigationType = "push") => {
       if (type === "replace") {
         router.replace(href);
       } else {
-        router.push(href);
+        router.navigate(href);
       }
     }
   }, [href, type, router]);

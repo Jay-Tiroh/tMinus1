@@ -7,6 +7,7 @@ import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { Colors } from "@/constants/Colors";
 import { Spacing } from "@/constants/Spacing";
+import { ms, s, vs } from "@/utils/responsive";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import { useRef, useState } from "react";
@@ -65,8 +66,7 @@ export default function OnboardingScreen() {
 
   const completeOnboarding = async () => {
     await AsyncStorage.setItem("has_onboarded", "true");
-
-    navigation.replace("/(auth)"); // or wherever
+    navigation.replace("/(auth)");
   };
 
   const handleNext = () => {
@@ -82,12 +82,6 @@ export default function OnboardingScreen() {
     }
   };
 
-  // import AsyncStorage from '@react-native-async-storage/async-storage';
-
-  // const completeOnboarding = async () => {
-  //   await AsyncStorage.setItem('has_onboarded', 'true');
-  //   router.replace('/(auth)/sign-in'); // or wherever
-  // };
   return (
     <ThemedView style={styles.container}>
       <ImageBackground
@@ -123,7 +117,6 @@ export default function OnboardingScreen() {
           })}
         </ScrollView>
 
-        {/* Indicators */}
         <Spacer size={41} />
         <View style={styles.indicatorContainer}>
           {PagesConfig.map((_, index) => (
@@ -139,7 +132,6 @@ export default function OnboardingScreen() {
           ))}
         </View>
 
-        {/* Button */}
         <Spacer size={41} />
         <View style={styles.buttonContainer}>
           <ThemedButton
@@ -164,50 +156,49 @@ const styles = StyleSheet.create({
   },
   image: {
     flex: 1,
-    justifyContent: "center", // pushes indicators + button to bottom
+    justifyContent: "center",
   },
   page: {
-    width: SCREEN_WIDTH, // ✅ each page = exact screen width
+    width: SCREEN_WIDTH,
     alignItems: "center",
     justifyContent: "flex-end",
-    paddingTop: 60,
+    paddingTop: vs(60),
   },
   buttonContainer: {
     width: "100%",
-    paddingHorizontal: 20,
+    paddingHorizontal: s(20),
     alignItems: "center",
   },
   button: {
-    boxShadow: "0 20px 60px rgba(94, 213, 168, .16)",
-    width: 180,
+    width: s(180),
   },
   text: {
     textAlign: "center",
-    maxWidth: 366,
+    maxWidth: s(366),
   },
   title: {
     color: Colors.white,
-    fontSize: 24,
+    fontSize: ms(24),
     letterSpacing: 0.0264 * 24,
   },
   subtitle: {
     color: Colors.textMuted,
-    fontSize: 18,
+    fontSize: ms(18),
     letterSpacing: 0.0264 * 18,
   },
   ill: {
     width: "100%",
-    height: 387,
+    height: vs(387),
   },
   textContainer: {
     alignItems: "center",
-    paddingHorizontal: 20,
-    gap: Spacing.lg,
+    paddingHorizontal: s(20),
+    gap: vs(Spacing.lg),
   },
   ellipse: {
-    width: 12.24,
-    height: 12.24,
-    borderRadius: 12.24,
+    width: ms(12.24),
+    height: ms(12.24),
+    borderRadius: ms(6.12),
   },
   activeEllipse: {
     backgroundColor: Colors.textMuted,
@@ -217,7 +208,7 @@ const styles = StyleSheet.create({
   },
   indicatorContainer: {
     flexDirection: "row",
-    gap: Spacing.sm,
+    gap: s(Spacing.sm),
     justifyContent: "center",
   },
 });

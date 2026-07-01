@@ -53,7 +53,7 @@ const KycLocked = () => {
           maxWidth: 200,
         }}
         textStyle={{ fontSize: 12, fontFamily: Fonts.bold }}
-        onPress={() => router.push("/kyc")}
+        onPress={() => router.replace("/kyc")}
       />
     </View>
   );

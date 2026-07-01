@@ -1,4 +1,5 @@
 import { LabelValueItem } from "@/components/LabelValueItem";
+
 import { Spacer } from "@/components/Spacer";
 import TextBlock from "@/components/TextBlock";
 import { ButtonVariant } from "@/components/ThemedButton";
@@ -8,10 +9,10 @@ import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
 import { useAssetRoute } from "@/hooks/useAssetRoute";
-import useTrade from "@/hooks/useTrade"; // Assuming useTrade is saved here
-import { Quote } from "@/types/trades";
+import useTrade from "@/hooks/useTrade";
+import { ms, s, vs } from "@/utils/responsive";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, TextStyle, View, ViewStyle } from "react-native";
 
@@ -25,16 +26,17 @@ export type ConfigType = {
     style?: ViewStyle;
     textStyle?: TextStyle;
   };
+
   content: React.ReactNode;
+
   topSpacerSize: number;
 };
+type ScreenState = "confirm" | "completed" | "failed";
 
 const QuoteScreen = () => {
-  const params = useLocalSearchParams<{ asset: string }>();
-  const asset = params.asset;
+  const { asset } = useLocalSearchParams();
   const { replace } = useAssetRoute();
-  // console.log("Rendering QuoteScreen for asset:", asset);
-  // 1. Bring in the trade hook
+  const router = useRouter();
   const {
     activeQuote,
     isQuoteExpired,
@@ -44,7 +46,6 @@ const QuoteScreen = () => {
     lastQuoteRequest,
   } = useTrade();
 
-  // 2. Local countdown timer for smooth UI ticking
   const [localTimeLeft, setLocalTimeLeft] = useState(timeRemainingSeconds);
 
   useEffect(() => {
@@ -59,16 +60,16 @@ const QuoteScreen = () => {
     return () => clearInterval(timer);
   }, [localTimeLeft, isQuoteExpired]);
 
-  // Prevent rendering if there's no quote yet (or handle graceful exit)
   if (!activeQuote) {
     return (
-      <View style={[GeneralStyles.wrapper, { justifyContent: "center" }]}>
+      <View
+        style={[GeneralStyles.wrapper, { flex: 1, justifyContent: "center" }]}
+      >
         <ActivityIndicator size="large" color={Colors.primaryClean} />
       </View>
     );
   }
 
-  // 3. Dynamic Configuration based on expiry status
   const isExpired = isQuoteExpired || localTimeLeft === 0;
 
   const activeConfig: ConfigType = isExpired
@@ -97,8 +98,6 @@ const QuoteScreen = () => {
           title: "Confirm with PIN",
           onPress: () => replace("execute"),
           variant: "primary",
-          style: undefined,
-          textStyle: undefined,
         },
         content: <Preview quote={activeQuote} timeLeft={localTimeLeft} />,
         topSpacerSize: 14,
@@ -116,9 +115,8 @@ const QuoteScreen = () => {
         variant: activeConfig.cta.variant,
         style: activeConfig.cta.style,
         textStyle: {
-          ...activeConfig.cta.textStyle,
           fontFamily: Fonts.bold,
-          fontSize: 14,
+          fontSize: ms(14),
         },
       }}
       topSpacerSize={activeConfig.topSpacerSize}
@@ -128,9 +126,9 @@ const QuoteScreen = () => {
   );
 };
 
-// --- Sub-components now receive dynamic data ---
+// --- Sub-components ---
 
-const Preview = ({ quote, timeLeft }: { quote: Quote; timeLeft: number }) => {
+const Preview = ({ quote, timeLeft }: { quote: any; timeLeft: number }) => {
   const formattedTime = `00:${timeLeft.toString().padStart(2, "0")}`;
 
   const config = [
@@ -157,13 +155,13 @@ const Preview = ({ quote, timeLeft }: { quote: Quote; timeLeft: number }) => {
       <View
         style={{
           width: "100%",
-          height: 86,
+          height: vs(86),
           backgroundColor: Colors.surfaceGreenDeep,
-          borderRadius: 18,
+          borderRadius: ms(18),
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "space-between",
-          paddingHorizontal: 20,
+          paddingHorizontal: s(20),
         }}
       >
         <ThemedText size={12} weight="medium" color={Colors.cloudGray}>
@@ -174,11 +172,7 @@ const Preview = ({ quote, timeLeft }: { quote: Quote; timeLeft: number }) => {
         </ThemedText>
       </View>
       <Spacer size={32} />
-      <View
-        style={{
-          gap: 10,
-        }}
-      >
+      <View style={{ gap: vs(10) }}>
         {config.map((item) => (
           <LabelValueItem
             key={item.label}
@@ -194,31 +188,32 @@ const Preview = ({ quote, timeLeft }: { quote: Quote; timeLeft: number }) => {
   );
 };
 
-const Expired = ({ quote }: { quote: Quote }) => {
+const Expired = ({ quote }: { quote: any }) => {
   const config = [
     { label: "Expired quote", value: quote.id },
     { label: "Previous receive", value: `${quote.toAmount} ${quote.toAsset}` },
   ];
+
   return (
     <>
       <View
         style={{
           width: "100%",
-          height: 238,
+          height: vs(238),
           backgroundColor: Colors.backgroundDark,
-          borderRadius: 22,
+          borderRadius: ms(22),
           alignItems: "center",
           justifyContent: "center",
-          paddingHorizontal: 20,
-          gap: 30,
+          paddingHorizontal: s(20),
+          gap: vs(30),
         }}
       >
         <View
           style={{
-            width: 88,
-            height: 88,
+            width: s(88),
+            height: vs(88),
             backgroundColor: Colors.warningAmber + "2E",
-            borderRadius: 44,
+            borderRadius: ms(44),
             alignItems: "center",
             justifyContent: "center",
           }}
@@ -231,17 +226,17 @@ const Expired = ({ quote }: { quote: Quote }) => {
         </View>
         <TextBlock
           title="This quote is no longer valid"
-          titleStyle={{ fontSize: 19, textAlign: "center" }}
-          bodyStyle={{ fontSize: 12, textAlign: "center", maxWidth: 290 }}
+          titleStyle={{ fontSize: ms(19), textAlign: "center" }}
+          bodyStyle={{
+            fontSize: ms(12),
+            textAlign: "center",
+            maxWidth: s(290),
+          }}
           body="Get a new quote so the rate, fee, and receive amount are current."
         />
       </View>
       <Spacer size={64} />
-      <View
-        style={{
-          gap: 10,
-        }}
-      >
+      <View style={{ gap: vs(10) }}>
         {config.map((item) => (
           <LabelValueItem
             key={item.label}

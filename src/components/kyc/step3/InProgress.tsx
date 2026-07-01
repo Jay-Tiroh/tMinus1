@@ -3,9 +3,11 @@ import { LabelValueItem } from "@/components/LabelValueItem";
 import { Spacer } from "@/components/Spacer";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
+import { vs } from "@/utils/responsive";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import React from "react";
 import { View } from "react-native";
+
 const InProgress = () => {
   const config = [
     {
@@ -36,7 +38,7 @@ const InProgress = () => {
       <View
         style={{
           ...GeneralStyles.wrapper,
-          gap: 14,
+          gap: vs(14),
         }}
       >
         {config.map((item) => (

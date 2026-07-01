@@ -3,6 +3,7 @@ import { Spacer } from "@/components/Spacer";
 import { ThemedButton } from "@/components/ThemedButton";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
+import { formatPhoneInternational } from "@/helpers/functions";
 import { showErrorToast } from "@/hooks/showToast"; // Adjust import path if needed
 import { signupSchema } from "@/schemas/authSchemas";
 import {
@@ -10,6 +11,7 @@ import {
   useValidateSignupMutation,
 } from "@/store/services/authApi"; // Adjust import path if needed
 
+import { ms, vs } from "@/utils/responsive";
 import Feather from "@expo/vector-icons/Feather";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -60,7 +62,7 @@ const SignUpForm = () => {
       // Step A: Validate the details first
       const validationResult = await validateSignup({
         email: data.email,
-        phone: data.phone,
+        phone: data.phone.replace(/\s/g, ""),
       }).unwrap();
 
       if (!validationResult.canRegister) {
@@ -86,12 +88,12 @@ const SignUpForm = () => {
       const registerResult = await register({
         fullName: data.fullName,
         email: data.email,
-        phone: data.phone,
+        phone: data.phone.replace(/\s/g, ""),
         password: data.password,
       }).unwrap();
 
       // Step C: Route to Verify OTP screen, passing the email for context
-      router.push({
+      router.replace({
         pathname: "/verify",
         params: { email: data.email },
       });
@@ -107,7 +109,7 @@ const SignUpForm = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ gap: 16 }}>
+      <View style={{ gap: vs(16) }}>
         <ThemedInput
           control={control}
           name="fullName"
@@ -128,6 +130,7 @@ const SignUpForm = () => {
           icon={<Feather name="phone" size={20} color={Colors.primaryClean} />}
           placeholder="Phone number"
           keyboardType="phone-pad"
+          formatter={formatPhoneInternational}
         />
         <ThemedInput
           control={control}
@@ -164,7 +167,7 @@ const SignUpForm = () => {
       <ThemedText
         color={Colors.textMidGray}
         size={13}
-        style={{ lineHeight: 18 }}
+        style={{ lineHeight: ms(18) }}
       >
         Use your real name and an international phone number for verification.
       </ThemedText>
@@ -186,9 +189,9 @@ const SignUpForm = () => {
           <ThemedText
             color={Colors.snowGray}
             weight="medium"
-            // onPress={() => router.push("/login")}
+            // onPress={() => router.replace("/login")}
             // Add actual route for sign-in
-            style={{ padding: 4 }}
+            style={{ padding: ms(4) }}
           >
             Sign in
           </ThemedText>

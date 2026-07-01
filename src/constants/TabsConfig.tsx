@@ -20,11 +20,7 @@ export interface TabConfig {
   name: TabRoute;
   label: string;
   icon: React.FC<SvgProps>;
-  /** The screen to navigate to when the tab is pressed.
-   *  Defaults to undefined (no nested reset needed). */
   initialRoute?: string;
-  /** Params to pass to initialRoute — use for dynamic segments. */
-  initialParams?: Record<string, unknown>;
 }
 
 // ─── Global Tab Bar Appearance ───────────────────────────────────────────────
@@ -54,41 +50,21 @@ export const DEFAULT_TRADE_ASSET = "BTC";
 
 // ─── Tab Definitions ─────────────────────────────────────────────────────────
 export const TABS: TabConfig[] = [
-  {
-    name: "home",
-    label: "Home",
-    icon: HomeIcon,
-    initialRoute: "index",
-  },
+  { name: "home", label: "Home", icon: HomeIcon, initialRoute: "index" },
   {
     name: "markets",
     label: "Markets",
     icon: MarketsIcon,
     initialRoute: "index",
   },
-  {
-    name: "trades",
-    label: "Trades",
-    icon: TradesIcon,
-    // trades has no index — resets to [asset]/asset.tsx with a default asset
-    initialRoute: "[asset]",
-    initialParams: {
-      screen: "asset",
-      params: { asset: DEFAULT_TRADE_ASSET },
-    },
-  },
+  { name: "trades", label: "Trades", icon: TradesIcon },
   {
     name: "wallets",
     label: "Wallets",
     icon: WalletsIcon,
     initialRoute: "index",
   },
-  {
-    name: "user",
-    label: "Profile",
-    icon: UserIcon,
-    initialRoute: "index",
-  },
+  { name: "user", label: "Profile", icon: UserIcon, initialRoute: "profile" },
 ];
 
 // ─── Helper ──────────────────────────────────────────────────────────────────

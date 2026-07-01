@@ -25,11 +25,16 @@ import { OtpInput, OtpInputRef } from "react-native-otp-entry";
 type RecoveryCode = string[];
 const RecoveryCodesScreen = () => {
   const { code } = useLocalSearchParams();
-  const formattedCode = typeof code === "string" ? code : undefined;
-  const [codes, setCodes] = useState<string[] | undefined>(
-    formattedCode?.split(","),
-  );
 
+  const parsedCodes = Array.isArray(code)
+    ? code
+    : typeof code === "string"
+      ? code.split(",")
+      : undefined;
+
+  const [codes, setCodes] = useState<string[] | undefined>(parsedCodes);
+
+  console.log("Parsed codes:", parsedCodes);
   const handleCopy = async () => {
     if (codes) {
       await Clipboard.setStringAsync(codes.join("\n"));

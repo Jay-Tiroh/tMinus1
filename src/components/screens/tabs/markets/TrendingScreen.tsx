@@ -11,20 +11,27 @@ import useFiat from "@/hooks/useFiat";
 import { useSafeBottom } from "@/hooks/useSafeBottom";
 import { useTrendingAssets } from "@/hooks/useTrendingAssets";
 import { Asset, FeaturedMeta } from "@/types/assets";
+import { ms, s, vs } from "@/utils/responsive";
 import { Href, useRouter } from "expo-router";
-import React from "react";
-import { ImageBackground, StyleSheet, View } from "react-native";
+import React, { useCallback, useState } from "react";
+import {
+  ImageBackground,
+  RefreshControl,
+  StyleSheet,
+  View,
+} from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type TopGainerProps = {
   topGainer: Asset | undefined;
   featured: FeaturedMeta | undefined;
 };
+
 const TopGainer = ({ topGainer, featured }: TopGainerProps) => {
   const route = "/(tabs)/trades/asset?coin=" + featured?.symbol;
   const router = useRouter();
   const handlePress = () => {
-    router.push(route as Href);
+    router.replace(route as Href);
   };
   const { symbol, convertFromUSD } = useFiat();
   return (
@@ -39,11 +46,11 @@ const TopGainer = ({ topGainer, featured }: TopGainerProps) => {
           body={"Highest 24h gain"}
           bodyStyle={{
             color: Colors.primaryAqua,
-            fontSize: 12,
-            marginTop: -4,
-            maxWidth: 120,
+            fontSize: ms(12),
+            marginTop: vs(-4),
+            maxWidth: s(120),
           }}
-          titleStyle={{ fontSize: 22 }}
+          titleStyle={{ fontSize: ms(22) }}
         />
 
         <Spacer size={6} />
@@ -51,11 +58,11 @@ const TopGainer = ({ topGainer, featured }: TopGainerProps) => {
           title="View asset"
           style={{
             backgroundColor: Colors.surfaceGreenRich,
-            width: 78,
-            height: 22,
-            borderRadius: 11,
+            width: s(78),
+            height: vs(22),
+            borderRadius: ms(11),
           }}
-          textStyle={{ color: Colors.primaryFrost, fontSize: 11 }}
+          textStyle={{ color: Colors.primaryFrost, fontSize: ms(11) }}
           onPress={handlePress}
         />
       </View>
@@ -63,22 +70,22 @@ const TopGainer = ({ topGainer, featured }: TopGainerProps) => {
         style={{
           alignItems: "flex-end",
           justifyContent: "space-between",
-          gap: 10,
+          gap: vs(10),
           height: "100%",
         }}
       >
         <ThemedText weight="medium" size={11} color={Colors.primaryFrost}>
           {symbol + formatAmount(convertFromUSD(topGainer?.priceUsd as number))}
         </ThemedText>
-        <View style={{ alignItems: "flex-end", gap: 4 }}>
+        <View style={{ alignItems: "flex-end", gap: vs(4) }}>
           <ThemedText weight="bold" size={12} color={Colors.primaryClean}>
             +{topGainer?.change24h.toFixed(1)}%
           </ThemedText>
           <Chart
             isPositive={true}
             data={topGainer?.sparkline ?? []}
-            width={178}
-            height={70}
+            width={s(178)}
+            height={vs(70)}
           />
         </View>
       </View>
@@ -89,22 +96,27 @@ const TopGainer = ({ topGainer, featured }: TopGainerProps) => {
 const TrendingScreen = () => {
   const bottomPadding = useSafeBottom();
   const topInset = useSafeAreaInsets().top;
-  const {
-    trending,
-    featured,
-    isLoading: trendingLoading,
-    isUninitialized: trendingUninitialized,
-  } = useTrendingAssets({ include: "sparkline" }, 10000);
+  const { trending, featured, refetch } = useTrendingAssets(
+    { include: "sparkline" },
+    10000,
+  );
 
   const topGainer = trending.find((asset) => asset.symbol === featured?.symbol);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleRefresh = useCallback(async () => {
+    setIsRefreshing(true);
+    try {
+      await refetch();
+    } finally {
+      setIsRefreshing(false);
+    }
+  }, [refetch]);
 
   return (
     <ImageBackground
       source={require("@/assets/images/new-bg.png")}
-      style={[
-        GeneralStyles.container,
-        { paddingTop: topInset + 24, paddingBottom: bottomPadding * 0 },
-      ]}
+      style={[GeneralStyles.container, { paddingTop: topInset + vs(24) }]}
     >
       <View style={GeneralStyles.wrapper}>
         <TextBlock
@@ -122,10 +134,19 @@ const TrendingScreen = () => {
         data={trending}
         coinItemConfig={{ showChange: true, showChart: true }}
         contentContainerStyle={{
-          paddingTop: 12,
+          paddingTop: vs(12),
           paddingBottom: bottomPadding * 2,
         }}
         useHrefs
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={handleRefresh}
+            tintColor={Colors.primary}
+            colors={[Colors.primary]}
+            progressBackgroundColor={Colors.backgroundDark}
+          />
+        }
       />
     </ImageBackground>
   );
@@ -137,11 +158,11 @@ const styles = StyleSheet.create({
   topGainerContainer: {
     width: "100%",
     backgroundColor: Colors.surfaceGreenDark,
-    borderRadius: 18,
-    padding: 16,
+    borderRadius: ms(18),
+    padding: ms(16),
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    maxHeight: 150,
+    maxHeight: vs(150),
   },
 });

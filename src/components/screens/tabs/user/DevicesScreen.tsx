@@ -230,7 +230,7 @@ const DevicesScreen = () => {
   return (
     <ImageBackground
       source={require("@/assets/images/new-bg.png")}
-      style={[GeneralStyles.container, { paddingTop: insets.top + 24 }]}
+      style={[GeneralStyles.container]}
     >
       <FlatList
         data={devices}
@@ -238,7 +238,7 @@ const DevicesScreen = () => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={[
           GeneralStyles.wrapper,
-          { paddingBottom: bottomPadding + 86 },
+          { paddingBottom: bottomPadding + 86, paddingTop: insets.top + 24 },
         ]}
         ListHeaderComponent={ListHeader}
         ListFooterComponent={ListFooter}

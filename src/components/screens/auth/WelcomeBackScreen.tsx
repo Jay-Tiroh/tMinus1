@@ -14,6 +14,7 @@ import {
   setCredentials,
   unlockSession,
 } from "@/store/slices/authSlice";
+import { ms, s, vs } from "@/utils/responsive";
 import { saveToken } from "@/utils/secureStore";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useRouter } from "expo-router";
@@ -99,9 +100,8 @@ const WelcomeBackScreen = () => {
         password,
       }).unwrap();
 
-      // 2FA gate — same pattern as SignInForm
       if (isTwoFactorResponse(result)) {
-        router.push({
+        router.replace({
           pathname: "/verify-2fa",
           params: {
             challengeId: result.challengeId,
@@ -170,7 +170,7 @@ const WelcomeBackScreen = () => {
     <Template
       textBlockProps={{
         title: "Welcome back",
-        titleStyle: { fontSize: 28 },
+        titleStyle: { fontSize: ms(28) },
       }}
       ctaProps={{
         title: "Sign in",
@@ -207,9 +207,9 @@ const WelcomeBackScreen = () => {
           {user?.avatarUrl ? (
             <View
               style={{
-                width: 100,
-                height: 100,
-                borderRadius: 50,
+                width: s(100),
+                height: vs(100),
+                borderRadius: ms(50),
                 alignItems: "center",
                 justifyContent: "center",
                 overflow: "hidden",
@@ -219,8 +219,8 @@ const WelcomeBackScreen = () => {
                 source={{
                   uri: user?.avatarUrl,
                 }}
-                width={100}
-                height={100}
+                width={s(100)}
+                height={vs(100)}
               />
             </View>
           ) : (
@@ -303,23 +303,23 @@ const styles = StyleSheet.create({
   profileSection: {
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 20,
+    marginTop: vs(20),
   },
   avatar: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+    width: s(100),
+    height: vs(100),
+    borderRadius: ms(50),
     backgroundColor: Colors.primary,
     alignItems: "center",
     justifyContent: "center",
   },
   textCenter: { textAlign: "center" },
   inputContainer: {
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-    height: 80,
+    paddingHorizontal: s(20),
+    paddingVertical: vs(16),
+    height: vs(80),
     justifyContent: "center",
-    gap: 4,
+    gap: vs(4),
   },
   inputRow: {
     flexDirection: "row",
@@ -328,29 +328,29 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     color: Colors.snowGray,
-    fontSize: 20,
+    fontSize: ms(20),
     fontFamily: Fonts.bold,
     padding: 0,
     margin: 0,
   },
   toggle: {
-    padding: 4,
-    marginRight: -4,
+    padding: ms(4),
+    marginRight: s(-4),
   },
   errorText: {
-    marginTop: 6,
-    marginLeft: 4,
+    marginTop: vs(6),
+    marginLeft: s(4),
   },
   footerActions: {
     width: "100%",
-    gap: 16,
+    gap: vs(16),
     alignItems: "center",
   },
   secondaryButton: {
     backgroundColor: Colors.surfaceNavy,
   },
   notYouCta: {
-    paddingVertical: 8,
-    paddingHorizontal: 16,
+    paddingVertical: vs(8),
+    paddingHorizontal: s(16),
   },
 });

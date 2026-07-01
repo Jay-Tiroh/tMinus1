@@ -35,7 +35,7 @@ const DepositAddressScreen = () => {
   };
 
   const router = useRouter();
-
+  const isUsdt = asset === "USDT";
   return (
     <Template
       textBlockProps={{
@@ -100,14 +100,16 @@ const DepositAddressScreen = () => {
             <Octicons name="copy" size={16} color={Colors.backgroundInk} />
           }
         />
-        <ThemedButton
-          title="Simulate deposit"
-          variant="secondary"
-          style={{ flex: 1 }}
-          onPress={() =>
-            router.push(`/wallets/deposit/simulate-deposit?asset=${asset}`)
-          }
-        />
+        {isUsdt && (
+          <ThemedButton
+            title="Simulate deposit"
+            variant="secondary"
+            style={{ flex: 1 }}
+            onPress={() =>
+              router.replace(`/wallets/deposit/simulate-deposit?asset=${asset}`)
+            }
+          />
+        )}
       </View>
 
       <Spacer size={32} />

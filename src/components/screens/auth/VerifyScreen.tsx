@@ -10,6 +10,7 @@ import {
   useRequestOTPMutation,
   useVerifyOTPMutation,
 } from "@/store/services/authApi";
+import { ms, s, vs } from "@/utils/responsive";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import * as Notifications from "expo-notifications";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -31,7 +32,6 @@ export default function VerifyScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
-  // Get email passed from SignUpForm
   const { email } = useLocalSearchParams<{ email: string }>();
 
   const [code, setCode] = useState("");
@@ -41,7 +41,6 @@ export default function VerifyScreen() {
   const [verifyOtp, { isLoading: isVerifying }] = useVerifyOTPMutation();
   const [requestOtp, { isLoading: isRequesting }] = useRequestOTPMutation();
 
-  // 1. Auto-fill Listener
   useEffect(() => {
     const subscription = Notifications.addNotificationReceivedListener(
       (notification) => {
@@ -59,7 +58,6 @@ export default function VerifyScreen() {
     return () => subscription.remove();
   }, []);
 
-  // 2. Countdown Timer Logic
   useEffect(() => {
     let timer: NodeJS.Timeout;
     if (countdown > 0) {
@@ -68,7 +66,6 @@ export default function VerifyScreen() {
     return () => clearTimeout(timer);
   }, [countdown]);
 
-  // 3. Request OTP & Send Local Push Notification
   const handleRequestOtp = async () => {
     if (!email) return;
 
@@ -77,16 +74,14 @@ export default function VerifyScreen() {
 
       setCountdown(RESEND_COOLDOWN);
 
-      // Simulate backend push notification by scheduling a local one
-      // using the demoCode returned by the sandbox API
       await Notifications.scheduleNotificationAsync({
         content: {
           title: "Verification Code",
           body: `Your authentication code is ${result.demoCode}`,
           sound: true,
-          data: { code: result.demoCode }, // This data payload triggers the auto-fill
+          data: { code: result.demoCode },
         },
-        trigger: null, // Send immediately
+        trigger: null,
       });
 
       showSuccessToast({
@@ -101,15 +96,12 @@ export default function VerifyScreen() {
     }
   };
 
-  // Initial OTP Request on Mount
   useEffect(() => {
     if (email && countdown === 0) {
       handleRequestOtp();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [email]);
 
-  // 4. Verify OTP Logic
   const handleVerify = async (submitCode?: string) => {
     const finalCode = submitCode ?? code;
     if (finalCode.length !== OTP_LENGTH || !email) return;
@@ -125,7 +117,6 @@ export default function VerifyScreen() {
         message: "Your email has been verified successfully.",
       });
 
-      // Route to login so they can sign in with their newly verified account
       router.replace("/(auth)");
     } catch (error: any) {
       showErrorToast({
@@ -135,7 +126,6 @@ export default function VerifyScreen() {
     }
   };
 
-  // Utility to obscure the email (e.g. stu***@cryptoclass.test)
   const maskEmail = (mail: string) => {
     if (!mail) return "";
     const [name, domain] = mail.split("@");
@@ -145,14 +135,17 @@ export default function VerifyScreen() {
   return (
     <ImageBackground
       source={require("@/assets/images/new-bg.png")}
-      style={[styles.bgContainer, { paddingTop: insets.top + 16 }]}
+      style={[styles.bgContainer, { paddingTop: insets.top + vs(16) }]}
     >
       <ScrollView
-        contentContainerStyle={{ paddingBottom: Spacing.lg + 50, flexGrow: 1 }}
+        contentContainerStyle={{
+          paddingBottom: vs(Spacing.lg + 50),
+          flexGrow: 1,
+        }}
         style={{ width: "100%" }}
         keyboardShouldPersistTaps="handled"
       >
-        <View style={{ paddingHorizontal: Spacing.lg }}>
+        <View style={{ paddingHorizontal: s(Spacing.lg) }}>
           <TouchableOpacity
             onPress={() => router.back()}
             style={styles.backBtn}
@@ -168,7 +161,7 @@ export default function VerifyScreen() {
           <TextBlock
             title="Verify Email"
             body={`Please type the code we sent to ${maskEmail(email || "")}`}
-            titleStyle={{ fontSize: 28 }}
+            titleStyle={{ fontSize: ms(28) }}
           />
           <Spacer size={40} />
 
@@ -186,7 +179,7 @@ export default function VerifyScreen() {
 
           <Spacer size={40} />
 
-          <View style={{ gap: 16 }}>
+          <View style={{ gap: vs(16) }}>
             <ThemedButton
               title={isVerifying ? "Verifying..." : "Verify Code"}
               variant="primary"
@@ -197,14 +190,14 @@ export default function VerifyScreen() {
 
           <Spacer size={32} />
 
-          <View style={{ gap: 4, alignItems: "center" }}>
+          <View style={{ gap: vs(4), alignItems: "center" }}>
             <ThemedText size={14} color={Colors.textMidGray}>
               Didn't receive the code?
             </ThemedText>
             <TouchableOpacity
               onPress={handleRequestOtp}
               disabled={countdown > 0 || isRequesting}
-              style={{ padding: 4 }}
+              style={{ padding: ms(4) }}
             >
               <ThemedText
                 size={14}
@@ -239,25 +232,25 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.background,
   },
   backBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 12,
+    width: s(40),
+    height: vs(40),
+    borderRadius: ms(12),
     backgroundColor: Colors.surfaceNavy,
     alignItems: "center",
     justifyContent: "center",
   },
   pinContainer: {
     backgroundColor: Colors.surfaceNavy,
-    borderColor: Colors.borderDark,
+    borderColor: Colors.surfaceDark,
     borderWidth: 1,
-    borderRadius: 12,
+    borderRadius: ms(12),
   },
   pinContainerFocused: {
     borderColor: Colors.primaryClean,
   },
   pinText: {
     color: Colors.white,
-    fontSize: 20,
+    fontSize: ms(20),
     fontWeight: "bold",
   },
 });

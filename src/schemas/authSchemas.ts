@@ -20,10 +20,15 @@ const emailSchema = z
 const phoneSchema = z
   .string()
   .min(1, "Mobile number is required")
-  .max(16, "Mobile number must be at most 16 characters")
-  .regex(
-    /^\+[1-9]\d{6,14}$/,
-    "Enter a valid international mobile number (e.g., +2347059233891)",
+  .transform((val) => val.replace(/\s/g, "")) // strip spaces from formatter
+  .pipe(
+    z
+      .string()
+      .max(16, "Mobile number must be at most 16 characters")
+      .regex(
+        /^\+[1-9]\d{6,14}$/,
+        "Enter a valid international mobile number (e.g., +2347059233891)",
+      ),
   );
 
 const secureUrlSchema = z

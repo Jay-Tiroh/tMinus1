@@ -1,4 +1,3 @@
-// components/kyc/Step2/Phase1.tsx
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
@@ -7,12 +6,14 @@ import { formatExtensionsForDisplay } from "@/helpers/functions";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { KycFilesState, setKycFile } from "@/store/slices/kycSlice";
 import { getDocumentByType, KycFileAsset } from "@/types/kyc";
+import { ms, s, vs } from "@/utils/responsive";
 import Feather from "@expo/vector-icons/Feather";
 import Fontisto from "@expo/vector-icons/Fontisto";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import * as DocumentPicker from "expo-document-picker";
 import React, { useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
+
 export type UploadOption = {
   label: keyof KycFilesState;
   title: string;
@@ -63,7 +64,7 @@ const UploadOptions = ({
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
-        gap: 12,
+        gap: s(12),
       }}
     >
       {UploadOptionsConfig.map((item) => (
@@ -72,11 +73,11 @@ const UploadOptions = ({
           key={item.title}
           style={{
             ...GeneralStyles.box,
-            width: 104,
-            minHeight: 112,
+            width: s(104),
+            minHeight: vs(112),
             justifyContent: "center",
             alignItems: "center",
-            gap: 17,
+            gap: vs(17),
             backgroundColor:
               selectedOption === item.label
                 ? Colors.surfaceGreenDeep
@@ -85,9 +86,9 @@ const UploadOptions = ({
         >
           <View
             style={{
-              width: 34,
-              height: 34,
-              borderRadius: 17,
+              width: s(34),
+              height: vs(34),
+              borderRadius: ms(17),
               backgroundColor:
                 selectedOption === item.label
                   ? Colors.primaryClean
@@ -141,10 +142,10 @@ export const UploadCTA = ({
         {
           justifyContent: "center",
           alignItems: "center",
-          minHeight: 142,
+          minHeight: vs(142),
           width: "100%",
-          maxWidth: 342,
-          gap: 16,
+          maxWidth: s(342),
+          gap: vs(16),
           borderColor: file ? Colors.primaryClean : "transparent",
           borderWidth: file ? 1 : 0,
         },
@@ -152,9 +153,9 @@ export const UploadCTA = ({
     >
       <View
         style={{
-          width: 50,
-          height: 50,
-          borderRadius: 25,
+          width: s(50),
+          height: vs(50),
+          borderRadius: ms(25),
           backgroundColor: file ? Colors.surfaceGreenDeep : Colors.surfaceNavy,
           justifyContent: "center",
           alignItems: "center",
@@ -170,7 +171,7 @@ export const UploadCTA = ({
         color={Colors.snowGray}
         weight="bold"
         size={13}
-        style={{ textAlign: "center", paddingHorizontal: 16 }}
+        style={{ textAlign: "center", paddingHorizontal: s(16) }}
         numberOfLines={1}
       >
         {file ? file.name : title}
@@ -211,25 +212,20 @@ const Phase1 = () => {
         await new Promise((resolve) => setTimeout(resolve, 300));
 
         const asset = result.assets[0];
-        console.log("Picked document asset:", asset);
-        const debugUri =
-          "file:///data/user/0/com.anonymous.tMinus1/cache/DocumentPicker/9b710e00-1647-4e12-abaa-457a38567a43.jpg";
+
         dispatch(
           setKycFile({
-            key: "document_front",
+            key: selectedOption, // Use the dynamically selected option (front/back)
             file: {
               uri: asset.uri,
-              name: "test_documents.jpg",
-              mimeType: "image/jpeg",
-              size: 5500000,
+              name: asset.name, // Use the actual file name
+              mimeType: asset.mimeType ?? "application/octet-stream", // Fallback if undefined
+              size: asset.size ?? 0,
             },
           }),
         );
-        console.warn("[KYC] File URI:", asset.uri);
       }
-    } catch (error) {
-      console.warn("Document picking failed:", error);
-    }
+    } catch (error) {}
   };
   return (
     <View style={styles.container}>
@@ -249,13 +245,13 @@ const Phase1 = () => {
           GeneralStyles.box,
           {
             flexDirection: "row",
-            gap: 8,
+            gap: s(8),
             alignItems: "center",
             width: "100%",
-            maxWidth: 342,
-            padding: 12,
-            paddingHorizontal: 16,
-            minHeight: 54,
+            maxWidth: s(342),
+            padding: ms(12),
+            paddingHorizontal: s(16),
+            minHeight: vs(54),
           },
         ]}
       >
@@ -282,6 +278,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    gap: 32,
+    gap: vs(32),
   },
 });

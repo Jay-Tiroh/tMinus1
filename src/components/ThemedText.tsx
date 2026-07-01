@@ -1,5 +1,6 @@
 import { Colors } from "@/constants/Colors";
 import { FontKey, Fonts } from "@/constants/Fonts";
+import { ms } from "@/utils/responsive";
 import React from "react";
 import { StyleProp, Text, TextProps, TextStyle } from "react-native";
 
@@ -28,8 +29,8 @@ export const ThemedText: React.FC<ThemedTextProps> = ({
       style={[
         {
           fontFamily: Fonts[weight],
-          fontSize: size,
-          letterSpacing: computedLetterSpacing,
+          fontSize: ms(size),
+          letterSpacing: ms(computedLetterSpacing),
           color,
         },
         style,

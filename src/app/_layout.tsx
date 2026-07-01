@@ -1,5 +1,7 @@
+import { InactivityLockProvider } from "@/components/InactivityLockProvider";
 import { Colors } from "@/constants/Colors";
 import { toastConfig } from "@/constants/toastConfig";
+import { usePushRegistration } from "@/hooks/usePushRegistration";
 import { store } from "@/store";
 import { clearCredentials, setCredentials } from "@/store/slices/authSlice";
 import { getToken, saveToken } from "@/utils/secureStore";
@@ -26,6 +28,7 @@ function RootLayoutNav() {
   const [bootstrapRoute, setBootstrapRoute] = useState<BootstrapRoute | null>(
     null,
   );
+  usePushRegistration();
 
   const [fontsLoaded, fontError] = useFonts({
     "NeueMontreal-Light": require("@/assets/fonts/NeueMontreal-Light.otf"),
@@ -135,7 +138,9 @@ function RootLayoutNav() {
 export default function RootLayout() {
   return (
     <Provider store={store}>
-      <RootLayoutNav />
+      <InactivityLockProvider>
+        <RootLayoutNav />
+      </InactivityLockProvider>
     </Provider>
   );
 }

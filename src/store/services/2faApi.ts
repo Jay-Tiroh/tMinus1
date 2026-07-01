@@ -23,6 +23,7 @@ export const twoFactorApi = baseApi.injectEndpoints({
     status: builder.query<TwoFactorStatusResponseData, void>({
       query: () => ({ url: "/auth/2fa/status", method: "GET" }),
       transformResponse: (response: TwoFactorStatusResponse) => response.data,
+      providesTags: ["User"],
     }),
     setup2FA: builder.mutation<Setup2FAResponseData, void>({
       query: () => ({ url: "/auth/2fa/setup", method: "POST" }),

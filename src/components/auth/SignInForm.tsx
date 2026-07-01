@@ -5,6 +5,7 @@ import { ThemedButton } from "@/components/ThemedButton";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
+import { formatPhoneInternational } from "@/helpers/functions";
 import { showErrorToast, showSuccessToast } from "@/hooks/showToast";
 import {
   EmailPasswordFormData,
@@ -16,6 +17,7 @@ import { useAppDispatch } from "@/store/hooks";
 import { useLoginMutation } from "@/store/services/authApi";
 import { setCredentials } from "@/store/slices/authSlice";
 import { LoginRequest } from "@/types/auth";
+import { vs } from "@/utils/responsive";
 import { saveToken } from "@/utils/secureStore";
 import Feather from "@expo/vector-icons/Feather";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
@@ -78,7 +80,7 @@ const SignInForm = () => {
   ) => {
     const formattedData: LoginRequest = {
       loginType: isEmail ? "email" : "phone",
-      identifier: "email" in data ? data.email : data.phone,
+      identifier: "email" in data ? data.email : data.phone.replace(/\s/g, ""),
       password: data.password,
     };
 
@@ -86,7 +88,7 @@ const SignInForm = () => {
     console.log("LOGIN RESULT", result);
     if ("data" in result && result.data) {
       if (isTwoFactorResponse(result.data)) {
-        router.push({
+        router.replace({
           pathname: "/verify-2fa",
           params: {
             challengeId: result.data.challengeId,
@@ -141,13 +143,13 @@ const SignInForm = () => {
       {(isError || errorMessage !== "") && (
         <ThemedText
           color={Colors.lossAlt}
-          style={{ width: "100%", marginBottom: 8 }}
+          style={{ width: "100%", marginBottom: vs(8) }}
         >
           {errorMessage}
         </ThemedText>
       )}
 
-      <View style={{ gap: 16 }}>
+      <View style={{ gap: vs(16) }}>
         <View style={styles.labelRow}>
           <ThemedText size={14} color={Colors.textSecondary}>
             {isEmail ? "Email" : "Mobile Number"}
@@ -163,17 +165,17 @@ const SignInForm = () => {
 
         {isEmail ? (
           <ThemedInput
+            key="email-input"
             control={emailForm.control}
-            name={"email"}
-            icon={
-              <Feather name={"mail"} size={20} color={Colors.primaryClean} />
-            }
-            placeholder={"student@cryptoclass.test"}
-            keyboardType={"email-address"}
+            name="email"
+            icon={<Feather name="mail" size={20} color={Colors.primaryClean} />}
+            placeholder="student@cryptoclass.test"
+            keyboardType="email-address"
             autoCapitalize="none"
           />
         ) : (
           <ThemedInput
+            key="phone-input"
             control={phoneForm.control}
             name="phone"
             icon={
@@ -181,10 +183,12 @@ const SignInForm = () => {
             }
             placeholder="Enter your mobile number"
             keyboardType="phone-pad"
+            formatter={formatPhoneInternational}
           />
         )}
 
         <ThemedInput
+          key={isEmail ? "email-password" : "phone-password"}
           control={activeForm.control as unknown as Control<FieldValues>}
           name="password"
           icon={
@@ -208,7 +212,7 @@ const SignInForm = () => {
 
       <Spacer size={32} />
 
-      <View style={{ gap: 16 }}>
+      <View style={{ gap: vs(16) }}>
         <ThemedButton
           title="Sign in"
           variant="primary"
@@ -248,7 +252,7 @@ const SignInForm = () => {
 export default SignInForm;
 
 const styles = StyleSheet.create({
-  forgotRow: { alignItems: "flex-end", width: "100%", marginTop: 12 },
+  forgotRow: { alignItems: "flex-end", width: "100%", marginTop: vs(12) },
   centerRow: { alignItems: "center", width: "100%" },
   labelRow: { flexDirection: "row", justifyContent: "space-between" },
 });

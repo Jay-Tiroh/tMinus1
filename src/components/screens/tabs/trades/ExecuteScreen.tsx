@@ -1,6 +1,7 @@
 import BadgeStuff from "@/components/BadgeStuff";
 import { LabelValueItem } from "@/components/LabelValueItem";
 import { ConfigType } from "@/components/screens/tabs/trades/QuoteScreen";
+
 import { Spacer } from "@/components/Spacer";
 import { ThemedText } from "@/components/ThemedText";
 import Template from "@/components/trades/Template";
@@ -9,6 +10,7 @@ import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
 import { useAssetRoute } from "@/hooks/useAssetRoute";
 import useTrade from "@/hooks/useTrade";
+import { ms, s, vs } from "@/utils/responsive";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -20,7 +22,7 @@ type ScreenState = "confirm" | "completed" | "failed";
 
 const ExecuteScreen = () => {
   const { asset } = useLocalSearchParams();
-  const { push } = useAssetRoute();
+  const { replace } = useAssetRoute();
   const router = useRouter();
   const { activeQuote, executeQuote, isExecuting, lastTransaction } =
     useTrade();
@@ -41,7 +43,7 @@ const ExecuteScreen = () => {
 
   const handleOnPinComplete = (enteredPin: string) => {
     setPin(enteredPin);
-    handleExecute(enteredPin); // pass directly, no stale closure
+    handleExecute(enteredPin);
     Keyboard.dismiss();
   };
 
@@ -51,10 +53,8 @@ const ExecuteScreen = () => {
       body: "Enter your transaction PIN to execute this quote.",
       cta: {
         title: isExecuting ? "Executing..." : "Execute trade",
-        onPress: handleExecute,
+        onPress: () => handleExecute(),
         variant: "primary",
-        style: undefined,
-        textStyle: undefined,
       },
       content: (
         <Confirm quote={activeQuote} onPinComplete={handleOnPinComplete} />
@@ -67,12 +67,10 @@ const ExecuteScreen = () => {
       cta: {
         title: "View transaction",
         onPress: () =>
-          router.push(
+          router.replace(
             `/(tabs)/wallets/transaction-details?id=${lastTransaction?.id}`,
-          ), // swap for your transaction detail route
+          ),
         variant: "primary",
-        style: undefined,
-        textStyle: undefined,
       },
       content: <Completed transaction={lastTransaction} />,
       topSpacerSize: 42,
@@ -83,10 +81,8 @@ const ExecuteScreen = () => {
       cta: {
         title: "Edit amount",
         onPress: () =>
-          push("action", { action: "buy", asset: asset as string }), // swap for your trade edit route
+          replace("action", { action: "Buy", asset: asset as string }),
         variant: "red",
-        style: undefined,
-        textStyle: undefined,
       },
       content: <Failed transaction={lastTransaction} />,
       topSpacerSize: 42,
@@ -104,12 +100,10 @@ const ExecuteScreen = () => {
       ctaProps={{
         title: activeConfig.cta.title,
         onPress: activeConfig.cta.onPress,
-        variant: activeConfig.cta.variant,
-        style: activeConfig.cta.style,
+        variant: activeConfig.cta.variant as any,
         textStyle: {
-          ...activeConfig.cta.textStyle,
           fontFamily: Fonts.bold,
-          fontSize: 14,
+          fontSize: ms(14),
         },
       }}
       topSpacerSize={activeConfig.topSpacerSize}
@@ -135,14 +129,16 @@ const Confirm = ({
   return (
     <>
       <View
-        style={{
-          ...GeneralStyles.box,
-          borderRadius: 20,
-          height: 150,
-          justifyContent: "center",
-          paddingHorizontal: 24,
-          gap: 12,
-        }}
+        style={[
+          GeneralStyles.box,
+          {
+            borderRadius: ms(20),
+            height: vs(150),
+            justifyContent: "center",
+            paddingHorizontal: s(24),
+            gap: vs(12),
+          },
+        ]}
       >
         <ThemedText color={Colors.snowGray} size={17} weight="bold">
           {action} {quote.toAsset}
@@ -179,7 +175,7 @@ const Confirm = ({
             borderColor: Colors.primaryClean,
           },
           pinCodeContainerStyle: {
-            minWidth: 80,
+            minWidth: s(80),
             borderColor: Colors.surface,
           },
         }}
@@ -187,15 +183,17 @@ const Confirm = ({
 
       <Spacer size={50} />
       <View
-        style={{
-          ...GeneralStyles.box,
-          justifyContent: "center",
-          alignItems: "center",
-          paddingHorizontal: 20,
-          maxWidth: 300,
-          height: 70,
-          marginInline: "auto",
-        }}
+        style={[
+          GeneralStyles.box,
+          {
+            justifyContent: "center",
+            alignItems: "center",
+            paddingHorizontal: s(20),
+            maxWidth: s(300),
+            height: vs(70),
+            alignSelf: "center",
+          },
+        ]}
       >
         <ThemedText
           color={Colors.textMidGray}
@@ -253,7 +251,7 @@ const Completed = ({
         }
       />
       <Spacer size={32} />
-      <View style={{ gap: 10 }}>
+      <View style={{ gap: vs(10) }}>
         {config.map((item) => (
           <LabelValueItem
             key={item.label}
@@ -293,7 +291,7 @@ const Failed = ({
         }
       />
       <Spacer size={56} />
-      <View style={{ gap: 10 }}>
+      <View style={{ gap: vs(10) }}>
         {config.map((item) => (
           <LabelValueItem
             key={item.label}

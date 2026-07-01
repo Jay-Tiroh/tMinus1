@@ -6,6 +6,7 @@ import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { useGoToRoute } from "@/hooks/useGoToRoute";
 import { useKyc } from "@/hooks/useKyc";
+import { ms } from "@/utils/responsive";
 import React, { useEffect } from "react";
 import { StyleSheet } from "react-native";
 
@@ -69,8 +70,7 @@ const KycStatus = () => {
     if (phaseConfig) {
       setCurrentConfig(phaseConfig);
     }
-    console.log("Current KYC status:", kycStatus);
-  }, [phase]);
+  }, [phase, kycStatus]);
 
   return (
     <Template
@@ -90,7 +90,7 @@ const KycStatus = () => {
           phase === "failed"
             ? styles.red
             : {
-                fontSize: 14,
+                fontSize: ms(14),
                 fontFamily: Fonts.bold,
               },
         onPress: () => handlePress(),
@@ -108,7 +108,7 @@ export default KycStatus;
 const styles = StyleSheet.create({
   red: {
     color: Colors.snowGray,
-    fontSize: 14,
+    fontSize: ms(14),
     fontFamily: Fonts.bold,
   },
 });

@@ -65,7 +65,7 @@ const SimulateDepositScreen = () => {
         settlementDelaySeconds: Number(data.delay),
       }).unwrap();
       dispatch(setLastDeposit(result));
-      router.push("/wallets/success");
+      router.replace("/wallets/success");
     } catch (error) {
       showErrorToast({
         title: "Failed to create sandbox deposit",

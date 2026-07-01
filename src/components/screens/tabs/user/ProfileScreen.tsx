@@ -5,6 +5,7 @@ import { ThemedText } from "@/components/ThemedText";
 import Template from "@/components/trades/Template";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
+import { useBackToHome } from "@/hooks/useBackToHome";
 import useOtherSettings from "@/hooks/useOtherSettings";
 import useProfile from "@/hooks/useProfile";
 import { useNotificationsQuery } from "@/store/services/notificationsApi";
@@ -15,6 +16,7 @@ import React from "react";
 import { Image, Pressable, View } from "react-native";
 
 const ProfileScreen = () => {
+  useBackToHome();
   const route: Href[] = [
     "/user/edit-profile",
     "/user/security",
@@ -32,16 +34,31 @@ const ProfileScreen = () => {
     .join("")
     .toUpperCase();
 
-  const { data: notifications } = useNotificationsQuery();
+  const { data: notifications, refetch: refetchNotifs } =
+    useNotificationsQuery();
   const unreadCount = notifications?.meta?.unread ?? 0;
-  const { data: priceAlerts, isError } = useGetPriceAlertsQuery();
+  const {
+    data: priceAlerts,
+    isError,
+    refetch: refetchAlerts,
+  } = useGetPriceAlertsQuery();
   const activeAlerts = priceAlerts?.meta?.active ?? [];
 
-  const { changeFiatCurrency, settings } = useOtherSettings();
+  const {
+    changeFiatCurrency,
+    settings,
+    refetch: refetchOtherSettings,
+  } = useOtherSettings();
   const [isModalVisible, setModalVisible] = React.useState(false);
   const [selectedCurrency, setSelectedCurrency] = React.useState<FiatCurrency>(
     settings?.fiatCurrency ?? "USD",
   );
+
+  const handleRefetch = () => {
+    refetchNotifs();
+    refetchAlerts();
+    refetchOtherSettings();
+  };
 
   const handleCurrencySelect = (currency: FiatCurrency) => {
     setSelectedCurrency(currency);
@@ -66,14 +83,14 @@ const ProfileScreen = () => {
       title: "Edit profile",
       subtitle: "Name, email, phone",
       onPress: () => {
-        router.push(route[0]);
+        router.replace(route[0]);
       },
     },
     {
       title: "Security",
       subtitle: "2FA, PIN, recovery codes",
       onPress: () => {
-        router.push(route[1]);
+        router.replace(route[1]);
       },
     },
     {
@@ -81,7 +98,7 @@ const ProfileScreen = () => {
       subtitle: activeAlerts + " active alerts",
       trailing: `${activeAlerts}`,
       onPress: () => {
-        router.push(route[2]);
+        router.replace(route[2]);
       },
     },
     {
@@ -89,14 +106,14 @@ const ProfileScreen = () => {
       subtitle: unreadCount + " unread messages",
       trailing: `${unreadCount}`,
       onPress: () => {
-        router.push(route[3]);
+        router.replace(route[3]);
       },
     },
     {
       title: "Watchlist",
       subtitle: "BTC, ETH, SOL",
       onPress: () => {
-        router.push(route[4]);
+        router.replace(route[4]);
       },
     },
   ];
@@ -106,6 +123,7 @@ const ProfileScreen = () => {
       textBlockProps={{ title: "Profile", body: "" }}
       ctaProps={undefined}
       topSpacerSize={32}
+      refetch={handleRefetch}
     >
       <View style={GeneralStyles.wrapper}>
         {/* User Header */}

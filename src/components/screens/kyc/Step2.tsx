@@ -8,6 +8,7 @@ import { showErrorToast } from "@/hooks/showToast";
 import { useGoToRoute } from "@/hooks/useGoToRoute";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { selectKycFiles, setKycFile } from "@/store/slices/kycSlice";
+import { ms, s, vs } from "@/utils/responsive";
 import * as ImagePicker from "expo-image-picker";
 import React, { useState } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
@@ -23,19 +24,13 @@ const PhaseConfig = {
   },
 };
 
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL ?? "";
-
-if (!API_BASE_URL) {
-  console.warn("EXPO_PUBLIC_API_BASE_URL is not configured.");
-}
-
 export default function Step2({
   handlePress: proceedToNextStep,
 }: {
   handlePress?: (step: number) => void;
 }) {
   const [currentPhase, setCurrentPhase] = useState<1 | 2>(1);
-  const [isUploading, setIsUploading] = useState(false);
+  const [isUploading] = useState(false);
 
   const dispatch = useAppDispatch();
   const selectedFiles = useAppSelector(selectKycFiles);
@@ -73,18 +68,15 @@ export default function Step2({
 
       if (!result.canceled && result.assets && result.assets.length > 0) {
         const asset = result.assets[0];
-        console.log("Captured selfie asset:", asset);
-        const debugUri =
-          "file:///data/user/0/com.anonymous.tMinus1/cache/DocumentPicker/4a0b073e-ef6b-495a-9e55-533dc114cc25.jpg";
 
         dispatch(
           setKycFile({
             key: "selfie",
             file: {
               uri: asset.uri,
-              name: "test_document.jpg",
-              mimeType: "image/jpeg",
-              size: 500000,
+              name: asset.fileName ?? "selfie.jpg",
+              mimeType: asset.mimeType ?? "image/jpeg",
+              size: asset.fileSize ?? 0,
             },
           }),
         );
@@ -100,11 +92,9 @@ export default function Step2({
     if (currentPhase === 2 && !selfieFile) {
       return "Upload selfie";
     }
-    if (currentPhase === 2 && selfieFile) {
-      return "Continue";
-    }
-    return "Submit Verification";
+    return "Continue";
   };
+
   const handlePushTo = useGoToRoute("/kyc/step3");
   const handlePhase2Transition = () => {
     if (!selfieFile) {
@@ -124,7 +114,6 @@ export default function Step2({
       if (!selfieFile) {
         handleTakeSelfie();
       } else {
-        // handleFinalSubmit();
         handlePhase2Transition();
       }
     }
@@ -147,7 +136,7 @@ export default function Step2({
         onPress: handlePress,
         disabled: isUploading,
         textStyle: {
-          fontSize: 14,
+          fontSize: ms(14),
           fontFamily: Fonts.bold,
         },
         iconComponent: isUploading ? (
@@ -159,8 +148,8 @@ export default function Step2({
         style={[
           GeneralStyles.wrapper,
           {
-            gap: 20,
-            paddingVertical: 8,
+            gap: vs(20),
+            paddingVertical: vs(8),
           },
         ]}
       >
@@ -173,13 +162,13 @@ export default function Step2({
 
 const styles = StyleSheet.create({
   inputContainer: {
-    borderRadius: 12,
+    borderRadius: ms(12),
     justifyContent: "space-between",
     alignItems: "center",
     backgroundColor: Colors.backgroundDark,
     flexDirection: "row",
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    paddingHorizontal: s(12),
+    paddingVertical: vs(8),
   },
   input: {
     flex: 1,

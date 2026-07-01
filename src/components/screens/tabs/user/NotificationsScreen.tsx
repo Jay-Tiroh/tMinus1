@@ -3,6 +3,7 @@ import { ThemedButton } from "@/components/ThemedButton";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
+import { timeAgo } from "@/helpers/functions";
 import { useSafeBottom } from "@/hooks/useSafeBottom";
 import {
   useMarkAllNotificationsReadMutation,
@@ -20,6 +21,7 @@ import {
   FlatList,
   ImageBackground,
   Pressable,
+  RefreshControl,
   StyleSheet,
   View,
 } from "react-native";
@@ -88,13 +90,22 @@ const NotificationItem = ({
       </View>
 
       {/* Status Label */}
-      <ThemedText
-        size={13}
-        weight="medium"
-        color={item.isRead ? Colors.primaryPale : Colors.primaryClean}
-      >
-        {item.isRead ? "Read" : "New"}
-      </ThemedText>
+      <View>
+        <ThemedText
+          size={13}
+          weight="medium"
+          color={item.isRead ? Colors.primaryPale : Colors.primaryClean}
+        >
+          {item.isRead ? "Read" : "New"}
+        </ThemedText>
+        <ThemedText
+          size={13}
+          weight="medium"
+          color={item.isRead ? Colors.textMuted : Colors.textFaint}
+        >
+          {timeAgo(item.createdAt)}
+        </ThemedText>
+      </View>
     </Pressable>
   );
 };
@@ -121,7 +132,7 @@ const NotificationsScreen = () => {
     [],
   );
 
-  const { data: notifications, isLoading } = useNotificationsQuery();
+  const { data: notifications, isLoading, refetch } = useNotificationsQuery();
 
   const sortedNotifications = useMemo(
     () =>
@@ -212,18 +223,27 @@ const NotificationsScreen = () => {
       handleMarkAction, // ← added
     ],
   );
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
+  const handleRefresh = useCallback(async () => {
+    setIsRefreshing(true);
+    try {
+      await refetch();
+    } finally {
+      setIsRefreshing(false);
+    }
+  }, [refetch]);
   return (
     <ImageBackground
       source={require("@/assets/images/new-bg.png")}
-      style={[{ flex: 1, paddingTop: insets.top + 24 }]}
+      style={[{ flex: 1 }]}
     >
       <FlatList
         data={sortedNotifications}
         keyExtractor={(item) => item.id}
         contentContainerStyle={[
           GeneralStyles.wrapper,
-          { paddingBottom: bottomPadding + 40 },
+          { paddingBottom: bottomPadding + 40, paddingTop: insets.top + 24 },
         ]}
         showsVerticalScrollIndicator={false}
         ListHeaderComponent={ListHeader}
@@ -236,6 +256,15 @@ const NotificationsScreen = () => {
           />
         )}
         ListEmptyComponent={!isLoading ? <EmptyStateCard /> : null}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={handleRefresh}
+            tintColor={Colors.primary}
+            colors={[Colors.primary]}
+            progressBackgroundColor={Colors.backgroundDark}
+          />
+        }
       />
     </ImageBackground>
   );

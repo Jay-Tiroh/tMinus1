@@ -3,10 +3,14 @@ import TextBlock from "@/components/TextBlock";
 import { ThemedButton } from "@/components/ThemedButton";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
+import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
+import { formatAmount } from "@/helpers/functions";
 import { useAssetRoute } from "@/hooks/useAssetRoute";
+import useFiat from "@/hooks/useFiat";
 import { useSafeBottom } from "@/hooks/useSafeBottom";
 import { useGetTradesQuery } from "@/store/services/marketsApi";
+import { ms, s, vs } from "@/utils/responsive";
 import { useLocalSearchParams } from "expo-router";
 import React from "react";
 import { FlatList, ImageBackground, StyleSheet, View } from "react-native";
@@ -18,7 +22,7 @@ const RecentTradesScreen = () => {
   const { replace } = useAssetRoute();
   const topInset = useSafeAreaInsets().top;
   const bottomPadding = useSafeBottom();
-
+  const { symbol, convertFromUSD } = useFiat();
   const { data: tradeData = [] } = useGetTradesQuery(
     { symbol: asset },
     { pollingInterval: 5000 },
@@ -41,8 +45,8 @@ const RecentTradesScreen = () => {
         <ThemedButton
           title="Trades"
           variant="primary"
-          style={styles.tab}
-          textStyle={styles.tabText}
+          style={[styles.tab]}
+          textStyle={[styles.tabText, { color: Colors.surfaceNavy }]}
         />
       </View>
       <Spacer size={24} />
@@ -52,9 +56,12 @@ const RecentTradesScreen = () => {
   return (
     <ImageBackground
       source={require("@/assets/images/new-bg.png")}
-      style={[{ paddingTop: topInset + 24, width: "100%", flex: 1 }]}
+      style={[{ width: "100%", flex: 1 }]}
     >
       <FlatList
+        style={{
+          paddingTop: topInset + vs(24),
+        }}
         data={tradeData}
         keyExtractor={(trade) => trade.id}
         renderItem={({ item: trade }) => {
@@ -62,13 +69,13 @@ const RecentTradesScreen = () => {
           const typeColor = isBuy ? Colors.primaryClean : Colors.lossBright;
 
           return (
-            <View style={[GeneralStyles.wrapper, { marginBottom: 10 }]}>
+            <View style={[GeneralStyles.wrapper, { marginBottom: vs(10) }]}>
               <View style={styles.tradeRow}>
                 <ThemedText
                   size={14}
                   weight="bold"
                   color={typeColor}
-                  style={{ width: 40 }}
+                  style={{ width: s(40) }}
                 >
                   {trade.side}
                 </ThemedText>
@@ -76,14 +83,14 @@ const RecentTradesScreen = () => {
                   size={14}
                   weight="bold"
                   color={Colors.snowGray}
-                  style={{ width: 90 }}
+                  style={{ flex: 1 }}
                 >
-                  {trade.priceUsd}
+                  {symbol + formatAmount(convertFromUSD(trade.priceUsd))}
                 </ThemedText>
                 <ThemedText
                   size={14}
                   color={Colors.textMidGray}
-                  style={{ width: 70, textAlign: "right" }}
+                  style={{ width: s(70), textAlign: "right" }}
                 >
                   {trade.amount}
                 </ThemedText>
@@ -92,18 +99,15 @@ const RecentTradesScreen = () => {
                   color={Colors.textMidGray}
                   style={{ flex: 1, textAlign: "right" }}
                 >
-                  {trade.totalUsd}
+                  {symbol + formatAmount(convertFromUSD(trade.totalUsd))}
                 </ThemedText>
               </View>
             </View>
           );
         }}
         ListHeaderComponent={ListHeader}
-        contentContainerStyle={{ paddingBottom: bottomPadding + 50 }}
+        contentContainerStyle={{ paddingBottom: bottomPadding + vs(50) }}
         showsVerticalScrollIndicator={false}
-        // onScrollEndDrag={() => {
-        //   console.log("you've reached the end!");
-        // }}
       />
     </ImageBackground>
   );
@@ -114,22 +118,24 @@ export default RecentTradesScreen;
 const styles = StyleSheet.create({
   tabsContainer: {
     flexDirection: "row",
-    gap: 12,
+    gap: s(12),
   },
   tab: {
-    height: 36,
-    width: 100,
-    borderRadius: 18,
+    height: vs(36),
+    minWidth: s(100),
+    maxWidth: s(150),
+    borderRadius: ms(18),
   },
   tabText: {
-    fontSize: 13,
-    color: Colors.surfaceNavy,
+    fontSize: ms(13),
+    fontFamily: Fonts.medium,
   },
   tradeRow: {
     ...GeneralStyles.box,
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 16,
-    height: 54,
+    paddingHorizontal: s(16),
+    height: vs(54),
+    justifyContent: "space-between",
   },
 });

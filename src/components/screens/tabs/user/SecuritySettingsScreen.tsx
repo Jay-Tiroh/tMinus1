@@ -31,8 +31,13 @@ const SecuritySettingsScreen = () => {
     activeDevice?.platform === "android" ? "Android" : "iOS";
   const deviceCount = devices?.data?.length ?? 0;
 
-  const { toggleBiometricSetting, settings } = useOtherSettings();
-  const { data: twoFactorStatusData } = useStatusQuery();
+  const {
+    toggleBiometricSetting,
+    settings,
+    refetch: refetchSettings,
+  } = useOtherSettings();
+  const { data: twoFactorStatusData, refetch: refetchStatus } =
+    useStatusQuery();
   const twoFactorEnabled = twoFactorStatusData?.twoFactorEnabled ?? false;
   const recoveryCodesRemaining = twoFactorStatusData?.recoveryCodesRemaining;
   const twoFactorStatus = twoFactorEnabled ? "On" : "Off";
@@ -87,6 +92,10 @@ const SecuritySettingsScreen = () => {
     },
   ];
 
+  const handleRefresh = () => {
+    refetchSettings();
+    refetchStatus();
+  };
   return (
     <Template
       textBlockProps={{
@@ -95,6 +104,7 @@ const SecuritySettingsScreen = () => {
       }}
       ctaProps={undefined}
       topSpacerSize={32}
+      refetch={handleRefresh}
     >
       <View style={GeneralStyles.wrapper}>
         <View style={{ gap: 12 }}>

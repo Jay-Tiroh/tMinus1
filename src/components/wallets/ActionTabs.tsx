@@ -34,7 +34,7 @@ const ActionTabs = () => {
     setActiveTab(tabName);
     const tab = Tabs.find((t) => t.name === tabName);
     if (tab?.href) {
-      router.push(tab.href);
+      router.replace(tab.href);
     }
   };
 

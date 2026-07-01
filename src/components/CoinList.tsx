@@ -30,6 +30,7 @@ type CoinListProps = {
   ListHeaderComponent?: FlatListProps<Asset>["ListHeaderComponent"];
   ListFooterComponent?: FlatListProps<Asset>["ListFooterComponent"];
   hasModal?: boolean;
+  refreshControl?: FlatListProps<Asset>["refreshControl"];
 };
 
 // ─── Separator ────────────────────────────────────────────────────────────────
@@ -54,6 +55,7 @@ const CoinList = React.memo(function CoinList({
   ListHeaderComponent,
   ListFooterComponent,
   hasModal = false,
+  refreshControl,
 }: CoinListProps) {
   const [isReady, setIsReady] = useState(false);
 
@@ -96,10 +98,6 @@ const CoinList = React.memo(function CoinList({
 
   return (
     <View style={[styles.coinListContainer]}>
-      <LinearGradient
-        colors={[Colors.black, "transparent"]}
-        style={styles.fadeGradientTop}
-      />
       <FlatList
         data={data}
         keyExtractor={keyExtractor}
@@ -112,6 +110,7 @@ const CoinList = React.memo(function CoinList({
         ListHeaderComponent={ListHeaderComponent}
         ListFooterComponent={ListFooterComponent}
         scrollEventThrottle={16}
+        refreshControl={refreshControl}
       />
       <LinearGradient
         colors={["transparent", Colors.black]}

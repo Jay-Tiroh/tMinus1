@@ -2,6 +2,7 @@ import Facebook from "@/assets/icons/facebook.svg";
 import Google from "@/assets/icons/google.svg";
 import { ThemedButton } from "@/components/ThemedButton";
 import { Colors } from "@/constants/Colors";
+import { ms, s, vs } from "@/utils/responsive";
 import React from "react";
 import {
   ActivityIndicator,
@@ -36,7 +37,7 @@ const CTA = ({
         iconComponent={
           isLoading && <ActivityIndicator color={Colors.surface} />
         }
-        textStyle={{ marginLeft: 20 }}
+        textStyle={{ marginLeft: s(20) }}
       />
 
       {page !== "mobile" && page !== "verify" && (
@@ -72,27 +73,27 @@ const styles = StyleSheet.create({
     // justifyContent: "center",
     width: "100%",
     alignItems: "center",
-    gap: 20,
+    gap: s(20),
   },
   socials: {
     flexDirection: "row",
     // gap: 20,
     justifyContent: "space-between",
     width: "100%",
-    maxWidth: 600,
+    maxWidth: s(600),
   },
   socialButton: {
-    borderRadius: 16,
+    borderRadius: ms(16),
     backgroundColor: Colors.white,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    gap: 10,
-    height: 54,
+    gap: s(10),
+    height: vs(54),
     width: "48%",
   },
   icon: {
-    width: 26,
-    height: 26,
+    width: ms(26),
+    height: ms(26),
   },
 });

@@ -1,11 +1,11 @@
 import { Notification, NotificationsResponse } from "@/types/notification";
 import { baseApi } from "./baseApi";
 
-const notificationsApi = baseApi.injectEndpoints({
+export const notificationsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     notifications: builder.query<NotificationsResponse, void>({
       query: () => "/me/notifications",
-      providesTags: ["Notifications"],
+      providesTags: [{ type: "Notifications", id: "LIST" }],
     }),
     markNotificationRead: builder.mutation<{ data: Notification }, string>({
       query: (notificationId) => ({
@@ -27,6 +27,7 @@ const notificationsApi = baseApi.injectEndpoints({
           );
         } catch {}
       },
+      invalidatesTags: [{ type: "Notifications", id: "LIST" }],
     }),
     markAllNotificationsRead: builder.mutation<void, void>({
       query: () => ({ url: "/me/notifications/read-all", method: "PATCH" }),
@@ -45,6 +46,7 @@ const notificationsApi = baseApi.injectEndpoints({
           );
         } catch {}
       },
+      invalidatesTags: [{ type: "Notifications", id: "LIST" }],
     }),
   }),
   overrideExisting: true,

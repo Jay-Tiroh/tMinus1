@@ -2,6 +2,7 @@ import NavHeader from "@/components/auth/NavHeader";
 import SignUpForm from "@/components/auth/SignUpForm";
 import { ThemedView } from "@/components/ThemedView";
 import { Spacing } from "@/constants/Spacing";
+import { vs } from "@/utils/responsive";
 import React from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -14,7 +15,7 @@ const SignUpScreen = () => {
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
-          paddingBottom: Spacing.lg,
+          paddingBottom: vs(Spacing.lg),
           flexGrow: 1,
           width: "100%",
         }}
@@ -31,13 +32,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    // alignItems: "center",
     width: "100%",
   },
   content: {
     flex: 1,
-    // justifyContent: "center",
-    // alignItems: "center",
     width: "100%",
   },
 });

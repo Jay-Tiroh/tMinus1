@@ -1,21 +1,36 @@
-import Chart from "@/components/LineChart";
 import { Spacer } from "@/components/Spacer";
 import { ThemedText } from "@/components/ThemedText";
 import Template from "@/components/trades/Template";
+import AdvancedLineChart from "@/components/wallets/AdvancedLineChart";
 import CryptoAssetItem from "@/components/wallets/CryptoAsset"; // Correctly using your component
 import { Colors } from "@/constants/Colors";
-import { PORTFOLIO_HISTORY_DATA } from "@/constants/mockData";
 import { GeneralStyles } from "@/constants/themes";
+import { formatAmount, timeAgo } from "@/helpers/functions";
+import useFiat from "@/hooks/useFiat";
+import useWallet from "@/hooks/useWallet";
+import { useGetPortfolioHistoryQuery } from "@/store/services/walletsApi";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 
-const PortfolioHistoryScreen = () => {
-  // Dummy data mapping to Chart component expectations
-  const chartData = Array.from({ length: 10 }).map((_, i) => ({
-    priceUsd: 100 + i * 15,
-    time: i,
-  }));
+export const timeOptions = {
+  "1D": "1 Day",
+  "1W": "1 Week",
+  "1M": "1 Month",
+  "1Y": "1 Year",
+} as const;
 
+const PortfolioHistoryScreen = () => {
+  const [timeControl, setTimeControl] =
+    React.useState<keyof typeof timeOptions>("1M");
+  const {
+    data: chartData,
+    isLoading,
+    isError,
+    isSuccess,
+  } = useGetPortfolioHistoryQuery({ range: timeControl });
+  const displayedData = chartData?.data.slice(-5).reverse();
+  const { portfolioValueUsd } = useWallet();
+  const { symbol } = useFiat();
   return (
     <Template
       textBlockProps={{
@@ -25,59 +40,28 @@ const PortfolioHistoryScreen = () => {
       ctaProps={undefined}
     >
       <View style={GeneralStyles.wrapper}>
-        <View
-          style={[
-            GeneralStyles.box,
-            {
-              padding: 20,
-              paddingBottom: 10,
-              height: 200,
-              justifyContent: "space-between",
-            },
-          ]}
-        >
-          <Chart data={chartData} isPositive={true} width={300} height={120} />
-
-          <View style={styles.timeFilters}>
-            {["1D", "1W", "1M", "1Y"].map((filter) => (
-              <View
-                key={filter}
-                style={[
-                  styles.filterPill,
-                  filter === "1M" && {
-                    backgroundColor: Colors.surfaceGreenForest,
-                  },
-                ]}
-              >
-                <ThemedText
-                  size={12}
-                  weight="bold"
-                  color={
-                    filter === "1M" ? Colors.primaryClean : Colors.textMidGray
-                  }
-                >
-                  {filter}
-                </ThemedText>
-              </View>
-            ))}
-          </View>
-        </View>
+        <AdvancedLineChart
+          symbol="PORTFOLIO"
+          priceUsd={portfolioValueUsd}
+          change24h={5}
+          chartData={chartData?.data || []}
+          setTimeControl={setTimeControl}
+          timeControl={timeControl}
+        />
       </View>
 
       <Spacer size={32} />
 
       <View style={[GeneralStyles.wrapper, { gap: 10 }]}>
-        {PORTFOLIO_HISTORY_DATA.map((item) => (
+        {displayedData?.map((item) => (
           <CryptoAssetItem
-            key={item.id}
+            key={item.time}
             iconComponent={
               <View
                 style={[
                   styles.iconCircle,
                   {
-                    backgroundColor: item.isPositive
-                      ? Colors.primaryClean
-                      : Colors.loss,
+                    backgroundColor: Colors.primaryClean,
                   },
                 ]}
               >
@@ -86,10 +70,10 @@ const PortfolioHistoryScreen = () => {
                 </ThemedText>
               </View>
             }
-            leftTitle={item.displayMonth}
+            leftTitle={timeAgo(item.time)}
             leftBody="Portfolio value"
-            rightTitle={item.portfolioValueFormatted}
-            rightBody={item.percentageChangeFormatted}
+            rightTitle={symbol + formatAmount(item.value)}
+            rightBody={item.currency}
           />
         ))}
       </View>

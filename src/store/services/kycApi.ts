@@ -1,7 +1,6 @@
 import {
   KYCSubmissionData,
   KYCUploadInstructionData,
-  KYCUploadInstructionRequest,
   KYCUploadInstructionResponse,
   SubmitKYCRequest,
   SubmitKYCResponse,
@@ -23,14 +22,19 @@ export const kycApi = baseApi.injectEndpoints({
       invalidatesTags: ["Kyc"],
     }),
 
+    // Note: When calling this mutation, construct and pass a FormData object.
+    // Example:
+    // const formData = new FormData();
+    // formData.append("file", fileAsset);
+    // formData.append("documentKind", "document_front");
     getKYCUploadInstructions: builder.mutation<
       KYCUploadInstructionData,
-      KYCUploadInstructionRequest
+      FormData
     >({
       query: (body) => ({
         url: "/auth/kyc/uploads",
         method: "POST",
-        body,
+        body, // Passing FormData automatically sets the multipart/form-data headers
       }),
       transformResponse: (response: KYCUploadInstructionResponse) =>
         response.data,

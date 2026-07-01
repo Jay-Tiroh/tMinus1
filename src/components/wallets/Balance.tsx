@@ -5,10 +5,18 @@ import { GeneralStyles } from "@/constants/themes";
 import { formatAmount } from "@/helpers/functions";
 import { showErrorToast } from "@/hooks/showToast";
 import useFiat from "@/hooks/useFiat";
+import { useGoToRoute } from "@/hooks/useGoToRoute";
 import useWallet from "@/hooks/useWallet";
+import { ms, s, vs } from "@/utils/responsive";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import React, { useEffect } from "react";
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import {
+  ActivityIndicator,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 const Balance = () => {
   const [isVisible, setIsVisible] = React.useState(false);
@@ -22,6 +30,7 @@ const Balance = () => {
   const balance = isVisible ? formatAmount(portfolioValue) : "*******";
   const balanceUSD = isVisible ? formatAmount(portfolioValueUsd) : "*******";
   const { symbol } = useFiat();
+
   useEffect(() => {
     if (isError) {
       showErrorToast({
@@ -31,15 +40,19 @@ const Balance = () => {
     }
   }, [isError]);
 
+  const toHistory = useGoToRoute("/wallets/portfolio-history");
+
   return (
     <View
-      style={{
-        ...GeneralStyles.box,
-        backgroundColor: Colors.surfaceGreenNight,
-        height: 150,
-        padding: 20,
-        borderRadius: 22,
-      }}
+      style={[
+        GeneralStyles.box,
+        {
+          backgroundColor: Colors.surfaceGreenNight,
+          height: vs(150),
+          padding: ms(20),
+          borderRadius: ms(22),
+        },
+      ]}
     >
       <ThemedText color={Colors.textMuted} size={14}>
         Total Portfolio Value
@@ -65,24 +78,29 @@ const Balance = () => {
             ${balanceUSD}
           </ThemedText>
         </View>
-        {isVisible ? (
+        <View style={{ justifyContent: "space-between", gap: vs(12) }}>
           <Ionicons
-            name="eye-off"
-            size={24}
+            name={isVisible ? "eye-off" : "eye"}
+            size={ms(24)}
             color={Colors.textMuted}
-            style={{}}
             onPress={toggleVisibility}
           />
-        ) : (
-          <Ionicons
-            name="eye"
-            size={24}
-            color={Colors.textMuted}
-            style={{}}
-            onPress={toggleVisibility}
-          />
-        )}
+        </View>
       </View>
+      <TouchableOpacity
+        style={{
+          alignSelf: "flex-end",
+          flexDirection: "row",
+          alignItems: "center",
+          gap: s(4),
+        }}
+        onPress={toHistory}
+      >
+        <MaterialIcons name="history" size={ms(20)} color={Colors.textFaint} />
+        <ThemedText color={Colors.textFaint} size={11}>
+          Portfolio History
+        </ThemedText>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -92,7 +110,7 @@ export default Balance;
 const styles = StyleSheet.create({
   container: {
     justifyContent: "center",
-    gap: 12,
-    marginBottom: 30,
+    gap: vs(12),
+    marginBottom: vs(30),
   },
 });

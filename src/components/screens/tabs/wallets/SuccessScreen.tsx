@@ -147,7 +147,7 @@ const SuccessScreen = () => {
     if (type === "withdrawal") dispatch(clearLastWithdrawal());
     if (type === "transfer") dispatch(clearLastTransfer());
 
-    router.push(`/(tabs)/wallets/transaction-details?id=${transactionId}`);
+    router.replace(`/(tabs)/wallets/transaction-details?id=${transactionId}`);
   };
 
   return (

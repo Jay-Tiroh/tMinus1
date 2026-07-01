@@ -3,10 +3,12 @@ import TextBlock from "@/components/TextBlock";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
+import { ms, s, vs } from "@/utils/responsive";
 import Entypo from "@expo/vector-icons/Entypo";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { LayoutChangeEvent, Pressable, StyleSheet, View } from "react-native";
+import { LayoutChangeEvent, Pressable, View } from "react-native";
+
 type HeaderProps = {
   title?: string;
   body?: string;
@@ -65,16 +67,16 @@ const Header = ({
       <View
         style={[
           GeneralStyles.wrapper,
-          { flexDirection: "row", alignItems: "flex-start", gap: 20 },
+          { flexDirection: "row", alignItems: "flex-start", gap: s(20) },
         ]}
       >
         <Pressable
           style={[
             GeneralStyles.box,
             {
-              width: 32,
-              height: 32,
-              borderRadius: 16,
+              width: s(32),
+              height: vs(32),
+              borderRadius: ms(16),
               justifyContent: "center",
               alignItems: "center",
             },
@@ -87,11 +89,11 @@ const Header = ({
           title={title}
           body={body}
           titleStyle={{
-            fontSize: 18,
+            fontSize: ms(18),
           }}
           bodyStyle={{
-            fontSize: 12,
-            maxWidth: 280,
+            fontSize: ms(12),
+            maxWidth: s(280),
           }}
         />
       </View>
@@ -112,9 +114,9 @@ const Header = ({
           <View
             key={item.label}
             style={{
-              minWidth: itemWidth,
+              minWidth: s(itemWidth),
               alignItems: "center",
-              gap: 8,
+              gap: vs(8),
               zIndex: 1,
             }}
           >
@@ -122,9 +124,9 @@ const Header = ({
               style={[
                 GeneralStyles.box,
                 {
-                  width: circleDiameter,
-                  height: circleDiameter,
-                  borderRadius: 16,
+                  width: s(circleDiameter),
+                  height: vs(circleDiameter),
+                  borderRadius: ms(16),
                   justifyContent: "center",
                   alignItems: "center",
                   backgroundColor:
@@ -161,22 +163,22 @@ const Header = ({
           style={{
             backgroundColor:
               stage >= 2 ? Colors.primaryClean : Colors.surfaceNavy,
-            height: 2,
+            height: vs(2),
             position: "absolute",
             width: width,
-            top: verticalOffset,
-            left: horizontalOffset,
+            top: vs(verticalOffset),
+            left: s(horizontalOffset),
           }}
         />
         <View
           style={{
             backgroundColor:
               stage === 3 ? Colors.primaryClean : Colors.surfaceNavy,
-            height: 2,
+            height: vs(2),
             position: "absolute",
             width: width,
-            top: verticalOffset,
-            right: horizontalOffset,
+            top: vs(verticalOffset),
+            right: s(horizontalOffset),
           }}
         />
       </View>
@@ -185,11 +187,3 @@ const Header = ({
 };
 
 export default Header;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});

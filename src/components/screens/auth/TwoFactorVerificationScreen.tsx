@@ -12,6 +12,7 @@ import { showErrorToast, showSuccessToast } from "@/hooks/showToast";
 import { useAppDispatch } from "@/store/hooks";
 import { useVerify2FAMutation } from "@/store/services/2faApi";
 import { setCredentials } from "@/store/slices/authSlice";
+import { ms, s, vs } from "@/utils/responsive";
 import { saveToken } from "@/utils/secureStore";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import React, { useRef, useState } from "react";
@@ -25,7 +26,7 @@ const Verify2FAScreen = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
-  const { challengeId, expiresAt, attemptsRemaining } = useLocalSearchParams<{
+  const { challengeId, attemptsRemaining } = useLocalSearchParams<{
     challengeId: string;
     expiresAt: string;
     attemptsRemaining: string;
@@ -80,7 +81,6 @@ const Verify2FAScreen = () => {
         message: error?.data?.message ?? "Invalid code",
       });
 
-      // Clear whichever input was active on failure
       if (isRecoveryMode) {
         setRecoveryCode("");
       } else {
@@ -91,7 +91,6 @@ const Verify2FAScreen = () => {
   };
 
   const handleToggleMode = () => {
-    // Reset both inputs when switching modes
     setCode("");
     setRecoveryCode("");
     otpRef.current?.clear();
@@ -99,7 +98,7 @@ const Verify2FAScreen = () => {
   };
 
   const CtaFooter = () => (
-    <View style={{ width: "100%", gap: 24 }}>
+    <View style={{ width: "100%", gap: vs(24) }}>
       <ThemedButton
         title={
           isRecoveryMode
@@ -119,8 +118,8 @@ const Verify2FAScreen = () => {
         <TextBlock
           title="Protected account"
           body="This extra step protects your trading balance and saved devices."
-          titleStyle={{ fontSize: 16, color: Colors.snowGray }}
-          bodyStyle={{ fontSize: 12, color: Colors.textMidGray }}
+          titleStyle={{ fontSize: ms(16), color: Colors.snowGray }}
+          bodyStyle={{ fontSize: ms(12), color: Colors.textMidGray }}
         />
       </View>
     </View>
@@ -176,7 +175,6 @@ const Verify2FAScreen = () => {
               placeholder="XXXXXXXX"
               value={recoveryCode}
               onChangeText={(text: string) =>
-                // uppercase + strip non-alphanumeric + cap at 8 chars
                 setRecoveryCode(
                   text
                     .replace(/[^a-zA-Z0-9]/g, "")
@@ -191,7 +189,7 @@ const Verify2FAScreen = () => {
             <ThemedText
               size={12}
               color={Colors.textMidGray}
-              style={{ marginTop: 8, marginLeft: 4 }}
+              style={{ marginTop: vs(8), marginLeft: s(4) }}
             >
               {recoveryCode.length}/{RECOVERY_CODE_LENGTH} characters
             </ThemedText>
@@ -208,7 +206,7 @@ const Verify2FAScreen = () => {
                 pinCodeContainerStyle: styles.otpBox,
                 pinCodeTextStyle: {
                   color: Colors.snowGray,
-                  fontSize: 24,
+                  fontSize: ms(24),
                   fontWeight: "bold",
                 },
               }}
@@ -250,20 +248,20 @@ const styles = StyleSheet.create({
   visualContainer: {
     alignItems: "center",
     justifyContent: "center",
-    height: 150,
+    height: vs(150),
   },
   pulseOuter: {
-    width: 140,
-    height: 140,
-    borderRadius: 70,
+    width: s(140),
+    height: vs(140),
+    borderRadius: ms(70),
     backgroundColor: Colors.surfaceNavy,
     alignItems: "center",
     justifyContent: "center",
   },
   pulseInner: {
-    width: 90,
-    height: 90,
-    borderRadius: 45,
+    width: s(90),
+    height: vs(90),
+    borderRadius: ms(45),
     backgroundColor: Colors.surfaceDark,
     alignItems: "center",
     justifyContent: "center",
@@ -274,24 +272,24 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   otpBox: {
-    width: 48,
-    height: 56,
+    width: s(48),
+    height: vs(56),
     backgroundColor: Colors.surfaceNavy,
-    borderRadius: 12,
+    borderRadius: ms(12),
     alignItems: "center",
     justifyContent: "center",
   },
   protectedBox: {
     ...GeneralStyles.box,
     flexDirection: "row",
-    padding: 16,
-    gap: 16,
+    padding: ms(16),
+    gap: s(16),
     alignItems: "center",
   },
   iconCircle: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: s(32),
+    height: vs(32),
+    borderRadius: ms(16),
     backgroundColor: Colors.surfaceGreenDark,
     alignItems: "center",
     justifyContent: "center",

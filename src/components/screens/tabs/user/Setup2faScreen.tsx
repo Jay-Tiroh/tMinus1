@@ -64,7 +64,9 @@ const Setup2FAScreen = () => {
       const result = await enable({ code: authCode }).unwrap();
       showSuccessToast({ title: "2FA enabled successfully!" });
       const code = result?.recoveryCodes;
-      router.push(`/user/two-factor/recovery-codes?codes=${code}`);
+      console.log("result:", result);
+      console.log("Recovery codes:", code);
+      router.replace(`/user/two-factor/recovery-codes?code=${code.join(",")}`);
     } catch (error) {
       console.error("Enable 2FA failed:", error);
       showErrorToast({ title: "Invalid code. Please try again." });

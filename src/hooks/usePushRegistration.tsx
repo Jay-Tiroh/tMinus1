@@ -1,10 +1,11 @@
 // hooks/usePushRegistration.ts
-import { useAppSelector } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { useRegisterDeviceMutation } from "@/store/services/devicesApi";
+import { notificationsApi } from "@/store/services/notificationsApi";
 import Constants from "expo-constants";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Platform } from "react-native";
 
 Notifications.setNotificationHandler({
@@ -19,13 +20,21 @@ Notifications.setNotificationHandler({
 
 export function usePushRegistration() {
   const token = useAppSelector((s) => s.auth.token);
+  const dispatch = useAppDispatch();
   const [registerDevice] = useRegisterDeviceMutation();
+
+  // Keep stable refs so listeners aren't re-added on every render
+  const notificationListener = useRef<
+    Notifications.EventSubscription | undefined
+  >(undefined);
+  const responseListener = useRef<Notifications.EventSubscription | undefined>(
+    undefined,
+  );
 
   useEffect(() => {
     if (!token || !Device.isDevice) return;
 
     const setupPushNotifications = async () => {
-      // 1. Configure Android channel first
       if (Platform.OS === "android") {
         await Notifications.setNotificationChannelAsync("default", {
           name: "default",
@@ -35,35 +44,58 @@ export function usePushRegistration() {
         });
       }
 
-      // 2. Check and request permissions
       const { status: existing } = await Notifications.getPermissionsAsync();
       let finalStatus = existing;
-
       if (existing !== "granted") {
         const { status } = await Notifications.requestPermissionsAsync();
         finalStatus = status;
       }
-
       if (finalStatus !== "granted") return;
 
-      // 3. Grab the Expo push token
       const { data: expoPushToken } = await Notifications.getExpoPushTokenAsync(
         {
           projectId: Constants.expoConfig?.extra?.eas?.projectId,
         },
       );
-
-      // 4. Register the device with your backend
+      console.log("📱 Expo Push Token:", expoPushToken);
       try {
         await registerDevice({
           expoPushToken,
           platform: Platform.OS as "ios" | "android",
         }).unwrap();
+        console.log("✅ Device registered successfully");
       } catch (err) {
         console.warn("Failed to register push device:", err);
       }
     };
 
     setupPushNotifications();
-  }, [token, registerDevice]);
+
+    // ─── Listener 1: notification arrives while app is foregrounded ──────────
+    // Fires immediately when the push lands — no screen visit needed.
+    notificationListener.current =
+      Notifications.addNotificationReceivedListener((notification) => {
+        console.log("🔔 Notification received:", notification); // ← add this
+        dispatch(
+          notificationsApi.util.invalidateTags([
+            { type: "Notifications", id: "LIST" },
+          ]),
+        );
+      });
+
+    responseListener.current =
+      Notifications.addNotificationResponseReceivedListener((response) => {
+        console.log("👆 Notification tapped:", response); // ← add this
+        dispatch(
+          notificationsApi.util.invalidateTags([
+            { type: "Notifications", id: "LIST" },
+          ]),
+        );
+      });
+
+    return () => {
+      notificationListener.current?.remove();
+      responseListener.current?.remove();
+    };
+  }, [token, dispatch, registerDevice]);
 }

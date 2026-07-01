@@ -29,5 +29,6 @@ export function useAllAssets(q?: string, pollIntervalMs = 10000) {
     isError,
     refetch,
     isUninitialized,
+    isLoading,
   };
 }

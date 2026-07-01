@@ -129,3 +129,25 @@ export function timeAgo(dateString: string): string {
     return `${years} years ago`;
   }
 }
+
+export const formatPhoneInternational = (value: string): string => {
+  // Strip everything except digits and leading +
+  const hasPlus = value.startsWith("+");
+  const digits = value.replace(/\D/g, "");
+
+  if (!digits) return hasPlus ? "+" : "";
+
+  // Re-attach the + and format as: +XXX XXXX XXXX XXXX (groups of 3-4)
+  const parts: string[] = [];
+
+  // Country code: first 1-3 digits (we'll take up to 3)
+  parts.push(digits.slice(0, 3));
+
+  // Remaining digits in groups of 4
+  const rest = digits.slice(3);
+  for (let i = 0; i < rest.length; i += 4) {
+    parts.push(rest.slice(i, i + 4));
+  }
+
+  return "+" + parts.join(" ");
+};

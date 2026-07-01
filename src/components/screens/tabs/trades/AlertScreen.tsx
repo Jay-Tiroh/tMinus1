@@ -23,6 +23,7 @@ import {
   PriceAlert,
   UpdatedPriceAlert,
 } from "@/types/priceAlerts";
+import { ms, s, vs } from "@/utils/responsive";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { useFocusEffect, useLocalSearchParams } from "expo-router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
@@ -47,12 +48,12 @@ const AlertScreen = () => {
   );
   const submitRef = useRef<() => void>(() => {});
   const [activeConfigIndex, setActiveConfigIndex] = useState(0);
-  const [createdAlert, setCreatedAlert] = useState<CreatedPriceAlert | null>(
-    null,
-  );
+  const [createdAlert, setCreatedAlert] = useState<
+    CreatedPriceAlert | UpdatedPriceAlert | null
+  >(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const toggleConfig = (alert?: CreatedPriceAlert) => {
+  const toggleConfig = (alert?: CreatedPriceAlert | UpdatedPriceAlert) => {
     if (alert) setCreatedAlert(alert);
     setActiveConfigIndex((prev) => (prev === 0 ? 1 : 0));
   };
@@ -103,10 +104,8 @@ const AlertScreen = () => {
             : "Create alert",
         onPress: () => submitRef.current?.(),
         variant: "primary",
-        style: undefined,
-        textStyle: undefined,
       },
-      content: () => (
+      content: (
         <CreateAlert
           asset={asset}
           submitRef={submitRef}
@@ -126,15 +125,12 @@ const AlertScreen = () => {
         title: "View alerts",
         onPress: handleViewAlerts,
         variant: "primary",
-        style: undefined,
-        textStyle: undefined,
       },
-      content: () => <Success alert={createdAlert} />,
+      content: <Success alert={createdAlert} />,
       topSpacerSize: 42,
     },
   ];
 
-  // ✅ Derived directly — no useState, no useEffect
   const activeConfig = Config[activeConfigIndex];
 
   return (
@@ -147,18 +143,14 @@ const AlertScreen = () => {
         title: activeConfig.cta.title,
         onPress: activeConfig.cta.onPress,
         variant: activeConfig.cta.variant,
-        style: activeConfig.cta.style,
         textStyle: {
-          ...activeConfig.cta.textStyle,
           fontFamily: Fonts.bold,
-          fontSize: 14,
+          fontSize: ms(14),
         },
       }}
       topSpacerSize={activeConfig.topSpacerSize}
     >
-      <View style={GeneralStyles.wrapper}>
-        <activeConfig.content />
-      </View>
+      <View style={GeneralStyles.wrapper}>{activeConfig.content}</View>
     </Template>
   );
 };
@@ -204,9 +196,7 @@ const CreateAlert = ({
 
   const [createPriceAlert, { isLoading }] = useCreatePriceAlertMutation();
   const { coinInfo } = useAssetChart(asset);
-
-  const [updatePriceAlert, { isLoading: isUpdating }] =
-    useUpdatePriceAlertMutation();
+  const [updatePriceAlert] = useUpdatePriceAlertMutation();
 
   const handleCreateAlert = async () => {
     if (!amount || isNaN(parseFloat(amount))) {
@@ -236,7 +226,7 @@ const CreateAlert = ({
       }).unwrap();
 
       onSuccess(result.data);
-    } catch (err: unknown) {
+    } catch (err: any) {
       showErrorToast({
         title: "Failed to create alert",
         message:
@@ -264,7 +254,9 @@ const CreateAlert = ({
   const config = [
     {
       label: "Trigger",
-      value: `${asset.toUpperCase()} ${activeDirection.toLowerCase()} $${formatAmount(parseFloat(amount)) || "—"}`,
+      value: `${asset.toUpperCase()} ${activeDirection.toLowerCase()} $${
+        formatAmount(parseFloat(amount)) || "—"
+      }`,
     },
     {
       label: "Status",
@@ -276,18 +268,22 @@ const CreateAlert = ({
   return (
     <>
       <View
-        style={{
-          ...GeneralStyles.box,
-          height: 92,
-          paddingHorizontal: 16,
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: 12,
-        }}
+        style={[
+          GeneralStyles.box,
+          {
+            height: vs(92),
+            paddingHorizontal: s(16),
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            gap: s(12),
+          },
+        ]}
       >
-        <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
-          <CryptoIcon symbol={asset} size={42} />
+        <View
+          style={{ flexDirection: "row", alignItems: "center", gap: s(12) }}
+        >
+          <CryptoIcon symbol={asset} size={ms(42)} />
           <TextBlock title={asset.toUpperCase()} body={coinInfo?.name} />
         </View>
         <ThemedText size={14} color={Colors.snowGray} weight="bold">
@@ -297,7 +293,7 @@ const CreateAlert = ({
 
       <Spacer size={46} />
 
-      <View style={{ flexDirection: "row", alignItems: "center", gap: 12 }}>
+      <View style={{ flexDirection: "row", alignItems: "center", gap: s(12) }}>
         {tabs.map((item) => (
           <TouchableOpacity
             key={item.title}
@@ -305,13 +301,13 @@ const CreateAlert = ({
             style={[
               GeneralStyles.box,
               {
-                borderRadius: 18,
+                borderRadius: ms(18),
                 backgroundColor:
                   activeDirection === item.title
                     ? item.bgColor
                     : Colors.surfaceNavy,
-                width: 80,
-                height: 36,
+                width: s(80),
+                height: vs(36),
                 alignItems: "center",
                 justifyContent: "center",
               },
@@ -333,19 +329,25 @@ const CreateAlert = ({
       <Spacer size={34} />
 
       <View
-        style={{
-          ...GeneralStyles.box,
-          height: 92,
-          paddingHorizontal: 16,
-          paddingVertical: 16,
-          flexDirection: "row",
-          alignItems: "flex-end",
-          justifyContent: "space-between",
-          gap: 12,
-        }}
+        style={[
+          GeneralStyles.box,
+          {
+            height: vs(92),
+            paddingHorizontal: s(16),
+            paddingVertical: vs(16),
+            flexDirection: "row",
+            alignItems: "flex-end",
+            justifyContent: "space-between",
+            gap: s(12),
+          },
+        ]}
       >
         <View
-          style={{ justifyContent: "space-between", gap: 12, height: "100%" }}
+          style={{
+            justifyContent: "space-between",
+            gap: vs(12),
+            height: "100%",
+          }}
         >
           <ThemedText size={12} color={Colors.textMidGray} weight="bold">
             Target price
@@ -357,11 +359,11 @@ const CreateAlert = ({
             placeholder="0.00"
             placeholderTextColor={Colors.textMidGray}
             style={{
-              fontSize: 26,
+              fontSize: ms(26),
               fontFamily: Fonts.bold,
               color: Colors.snowGray,
               padding: 0,
-              maxWidth: 300,
+              maxWidth: s(300),
             }}
           />
         </View>
@@ -372,7 +374,7 @@ const CreateAlert = ({
 
       <Spacer size={44} />
 
-      <View style={{ gap: 10 }}>
+      <View style={{ gap: vs(10) }}>
         {config.map((item) => (
           <LabelValueItem
             key={item.label}
@@ -389,7 +391,7 @@ const CreateAlert = ({
 // ─── Success ─────────────────────────────────────────────────────────────────
 
 type SuccessProps = {
-  alert: CreatedPriceAlert | null;
+  alert: CreatedPriceAlert | UpdatedPriceAlert | null;
 };
 
 const Success = ({ alert }: SuccessProps) => {
@@ -405,7 +407,9 @@ const Success = ({ alert }: SuccessProps) => {
   return (
     <>
       <BadgeStuff
-        title={`${alert?.assetSymbol ?? "Asset"} ${alert?.direction?.toLowerCase() ?? ""} $${formatAmount(alert?.targetPriceUsd ?? 0)}`}
+        title={`${alert?.assetSymbol ?? "Asset"} ${
+          alert?.direction?.toLowerCase() ?? ""
+        } $${formatAmount(alert?.targetPriceUsd ?? 0)}`}
         desc="This alert appears in Profile → Price Alerts and can be edited or deleted."
         outerColor={Colors.primaryClean}
         innerColor={Colors.primaryClean}
@@ -414,7 +418,7 @@ const Success = ({ alert }: SuccessProps) => {
         }
       />
       <Spacer size={56} />
-      <View style={{ gap: 10 }}>
+      <View style={{ gap: vs(10) }}>
         {config.map((item) => (
           <LabelValueItem
             key={item.label}

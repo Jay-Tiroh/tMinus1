@@ -52,7 +52,7 @@ const CoinItem = ({
 
   const handlePress = () => {
     if (useHrefs && route) {
-      router.push(route as Href);
+      router.replace(route as Href);
     }
   };
 

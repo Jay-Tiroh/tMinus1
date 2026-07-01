@@ -44,7 +44,7 @@ export default function EmailMobile() {
       );
     }
 
-    router.push("/(auth)/verify");
+    router.replace("/(auth)/verify");
   };
 
   const handleToggle = () => {

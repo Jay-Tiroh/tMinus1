@@ -10,6 +10,7 @@ import { GeneralStyles } from "@/constants/themes";
 // Make sure formatAmount is imported here alongside timeAgo
 import { formatAmount, timeAgo } from "@/helpers/functions";
 import { useAllAssets } from "@/hooks/useAllAssets";
+import { useBackToHome } from "@/hooks/useBackToHome";
 import useFiat from "@/hooks/useFiat";
 import { useGoToRoute } from "@/hooks/useGoToRoute";
 import useProfile from "@/hooks/useProfile";
@@ -70,10 +71,11 @@ const RecentTransactions = () => {
 };
 
 const WalletsScreen = () => {
-  const { kycStatus } = useProfile();
+  useBackToHome();
+  const { kycStatus, refetch: kycRefetch } = useProfile();
   const isVerified = kycStatus === "approved";
-  const { coins } = useAllAssets();
-  const { balances } = useWallet();
+  const { coins, refetch: coinsRefetch } = useAllAssets();
+  const { balances, refetch: walletRefetch } = useWallet();
 
   const assetsHeld = balances.map((balance) => balance.assetSymbol);
   const displayedCoins = coins.filter((coin) =>
@@ -82,6 +84,12 @@ const WalletsScreen = () => {
 
   const { symbol, fiat, convertFromUSD } = useFiat();
 
+  const handleRefresh = () => {
+    kycRefetch();
+    coinsRefetch();
+    walletRefetch();
+  };
+
   return (
     <Template
       textBlockProps={{
@@ -89,6 +97,7 @@ const WalletsScreen = () => {
         body: "Aggregated in USD from active asset balances.",
       }}
       ctaProps={undefined}
+      refetch={handleRefresh}
     >
       <View style={GeneralStyles.wrapper}>
         <Balance />

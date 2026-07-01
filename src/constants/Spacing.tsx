@@ -1,8 +1,15 @@
+import { s, vs } from "@/utils/responsive";
+
 export const Spacing = {
-  xs: 4,
-  sm: 8,
-  md: 16,
-  lg: 24,
-  xl: 32,
-  xxl: 48,
-} as const;
+  xs: s(4),
+  sm: s(8),
+  md: s(16),
+  lg: s(24),
+  xl: s(32),
+  xxl: s(48),
+
+  // vertical-specific if you differentiate
+  gapSm: vs(8),
+  gapMd: vs(16),
+  gapLg: vs(24),
+};

@@ -7,6 +7,7 @@ interface UseAssetChartReturn {
   isLoading: boolean;
   isError: boolean;
   isSuccess: boolean;
+  refetch: () => void;
 }
 
 export function useAssetChart(
@@ -19,6 +20,7 @@ export function useAssetChart(
     isLoading,
     isError,
     isSuccess,
+    refetch,
   } = useGetAssetQuery(
     { symbol },
     {
@@ -33,5 +35,6 @@ export function useAssetChart(
     isLoading,
     isError,
     isSuccess,
+    refetch,
   };
 }

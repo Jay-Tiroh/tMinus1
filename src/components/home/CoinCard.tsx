@@ -6,6 +6,7 @@ import { formatCurrency } from "@/helpers/functions";
 import { useAssetChart } from "@/hooks/useAssetChart";
 import useFiat from "@/hooks/useFiat";
 import { Asset } from "@/types/assets";
+import { ms, s, vs } from "@/utils/responsive";
 import { memo, useState } from "react";
 import { StyleSheet, View } from "react-native";
 
@@ -61,10 +62,10 @@ export const CoinCard = memo(function CoinCard({ coin }: CoinCardProps) {
 
 const styles = StyleSheet.create({
   card: {
-    width: 163,
+    width: s(163),
     // height: 118,
-    borderRadius: 16,
-    padding: 12,
+    borderRadius: ms(16),
+    padding: s(12),
     justifyContent: "space-between",
     overflow: "hidden",
     boxShadow: "0px 16px 50px rgba(22, 28, 34, 0.08)",
@@ -78,11 +79,11 @@ const styles = StyleSheet.create({
   middle: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 4,
+    gap: s(4),
     justifyContent: "space-between",
-    marginTop: 10,
+    marginTop: vs(10),
   },
   bottom: {
-    marginTop: 10,
+    marginTop: vs(10),
   },
 });

@@ -11,11 +11,11 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import React from "react";
 import {
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
+    Pressable,
+    ScrollView,
+    StyleSheet,
+    TouchableOpacity,
+    View,
 } from "react-native";
 import QRCode from "react-native-qrcode-svg";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -27,7 +27,7 @@ const MyQRScreen = () => {
   };
   const router = useRouter();
   const handleScan = () => {
-    router.push("/wallets/scanQr");
+    router.replace("/wallets/scanQr");
   };
 
   // TODO: Replace with dynamic data from wallet store / API

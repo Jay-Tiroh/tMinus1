@@ -5,12 +5,13 @@ import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
 import { formatCurrency } from "@/helpers/functions";
 import { useKyc } from "@/hooks/useKyc";
+import { vs } from "@/utils/responsive";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import React from "react";
 import { View } from "react-native";
 
 const Approved = () => {
-  const { limits, isLoading, isError } = useKyc();
+  const { limits } = useKyc();
 
   const config = [
     {
@@ -45,7 +46,7 @@ const Approved = () => {
       <View
         style={{
           ...GeneralStyles.wrapper,
-          gap: 14,
+          gap: vs(14),
         }}
       >
         {config.map((item) => (

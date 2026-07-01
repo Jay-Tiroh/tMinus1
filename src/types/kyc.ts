@@ -38,29 +38,61 @@ export interface SubmitKYCResponse {
   };
 }
 
+// Represents the fields that should be appended to FormData
 export interface KYCUploadInstructionRequest {
-  fileName: string;
-  contentType: string;
-  documentKind: string;
+  file: File | Blob | any; // Replace 'any' with specific React Native file type if applicable
+  documentKind: "selfie" | "document_front" | "document_back";
 }
 
+// Updated to match the 201 response schema from the API docs
 export interface KYCUploadInstructionData {
   uploadId: string;
   provider: string;
-  cloudName: string;
+  cloudName?: string;
   storageKey: string;
-  folder: string;
+  folder?: string;
   publicId: string;
-  uploadUrl: string;
+  uploadUrl?: string;
   publicUrl: string;
-  method: string;
-  headers: Record<string, string>;
-  formFields: Record<string, string | number>;
-  expiresAt: string;
+  method?: string;
+  headers?: Record<string, string>;
+  formFields?: Record<string, string | number>;
+  expiresAt?: string;
+  uploaded: boolean;
+  directUpload: boolean;
+  fileName: string;
+  contentType: string;
+  sizeBytes: number;
+  cloudinary?: {
+    asset_id: string;
+    public_id: string;
+    version: number;
+    version_id: string;
+    signature: string;
+    width: number;
+    height: number;
+    format: string;
+    resource_type: string;
+    created_at: string;
+    tags: string[];
+    bytes: number;
+    type: string;
+    etag: string;
+    placeholder: boolean;
+    url: string;
+    secure_url: string;
+    folder: string;
+    existing: boolean;
+    original_filename: string;
+    api_key: string;
+  };
 }
 
 export interface KYCUploadInstructionResponse {
   data: KYCUploadInstructionData;
+  meta?: {
+    requestId: string;
+  };
 }
 
 export type KycDocumentCategory = "identity" | "address";

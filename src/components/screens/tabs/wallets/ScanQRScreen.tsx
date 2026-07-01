@@ -12,7 +12,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 const ScanQRScreen = () => {
   const router = useRouter();
   const handleShow = () => {
-    router.push("/wallets/myQr");
+    router.replace("/wallets/myQr");
   };
   const insets = useSafeAreaInsets();
   const TabsBottomPadding = insets.bottom + 86;
@@ -63,7 +63,7 @@ const ScanQRScreen = () => {
         <ThemedButton
           title="Cancel"
           variant="secondary"
-          onPress={() => router.push("/home")}
+          onPress={() => router.replace("/home")}
         />
       </View>
     </ScrollView>

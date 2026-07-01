@@ -6,7 +6,6 @@ import TextBlock from "@/components/TextBlock";
 import { ThemedButton } from "@/components/ThemedButton";
 import { ThemedText } from "@/components/ThemedText";
 import { BuildActionConfig } from "@/constants/actionConfig";
-
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
@@ -20,6 +19,7 @@ import { useSafeBottom } from "@/hooks/useSafeBottom";
 import useTrade from "@/hooks/useTrade";
 import useWallet from "@/hooks/useWallet";
 import { TradeType } from "@/types/trades";
+import { ms, s, vs } from "@/utils/responsive";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useRef, useState } from "react";
@@ -93,6 +93,12 @@ interface TextInputBlockProps {
   onChangeText: (value: string) => void;
   onPressAsset?: () => void;
 }
+interface StaticAmountBlockProps {
+  label: string;
+  body: string;
+  symbol: string;
+  onPressAsset?: () => void;
+}
 
 const TextInputBlock = ({
   label,
@@ -112,16 +118,16 @@ const TextInputBlock = ({
         GeneralStyles.box,
         {
           width: "100%",
-          height: 86,
-          borderRadius: 18,
+          height: vs(86),
+          borderRadius: ms(18),
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "space-between",
-          paddingHorizontal: 16,
+          paddingHorizontal: s(16),
         },
       ]}
     >
-      <View style={{ gap: 8, justifyContent: "center", flex: 1 }}>
+      <View style={{ gap: vs(8), justifyContent: "center", flex: 1 }}>
         <ThemedText color={Colors.textMidGray} size={12}>
           {label}
         </ThemedText>
@@ -133,7 +139,7 @@ const TextInputBlock = ({
           placeholderTextColor={Colors.textMidGray}
           style={{
             color: Colors.snowGray,
-            fontSize: 24,
+            fontSize: ms(24),
             fontFamily: Fonts.bold,
             paddingBottom: 0,
             paddingTop: 0,
@@ -145,9 +151,9 @@ const TextInputBlock = ({
       <TouchableOpacity
         onPress={onPressAsset}
         disabled={!onPressAsset}
-        style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
+        style={{ flexDirection: "row", alignItems: "center", gap: s(8) }}
       >
-        <CryptoIcon symbol={symbol} size={24} />
+        <CryptoIcon symbol={symbol} size={ms(24)} />
         <ThemedText>{symbol}</ThemedText>
         {onPressAsset && (
           <MaterialCommunityIcons
@@ -161,14 +167,6 @@ const TextInputBlock = ({
   );
 };
 
-// ─── StaticAmountBlock ─────────────────────────────────────────────────────────
-interface StaticAmountBlockProps {
-  label: string;
-  body: string;
-  symbol: string;
-  onPressAsset?: () => void;
-}
-
 const StaticAmountBlock = ({
   label,
   body,
@@ -180,12 +178,12 @@ const StaticAmountBlock = ({
       GeneralStyles.box,
       {
         width: "100%",
-        height: 86,
-        borderRadius: 18,
+        height: vs(86),
+        borderRadius: ms(18),
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        paddingHorizontal: 16,
+        paddingHorizontal: s(16),
       },
     ]}
   >
@@ -193,23 +191,23 @@ const StaticAmountBlock = ({
       title={label}
       titleStyle={{
         color: Colors.textMidGray,
-        fontSize: 12,
+        fontSize: ms(12),
         fontFamily: Fonts.regular,
       }}
       body={body}
       bodyStyle={{
         color: Colors.snowGray,
-        fontSize: 24,
+        fontSize: ms(24),
         fontFamily: Fonts.bold,
-        maxWidth: 200,
+        maxWidth: s(200),
       }}
     />
     <TouchableOpacity
       onPress={onPressAsset}
       disabled={!onPressAsset}
-      style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
+      style={{ flexDirection: "row", alignItems: "center", gap: s(8) }}
     >
-      <CryptoIcon symbol={symbol} size={24} />
+      <CryptoIcon symbol={symbol} size={ms(24)} />
       <ThemedText>{symbol}</ThemedText>
       {onPressAsset && (
         <MaterialCommunityIcons
@@ -471,6 +469,8 @@ const ActionScreen = () => {
     }
   };
 
+  const assetAvailable = getBalanceBySymbol(sellInputSymbol)?.available || 0;
+
   // Build the configuration
   const config = BuildActionConfig({
     // General Data
@@ -478,7 +478,7 @@ const ActionScreen = () => {
     limits,
     openAssetPicker,
     pushQuote: handleSubmit,
-
+    assetAvailable,
     // Buy Data
     buyAmount,
     setBuyAmount,
@@ -671,15 +671,15 @@ const styles = StyleSheet.create({
   arrowIconContainer: {
     alignItems: "center",
     justifyContent: "center",
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: s(40),
+    height: vs(40),
+    borderRadius: ms(20),
     backgroundColor: Colors.surfaceNavy,
     position: "absolute",
     top: "50%",
     left: "50%",
     zIndex: 3,
-    transform: [{ translateX: 10 }, { translateY: -20 }],
+    transform: [{ translateX: s(10) }, { translateY: vs(-20) }],
     elevation: 4,
     borderWidth: 3,
     borderColor: Colors.backgroundInk,

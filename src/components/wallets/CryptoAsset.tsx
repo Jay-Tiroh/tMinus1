@@ -1,7 +1,8 @@
 import { CryptoIcon } from "@/components/CryptoIcon";
-import TextBlock from "@/components/TextBlock"; // Adjust import paths as needed
+import TextBlock from "@/components/TextBlock";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
+import { ms, s, vs } from "@/utils/responsive";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 
@@ -27,8 +28,7 @@ export const CryptoAssetItem = ({
   return (
     <View style={styles.card}>
       <View style={styles.leftSection}>
-        {/* Only render the icon if iconSymbol is provided */}
-        {iconSymbol && <CryptoIcon symbol={iconSymbol} size={32} />}
+        {iconSymbol && <CryptoIcon symbol={iconSymbol} size={ms(32)} />}
         {iconComponent && iconComponent}
         <TextBlock
           title={leftTitle}
@@ -60,29 +60,27 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingVertical: 16,
-    paddingHorizontal: 20,
-    borderRadius: 18,
+    paddingVertical: vs(16),
+    paddingHorizontal: s(20),
+    borderRadius: ms(18),
     width: "100%",
   },
   leftSection: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 16,
-
+    gap: s(16),
     maxWidth: "50%",
   },
   rightSection: {
     alignItems: "flex-end",
   },
   titleStyle: {
-    fontSize: 14,
+    fontSize: ms(14),
     fontFamily: Fonts.medium,
-    // lineHeight: 22,
   },
   bodyStyle: {
     textTransform: "uppercase",
-    fontSize: 12,
+    fontSize: ms(12),
   },
   rightAlign: {
     textAlign: "right",

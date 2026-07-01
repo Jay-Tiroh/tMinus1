@@ -1,4 +1,3 @@
-import ThemedHeader from "@/components/ThemedHeader";
 import { Colors } from "@/constants/Colors";
 import { Stack } from "expo-router";
 
@@ -13,13 +12,7 @@ export default function HomeLayout() {
       }}
     >
       <Stack.Screen name="index" />
-      <Stack.Screen
-        name="menu"
-        options={{
-          header: () => <ThemedHeader goBack title="Menu" headerRight="menu" />,
-          contentStyle: { backgroundColor: Colors.surfaceDark },
-        }}
-      />
+
       <Stack.Screen
         name="notifications"
         options={{

@@ -1,3 +1,4 @@
+import { s, vs } from "@/utils/responsive";
 import React from "react";
 import { View, ViewStyle } from "react-native";
 
@@ -13,6 +14,8 @@ export const Spacer: React.FC<SpacerProps> = ({
   style,
 }) => {
   return (
-    <View style={[horizontal ? { width: size } : { height: size }, style]} />
+    <View
+      style={[horizontal ? { width: s(size) } : { height: vs(size) }, style]}
+    />
   );
 };

@@ -3,6 +3,7 @@ import { Spacer } from "@/components/Spacer";
 import { ThemedButton } from "@/components/ThemedButton";
 import { GeneralStyles } from "@/constants/themes";
 import { useSafeBottom } from "@/hooks/useSafeBottom";
+import { vs } from "@/utils/responsive";
 import React from "react";
 import { ImageBackground, ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -41,7 +42,7 @@ const Template = ({
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
-          paddingTop: topInset + 32,
+          paddingTop: topInset + vs(32),
           paddingBottom: bottomPadding,
           width: "100%",
           flexGrow: 1,
@@ -57,7 +58,12 @@ const Template = ({
         <View
           style={[
             GeneralStyles.wrapper,
-            { gap: 14, flex: 1, justifyContent: "flex-end", marginTop: 48 },
+            {
+              gap: vs(14),
+              flex: 1,
+              justifyContent: "flex-end",
+              marginTop: vs(48),
+            },
           ]}
         >
           <ThemedButton {...ctaProps} />

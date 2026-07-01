@@ -6,7 +6,6 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 export type KycFilesState = {
   document_front?: KycFileAsset;
   document_back?: KycFileAsset;
-  passport?: KycFileAsset;
   selfie?: KycFileAsset;
 };
 
@@ -20,7 +19,7 @@ const initialState: KycState = {
   documentType: "" as KycDocumentType,
   documentNumber: "",
   selfieImageUrl: "",
-  documentImageUrl: "", // Note: API expects a single URL, we will likely map front/passport here.
+  documentImageUrl: "",
   selectedFiles: {},
 };
 
@@ -54,7 +53,7 @@ const kycSlice = createSlice({
       state.selectedFiles[action.payload.key] = action.payload.file;
     },
 
-    // Saves the remote publicUrls AFTER the pre-signed upload completes
+    // Saves the remote publicUrls AFTER the API upload completes
     setUploadedUrls: (
       state,
       action: PayloadAction<

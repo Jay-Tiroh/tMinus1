@@ -1,5 +1,6 @@
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
+import { ms, s, vs } from "@/utils/responsive";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import React from "react";
 import { StyleSheet, View } from "react-native";
@@ -28,7 +29,7 @@ export const InfoBanner = ({ type, title, desc }: InfoBannerProps) => {
         <ThemedText
           size={13}
           color={Colors.textMidGray}
-          style={{ lineHeight: 18 }}
+          style={{ lineHeight: ms(18) }}
         >
           {desc}
         </ThemedText>
@@ -41,22 +42,22 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     backgroundColor: Colors.surfaceNavy,
-    borderRadius: 16,
-    padding: 16,
-    gap: 16,
+    borderRadius: ms(16),
+    padding: ms(16),
+    gap: s(16),
     width: "100%",
   },
   iconCircle: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: s(36),
+    height: vs(36),
+    borderRadius: ms(18),
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 2,
+    marginTop: vs(2),
   },
   textStack: {
     flex: 1,
-    gap: 4,
+    gap: vs(4),
     justifyContent: "center",
   },
 });

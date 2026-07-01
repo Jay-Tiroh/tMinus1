@@ -2,6 +2,7 @@ import { ThemedButton } from "@/components/ThemedButton";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
+import { ms, s, vs } from "@/utils/responsive";
 import {
   ActivityIndicator,
   Modal,
@@ -47,7 +48,7 @@ const RemoveFromWatchlistModal = ({
               style={styles.button}
               onPress={onDismiss}
               textStyle={{
-                fontSize: 16,
+                fontSize: ms(16),
                 fontFamily: Fonts.medium,
               }}
             />
@@ -57,7 +58,7 @@ const RemoveFromWatchlistModal = ({
               style={[styles.button, styles.removeButton]}
               textStyle={{
                 color: Colors.surfaceNavy,
-                fontSize: 16,
+                fontSize: ms(16),
                 fontFamily: Fonts.medium,
               }}
               onPress={onConfirm}
@@ -85,10 +86,10 @@ const styles = StyleSheet.create({
   },
   modal: {
     backgroundColor: Colors.surfaceNavy,
-    borderRadius: 16,
-    padding: 24,
+    borderRadius: ms(16),
+    padding: ms(24),
     width: "85%",
-    gap: 12,
+    gap: vs(12),
   },
   title: {
     color: Colors.white,
@@ -98,12 +99,12 @@ const styles = StyleSheet.create({
   },
   actions: {
     flexDirection: "row",
-    gap: 12,
-    marginTop: 8,
+    gap: s(12),
+    marginTop: vs(8),
   },
   button: {
     flex: 1,
-    height: 44,
+    height: vs(44),
   },
   removeButton: {
     backgroundColor: Colors.loss,
