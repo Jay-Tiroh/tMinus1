@@ -56,7 +56,7 @@ const EditProfileScreen = () => {
         title: "Profile Updated",
         message: "Your profile details have been saved successfully.",
       });
-      router.back();
+      router.replace("/(tabs)/user/profile");
     } catch (error) {
       console.error("Failed to update profile:", error);
       showErrorToast({

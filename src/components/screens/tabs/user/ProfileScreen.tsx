@@ -128,41 +128,33 @@ const ProfileScreen = () => {
       <View style={GeneralStyles.wrapper}>
         {/* User Header */}
         <View style={{ flexDirection: "row", alignItems: "center", gap: 16 }}>
-          {user?.avatarUrl ? (
-            <View
-              style={{
-                width: 72,
-                height: 72,
-                borderRadius: 36,
-                alignItems: "center",
-                justifyContent: "center",
-                overflow: "hidden",
-              }}
-            >
+          <View
+            style={{
+              width: 72,
+              height: 72,
+              borderRadius: 36,
+              alignItems: "center",
+              justifyContent: "center",
+              overflow: "hidden",
+              backgroundColor: Colors.primary,
+              position: "relative",
+            }}
+          >
+            <ThemedText size={32} weight="bold" color={Colors.backgroundInk}>
+              {initials}
+            </ThemedText>
+            {user?.avatarUrl && (
               <Image
                 source={{
                   uri: user?.avatarUrl,
                 }}
                 width={72}
                 height={72}
+                style={{ position: "absolute", top: 0, left: 0 }}
               />
-            </View>
-          ) : (
-            <View
-              style={{
-                width: 72,
-                height: 72,
-                borderRadius: 36,
-                backgroundColor: Colors.primary,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <ThemedText size={32} weight="bold" color={Colors.backgroundInk}>
-                {initials}
-              </ThemedText>
-            </View>
-          )}
+            )}
+          </View>
+
           <View style={{ gap: 4 }}>
             <ThemedText size={20} weight="bold" color={Colors.white}>
               {fullName}

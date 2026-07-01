@@ -1,50 +1,103 @@
-# Welcome to your Expo app 👋
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
-## Get started
+# 🌟 tMinus1
 
-1. Install dependencies
+**tMinus1** is a comprehensive mobile application designed to manage cryptocurrency transactions, wallets, and user profiles. It provides a secure and user-friendly interface for users to interact with various cryptocurrencies, including Bitcoin, Ethereum, and more.
 
-   ```bash
-   npm install
-   ```
+## 🚀 Features
 
-2. Start the app
+* **Transaction Management**: Seamlessly send, receive, and manage cryptocurrency transactions.
+* **Wallet Creation**: Create and manage multiple wallets for different cryptocurrencies.
+* **Profile Management**: A comprehensive system for user information, settings, and verification status.
+* **Inactivity Lock**: Integrated session security that automatically locks the app after periods of inactivity.
+* **Secure Storage**: Advanced protection for sensitive data, including private keys and wallet information.
 
-   ```bash
-   npx expo start
-   ```
+## 🛠️ Tech Stack
 
-In the output, you'll find options to open the app in a
+* **Frontend**: React Native, Expo
+* **Backend**: Node.js, Express.js (Developed by [chinonsogreat7](https://github.com/chinonsogreat7))
+* **Database**: MongoDB
+* **API**: RESTful API
+* **Security**: SSL/TLS, Secure Storage
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## 📦 Installation
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+To install and run **tMinus1** locally, follow these steps:
 
-## Get a fresh project
-
-When you're ready, run:
-
+1. **Clone the repository:**
 ```bash
-npm run reset-project
+git clone https://github.com/Jay-Tiroh/tMinus1.git
+cd tMinus1
+
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
 
-## Learn more
+2. **Install dependencies:**
+```bash
+npm install # or yarn install
 
-To learn more about developing your project with Expo, look at the following resources:
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
 
-## Join the community
+3. **Start the application:**
+```bash
+npm start # or yarn start
 
-Join our community of developers creating universal apps.
+```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+
+
+## 📂 Project Structure
+
+```text
+.
+├── app.config.ts
+├── src
+│   ├── components
+│   │   ├── InactivityLockProvider.tsx
+│   │   └── ...
+│   ├── constants
+│   │   ├── MenuLists.ts
+│   │   ├── Coins.ts
+│   │   ├── AssetsMap.ts
+│   │   └── ...
+│   ├── helpers
+│   │   ├── functions.ts
+│   │   └── ...
+│   ├── hooks
+│   │   ├── useWallet.tsx
+│   │   ├── useMarket.tsx
+│   │   ├── useTradeCalculator.tsx
+│   │   ├── useTransactionById.tsx
+│   │   ├── useTransactions.tsx
+│   │   ├── useUser.tsx
+│   │   ├── useProfile.tsx
+│   │   └── ...
+│   ├── store
+│   │   ├── services
+│   │   │   ├── walletsApi.ts
+│   │   │   ├── profileApi.ts
+│   │   │   └── ...
+│   │   ├── slices
+│   │   │   ├── authSlice.ts
+│   │   │   └── ...
+│   │   └── ...
+│   └── ...
+├── package.json
+└── ...
+
+```
+
+## 📸 Screenshots
+
+| Home | Price Alerts | Profile |
+| :---: | :---: | :---: |
+| ![Home](images/home.jpg) | ![Alerts](images/price-alerts.jpg) | ![Profile](images/profile.jpg) |
+
+| Swap | Trade | 2FA Setup |
+| :---: | :---: | :---: |
+| ![Swap](images/swap.jpg) | ![Trade](images/trade.jpg) | ![2FA](images/two-fa-setup.jpg) |
+
+| Wallets | Withdrawal |
+| :---: | :---: |
+| ![Wallets](images/wallets.jpg) | ![Withdrawal](images/withdrawal.jpg) |
