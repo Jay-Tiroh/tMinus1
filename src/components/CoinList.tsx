@@ -1,6 +1,5 @@
 import CoinItem from "@/components/CoinItem";
 import Loader from "@/components/Loader";
-import { CoinIcons } from "@/constants/AssetsMap";
 import { Colors } from "@/constants/Colors";
 import { Asset } from "@/types/assets";
 import { LinearGradient } from "expo-linear-gradient";
@@ -77,8 +76,6 @@ const CoinList = React.memo(function CoinList({
       <View style={styles.coinItemWrapper}>
         <CoinItem
           name={item.name}
-          amount={30594}
-          icon={CoinIcons[item.symbol]}
           alias={item.symbol}
           amountInUsd={amountInUsd ?? item.priceUsd}
           change={item.change24h}
@@ -89,7 +86,7 @@ const CoinList = React.memo(function CoinList({
         />
       </View>
     ),
-    [showChange, showChart, useHrefs, hasModal],
+    [showChange, showChart, useHrefs, hasModal, amountInUsd],
   );
 
   const keyExtractor = useCallback((item: Asset) => item.id, []);

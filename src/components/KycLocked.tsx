@@ -9,7 +9,7 @@ import useProfile from "@/hooks/useProfile";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { useRouter } from "expo-router";
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { View } from "react-native";
 
 const KycLocked = () => {
   const router = useRouter();
@@ -60,11 +60,3 @@ const KycLocked = () => {
 };
 
 export default KycLocked;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-});

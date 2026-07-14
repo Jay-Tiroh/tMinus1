@@ -2,10 +2,12 @@ import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
 import { formatExtensionsForDisplay } from "@/helpers/functions";
+import { showErrorToast } from "@/hooks/showToast";
 
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { KycFilesState, setKycFile } from "@/store/slices/kycSlice";
 import { getDocumentByType, KycFileAsset } from "@/types/kyc";
+import { getErrorMessage } from "@/utils/errors";
 import { ms, s, vs } from "@/utils/responsive";
 import Feather from "@expo/vector-icons/Feather";
 import Fontisto from "@expo/vector-icons/Fontisto";
@@ -225,7 +227,12 @@ const Phase1 = () => {
           }),
         );
       }
-    } catch (error) {}
+    } catch (error) {
+      showErrorToast({
+        title:"Document Upload Failed",
+        message: getErrorMessage(error, "An error occurred while uploading the document. Please try again."),
+      })
+    }
   };
   return (
     <View style={styles.container}>

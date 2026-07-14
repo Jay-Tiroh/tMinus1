@@ -46,3 +46,8 @@ app-example
 # google services files
 # google-services.json
 service-account.json
+
+# Sensitive / generated files
+*.keystore
+google-services.json
+build_log.txt

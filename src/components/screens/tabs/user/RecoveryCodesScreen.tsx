@@ -8,8 +8,7 @@ import {
   showInfoToast,
   showSuccessToast,
 } from "@/hooks/showToast";
-import { useLocalSearchParams } from "expo-router";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 
 import { ThemedInput } from "@/components/auth/ThemedTextInput";
@@ -22,19 +21,18 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import Octicons from "@expo/vector-icons/Octicons";
 import * as Clipboard from "expo-clipboard";
 import { OtpInput, OtpInputRef } from "react-native-otp-entry";
-type RecoveryCode = string[];
+import { consumePendingRecoveryCodes } from "@/utils/recoveryCodesTransfer";
+
 const RecoveryCodesScreen = () => {
-  const { code } = useLocalSearchParams();
+  const [codes, setCodes] = useState<string[] | undefined>(undefined);
 
-  const parsedCodes = Array.isArray(code)
-    ? code
-    : typeof code === "string"
-      ? code.split(",")
-      : undefined;
+  useEffect(() => {
+    const retrieved = consumePendingRecoveryCodes();
+    if (retrieved) {
+      setCodes(retrieved);
+    }
+  }, []);
 
-  const [codes, setCodes] = useState<string[] | undefined>(parsedCodes);
-
-  console.log("Parsed codes:", parsedCodes);
   const handleCopy = async () => {
     if (codes) {
       await Clipboard.setStringAsync(codes.join("\n"));

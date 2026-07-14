@@ -16,6 +16,7 @@ import useWallet from "@/hooks/useWallet";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { useInternalTransferMutation } from "@/store/services/walletsApi";
 import { addRecentContact, setLastTransfer } from "@/store/slices/walletsSlice";
+import { logger } from "@/utils/logger";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import React, { useMemo, useState } from "react";
 import {
@@ -144,7 +145,7 @@ const TransferScreen = () => {
         });
         setPinModalVisible(false);
       }
-      console.log(error);
+      logger.log(error);
     }
   };
   const handleAssetSelect = (asset: Asset) => {

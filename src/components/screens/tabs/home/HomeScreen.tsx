@@ -5,7 +5,7 @@ import { ThemedButton } from "@/components/ThemedButton";
 import { ThemedText } from "@/components/ThemedText";
 import Template from "@/components/trades/Template";
 import Balance from "@/components/wallets/Balance";
-import CryptoAssetItem from "@/components/wallets/CryptoAsset";
+import CryptoAssetItem from "@/components/wallets/CryptoAssetItem";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
 import { formatAmount } from "@/helpers/functions";
@@ -117,6 +117,7 @@ export default function HomeScreen() {
         body: `Welcome back, ${firstName}`,
       }}
       ctaProps={undefined}
+      refetch={handleRefetch}
     >
       <View style={GeneralStyles.wrapper}>
         {/* Balance Section */}

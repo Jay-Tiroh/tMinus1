@@ -7,7 +7,6 @@ import { formatPhoneInternational } from "@/helpers/functions";
 import { showErrorToast } from "@/hooks/showToast"; // Adjust import path if needed
 import { signupSchema } from "@/schemas/authSchemas";
 import {
-  useRegisterMutation,
   useValidateSignupMutation,
 } from "@/store/services/authApi"; // Adjust import path if needed
 
@@ -52,9 +51,9 @@ const SignUpForm = () => {
   // 3. Initialize API Mutations
   const [validateSignup, { isLoading: isValidating }] =
     useValidateSignupMutation();
-  const [register, { isLoading: isRegistering }] = useRegisterMutation();
 
-  const isLoading = isValidating || isRegistering;
+
+  const isLoading = isValidating ;
 
   // 4. Form Submission Flow
   const onSubmit = async (data: SignUpFormValues) => {
@@ -81,18 +80,10 @@ const SignUpForm = () => {
             phoneError ||
             "These details cannot be used to register.",
         });
-        return; // Halt registration
+        return;
       }
 
-      // Step B: Proceed with actual registration
-      const registerResult = await register({
-        fullName: data.fullName,
-        email: data.email,
-        phone: data.phone.replace(/\s/g, ""),
-        password: data.password,
-      }).unwrap();
 
-      // Step C: Route to Verify OTP screen, passing the email for context
       router.replace({
         pathname: "/verify",
         params: { email: data.email },
@@ -189,8 +180,6 @@ const SignUpForm = () => {
           <ThemedText
             color={Colors.snowGray}
             weight="medium"
-            // onPress={() => router.replace("/login")}
-            // Add actual route for sign-in
             style={{ padding: ms(4) }}
           >
             Sign in

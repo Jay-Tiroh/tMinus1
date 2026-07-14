@@ -5,6 +5,7 @@ import { Colors } from "@/constants/Colors";
 import { buildSettingsList } from "@/hooks/useSettings";
 import { useSettingsQuery } from "@/store/services/profileApi";
 import { UpdateSettingsRequestData } from "@/types/profile";
+import { logger } from "@/utils/logger";
 import React from "react";
 import {
   FlatList,
@@ -33,7 +34,7 @@ const SettingsScreen = () => {
   }
 
   if (isError || !settings) {
-    console.log(error);
+    logger.log(error);
     return (
       <ScrollView
         contentContainerStyle={styles.centerContainer}
@@ -56,7 +57,7 @@ const SettingsScreen = () => {
   }
 
   const settingsList = buildSettingsList(settings);
-  // console.log("Settings:", settings);
+  // logger.log("Settings:", settings);
 
   return (
     <FlatList

@@ -15,7 +15,7 @@ export const OTPInput = ({
   onComplete,
 }: OTPInputProps) => {
   const [code, setCode] = useState<string[]>(Array(length).fill(""));
-  const inputs = useRef<Array<TextInput | null>>([]);
+  const inputs = useRef<(TextInput | null)[]>([]);
 
   const handleChange = (text: string, index: number) => {
     const newCode = [...code];

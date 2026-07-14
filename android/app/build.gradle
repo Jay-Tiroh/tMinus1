@@ -181,4 +181,6 @@ dependencies {
     }
 }
 
+apply from: new File(["node", "--print", "require.resolve('expo-updates/package.json')"].execute(null, rootDir).text.trim().replace("package.json", "scripts/create-manifest-android.gradle"))
+
 apply plugin: 'com.google.gms.google-services'

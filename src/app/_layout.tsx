@@ -3,8 +3,10 @@ import { Colors } from "@/constants/Colors";
 import { toastConfig } from "@/constants/toastConfig";
 import { usePushRegistration } from "@/hooks/usePushRegistration";
 import { store } from "@/store";
+import { authApi } from "@/store/services/authApi";
 import { clearCredentials, setCredentials } from "@/store/slices/authSlice";
-import { getToken, saveToken } from "@/utils/secureStore";
+import { logger } from "@/utils/logger";
+import { clearTokens, getToken, saveToken } from "@/utils/secureStore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFonts } from "expo-font";
 import { Stack, useRouter } from "expo-router";
@@ -19,7 +21,6 @@ import { Provider } from "react-redux";
 SplashScreen.preventAutoHideAsync();
 enableScreens(true);
 
-const BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 type BootstrapRoute = "onboarding" | "auth" | "locked";
 
 function RootLayoutNav() {
@@ -54,30 +55,33 @@ function RootLayoutNav() {
         }
 
         try {
-          const res = await fetch(`${BASE_URL}/auth/session`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
 
-          if (!res.ok) throw new Error("Session invalid");
-
-          const json = await res.json();
-          store.dispatch(
-            setCredentials({
-              user: json.data.user,
-              token: json.data.accessToken,
-              refreshToken: json.data.refreshToken,
-            }),
+          const result = await store.dispatch(
+            authApi.endpoints.getSession.initiate(undefined, { forceRefetch: true }),
           );
 
+          if (result.error || !result.data) {
+            throw new Error("Session invalid");
+          }
+
+          const { user, accessToken, refreshToken } = result.data;
+
+          await saveToken("ACCESS_TOKEN", accessToken);
+          await saveToken("REFRESH_TOKEN", refreshToken);
+
+          store.dispatch(
+            setCredentials({ user, token: accessToken, refreshToken }),
+          );
           setBootstrapRoute("locked");
         } catch {
-          store.dispatch(clearCredentials());
-          await saveToken("ACCESS_TOKEN", "");
+          await clearTokens();
           await saveToken("SESSION_LOCKED", "false");
+          store.dispatch(clearCredentials());
           setBootstrapRoute("auth");
         }
       } catch (error) {
-        console.error("Bootstrap error:", error);
+        logger.error("Bootstrap error:", error);
+        await clearTokens();
         store.dispatch(clearCredentials());
         setBootstrapRoute("auth");
       } finally {
@@ -103,7 +107,7 @@ function RootLayoutNav() {
     }
 
     SplashScreen.hideAsync();
-  }, [fontsLoaded, isBootstrapped, bootstrapRoute]);
+  }, [fontsLoaded, isBootstrapped, bootstrapRoute, router]);
 
   useEffect(() => {
     if (fontError && isBootstrapped) SplashScreen.hideAsync();

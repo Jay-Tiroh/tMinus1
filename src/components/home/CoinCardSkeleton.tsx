@@ -1,8 +1,8 @@
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useEffect, useRef } from "react";
-import { Animated, Dimensions, Easing, StyleSheet, View } from "react-native";
+import { Animated,  Easing, StyleSheet, View } from "react-native";
 
-const CARD_WIDTH = Dimensions.get("window").width * 0.7;
+
 
 const CoinCardsSkeleton = () => {
   return (
@@ -26,7 +26,7 @@ const SkeletonCard = () => {
         useNativeDriver: true,
       }),
     ).start();
-  }, []);
+  }, [shimmerAnim]);
 
   const translateX = shimmerAnim.interpolate({
     inputRange: [0, 1],

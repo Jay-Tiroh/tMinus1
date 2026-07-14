@@ -1,3 +1,4 @@
+import { showErrorToast } from "@/hooks/showToast";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
   useCreateQuoteMutation,
@@ -11,6 +12,8 @@ import {
   setLastTransaction,
 } from "@/store/slices/tradesSlice";
 import { CreateQuoteRequest } from "@/types/trades";
+import { getErrorMessage } from "@/utils/errors";
+import { logger } from "@/utils/logger";
 import { useCallback, useEffect } from "react";
 
 export default function useTrade(pollIntervalMs = 5000) {
@@ -35,7 +38,7 @@ export default function useTrade(pollIntervalMs = 5000) {
     if (activeQuoteData && activeQuoteData !== activeQuote) {
       dispatch(setActiveQuote(activeQuoteData));
     }
-  }, [activeQuoteData]);
+  }, [activeQuoteData, activeQuote, dispatch]);
 
   const createQuote = useCallback(
     async (request: CreateQuoteRequest) => {
@@ -45,7 +48,11 @@ export default function useTrade(pollIntervalMs = 5000) {
         dispatch(setActiveQuote(quote));
         return quote;
       } catch (error) {
-        console.error("Failed to create quote:", error);
+        showErrorToast({
+          title: "Failed to create quote.",
+          message: getErrorMessage(error, "We couldn't create the quote right now. Please try again."),
+        });
+        logger.error("Failed to create quote:", error);
         throw error;
       }
     },
@@ -67,7 +74,11 @@ export default function useTrade(pollIntervalMs = 5000) {
         dispatch(clearTrade());
         return result;
       } catch (error) {
-        console.error("Failed to execute trade:", error);
+        showErrorToast({
+          title: "Failed to execute trade.",
+          message: getErrorMessage(error, "We couldn't execute the trade right now. Please try again."),
+        });
+        logger.error("Failed to execute trade:", error);
         throw error;
       }
     },

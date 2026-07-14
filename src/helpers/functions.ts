@@ -51,7 +51,11 @@ export const calculateEstimatedCryptoReceive = (
   return Number(estimatedCrypto.toFixed(8));
 };
 
-export function formatAmount(value: number, isCrypto = false): string {
+export function formatAmount(value: number, isCrypto = true): string {
+  if (!Number.isFinite(value)) {
+    return isCrypto ? "0.00000000" : "0.00";
+  }
+
   if (!isCrypto) {
     return new Intl.NumberFormat("en-US", {
       minimumFractionDigits: 2,
@@ -59,8 +63,6 @@ export function formatAmount(value: number, isCrypto = false): string {
     }).format(value);
   }
 
-  // For values >= 1, show up to 4 decimal places
-  // For values < 1, show enough digits to capture 2 significant figures
   let maxFraction: number;
 
   if (value >= 1) {
@@ -68,10 +70,8 @@ export function formatAmount(value: number, isCrypto = false): string {
   } else if (value === 0) {
     maxFraction = 2;
   } else {
-    // Find how many leading zeros are after the decimal point
-    // e.g. 0.00000183 → needs 8 decimal places to show 2 sig figs
     const leadingZeros = Math.floor(-Math.log10(Math.abs(value)));
-    maxFraction = Math.min(leadingZeros + 2, 8);
+    maxFraction = Math.min(Math.max(leadingZeros + 2, 2), 8);
   }
 
   return new Intl.NumberFormat("en-US", {
@@ -79,7 +79,6 @@ export function formatAmount(value: number, isCrypto = false): string {
     maximumFractionDigits: maxFraction,
   }).format(value);
 }
-
 export function timeAgo(dateString: string): string {
   const date = new Date(dateString);
   const now = new Date();

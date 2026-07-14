@@ -123,10 +123,10 @@ export interface RefreshRequestBody {
   refreshToken: string;
 }
 
-export interface RefreshResponseData extends AuthResponseData {}
+
 
 export interface RefreshResponse {
-  data: RefreshResponseData;
+  data: AuthResponseData;
 }
 
 export interface TwoFactorChallengeData {

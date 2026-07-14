@@ -1,5 +1,4 @@
 import { Spacer } from "@/components/Spacer";
-import { ThemedText } from "@/components/ThemedText";
 import Template from "@/components/trades/Template";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
@@ -123,24 +122,7 @@ const SecuritySettingsScreen = () => {
 
         <Spacer size={32} />
 
-        {/* Info Box */}
-        <View
-          style={[
-            GeneralStyles.box,
-            {
-              backgroundColor: Colors.surfaceGreenBrown,
-              padding: 24,
-              gap: 8,
-            },
-          ]}
-        >
-          <ThemedText size={16} weight="bold" color={Colors.snowGray}>
-            Admin will never ask for codes
-          </ThemedText>
-          <ThemedText size={14} color={Colors.warningBronze}>
-            Keep recovery codes private and regenerate them if exposed.
-          </ThemedText>
-        </View>
+
       </View>
     </Template>
   );

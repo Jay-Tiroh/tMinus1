@@ -1,5 +1,6 @@
 import CandlestickChart from "@/components/CandlestickChart";
 import ChangeText from "@/components/ChangeText";
+import Skeleton from "@/components/Skeleton";
 import TextBlock from "@/components/TextBlock";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
@@ -30,10 +31,7 @@ const CandlestickComponent = ({ symbol, priceUsd, change24h }: props) => {
     setTimeControl(option);
   };
 
-  const { candles, isLoading, isError, isSuccess } = useAssetCandle(
-    symbol,
-    timeControl,
-  );
+  const { candles, isLoading } = useAssetCandle(symbol, timeControl);
 
   const [componentWidth, setComponentWidth] = React.useState(0);
 
@@ -76,7 +74,11 @@ const CandlestickComponent = ({ symbol, priceUsd, change24h }: props) => {
 
       {/*chart*/}
 
-      <CandlestickChart data={candles} width={componentWidth - 40} />
+      {isLoading ? (
+        <Skeleton />
+      ) : (
+        <CandlestickChart data={candles} width={componentWidth - 40} />
+      )}
 
       {/*action tabs*/}
       <ActionTabs onSelect={onSelectTimeControl} timeControl={timeControl} />
@@ -101,7 +103,7 @@ const ActionTabs = ({ timeControl, onSelect }: ActionTabsProps) => {
         width: "100%",
       }}
     >
-      {Object.entries(timeOptions).map(([key, label]) => (
+      {Object.entries(timeOptions).map(([key]) => (
         <Pressable
           key={key}
           style={{

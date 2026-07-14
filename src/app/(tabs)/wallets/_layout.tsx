@@ -17,8 +17,6 @@ export default function WalletsLayout() {
           headerShown: false,
         }}
       />
-      <Stack.Screen name="myQr" />
-      <Stack.Screen name="scanQr" />
     </Stack>
   );
 }

@@ -2,7 +2,7 @@ import { Spacer } from "@/components/Spacer";
 import TextBlock from "@/components/TextBlock";
 import { ThemedButton } from "@/components/ThemedButton";
 import { ThemedText } from "@/components/ThemedText";
-import CryptoAssetItem from "@/components/wallets/CryptoAsset";
+import CryptoAssetItem from "@/components/wallets/CryptoAssetItem";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
 import { formatAmount } from "@/helpers/functions";
@@ -44,7 +44,7 @@ const DepositAssetSelectionScreen = () => {
         }
         return acc;
       },
-      [] as Array<(typeof balances)[0] & { network: string }>,
+      [] as ((typeof balances)[0] & { network: string })[],
     );
   }, [balances, depositAddresses]);
 

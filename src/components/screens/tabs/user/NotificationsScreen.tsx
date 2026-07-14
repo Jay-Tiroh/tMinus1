@@ -10,12 +10,8 @@ import {
   useMarkNotificationReadMutation,
   useNotificationsQuery,
 } from "@/store/services/notificationsApi";
-// import {
-//   useMarkAllNotificationsReadMutation,
-//   useMarkNotificationReadMutation,
-//   useNotificationsQuery,
-// } from "@/store/services/notificationsApi";
 import { Notification } from "@/types/notification";
+import { logger } from "@/utils/logger";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   FlatList,
@@ -171,8 +167,8 @@ const NotificationsScreen = () => {
       if (!item.isRead) {
         markAsRead(item.id)
           .unwrap()
-          .then((res) => console.log("markAsRead success", res))
-          .catch((err) => console.log("markAsRead error", err));
+          .then((res) => logger.log("markAsRead success", res))
+          .catch((err) => logger.log("markAsRead error", err));
       }
     }
   };
@@ -185,8 +181,8 @@ const NotificationsScreen = () => {
       markAllRead();
     }
 
-    console.log("Notifications data:", notifications);
-  }, [selectMode, selectedNotifications, markAsRead, markAllRead]);
+    logger.log("Notifications data:", notifications);
+  }, [selectMode, selectedNotifications, markAsRead, markAllRead, notifications]);
 
   const ListHeader = useMemo(
     () => (

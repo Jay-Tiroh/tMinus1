@@ -13,17 +13,15 @@ import { useWatchlist } from "@/hooks/useWatchlist";
 import { Href, useRouter } from "expo-router";
 import React, { useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
-import { SvgProps } from "react-native-svg";
+
 
 type CoinItemProps = {
   name: string;
   alias: string;
-  amount: number;
   amountInUsd?: number;
   change?: number;
   showChange?: boolean;
   showChart?: boolean;
-  icon: React.FC<SvgProps>;
   useHrefs?: boolean;
   hasModal?: boolean;
 };
@@ -31,10 +29,8 @@ type CoinItemProps = {
 const CoinItem = ({
   name,
   alias,
-  amount,
   amountInUsd,
   change,
-  icon: Icon,
   showChange = false,
   showChart = false,
   useHrefs = false,

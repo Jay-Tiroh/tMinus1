@@ -8,6 +8,7 @@ import { showErrorToast } from "@/hooks/showToast";
 import { useAppDispatch } from "@/store/hooks";
 import { useSimulateDepositMutation } from "@/store/services/walletsApi";
 import { setLastDeposit } from "@/store/slices/walletsSlice";
+import { getErrorMessage } from "@/utils/errors";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React from "react";
@@ -54,7 +55,7 @@ const SimulateDepositScreen = () => {
 
   const amount = watch("amount");
 
-  const [simulateDeposit, { isError, isLoading, isSuccess }] =
+  const [simulateDeposit, { isLoading, isSuccess }] =
     useSimulateDepositMutation();
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -66,10 +67,11 @@ const SimulateDepositScreen = () => {
       }).unwrap();
       dispatch(setLastDeposit(result));
       router.replace("/wallets/success");
+      // SimulateDepositScreen.tsx
     } catch (error) {
       showErrorToast({
         title: "Failed to create sandbox deposit",
-        message: error?.data?.error?.message ?? undefined,
+        message: getErrorMessage(error),
       });
     }
   };

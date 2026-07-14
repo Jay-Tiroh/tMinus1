@@ -3,7 +3,7 @@ import { Spacer } from "@/components/Spacer";
 import TextBlock from "@/components/TextBlock";
 import { ThemedButton } from "@/components/ThemedButton";
 import { ThemedText } from "@/components/ThemedText";
-import CryptoAssetItem from "@/components/wallets/CryptoAsset";
+import CryptoAssetItem from "@/components/wallets/CryptoAssetItem";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
@@ -75,7 +75,7 @@ const TransactionHistoryScreen = () => {
   const bottomPadding = useSafeBottom();
   const topInset = useSafeAreaInsets().top;
 
-  const { transactions, isFetching, refetch, isLoading } = useTransactions(
+  const { transactions, isFetching, refetch } = useTransactions(
     {
       type: TAB_TYPE_MAP[activeTab],
     },

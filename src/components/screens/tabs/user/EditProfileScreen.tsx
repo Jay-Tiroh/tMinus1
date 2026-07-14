@@ -10,6 +10,8 @@ import { showErrorToast, showSuccessToast } from "@/hooks/showToast";
 import { EditProfileFormData, editProfileSchema } from "@/schemas/authSchemas";
 import { useUpdateProfileMutation } from "@/store/services/profileApi";
 import { UpdateProfileRequest } from "@/types/profile";
+import { getErrorMessage } from "@/utils/errors";
+import { logger } from "@/utils/logger";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
@@ -51,17 +53,17 @@ const EditProfileScreen = () => {
       avatarUrl: data.avatarUrl?.trim() ? data.avatarUrl?.trim() : url,
     };
     try {
-      const result = await updateProfile(payload).unwrap();
+      await updateProfile(payload).unwrap();
       showSuccessToast({
         title: "Profile Updated",
         message: "Your profile details have been saved successfully.",
       });
       router.replace("/(tabs)/user/profile");
     } catch (error) {
-      console.error("Failed to update profile:", error);
+      logger.error("Failed to update profile:", error);
       showErrorToast({
         title: "Update Failed",
-        message: "We couldn't update your profile right now. Please try again.",
+        message: getErrorMessage(error,"We couldn't update your profile right now. Please try again."),
       });
     }
   };

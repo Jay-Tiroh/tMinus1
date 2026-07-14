@@ -2,6 +2,7 @@ import Template from "@/components/kyc/Template";
 import { LabelValueItem } from "@/components/LabelValueItem";
 import { Spacer } from "@/components/Spacer";
 import TextBlock from "@/components/TextBlock";
+import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
 import { showErrorToast, showSuccessToast } from "@/hooks/showToast";
@@ -18,6 +19,8 @@ import {
   setUploadedUrls,
 } from "@/store/slices/kycSlice";
 import { getDocumentByType } from "@/types/kyc";
+import { getErrorMessage } from "@/utils/errors";
+import { logger } from "@/utils/logger";
 import { ms, s, vs } from "@/utils/responsive";
 import React from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
@@ -60,7 +63,7 @@ const Step3 = () => {
 
   const handleFinalSubmit = async () => {
     try {
-      const uploadedUrls: Record<string, string> = {};
+      const uploadedFiles: Record<string, string> = {};
 
       const idempotencyKey = `${Date.now()}-${Math.random()
         .toString(36)
@@ -84,11 +87,11 @@ const Step3 = () => {
           throw new Error(`API failed to upload ${docKind}`);
         }
 
-        uploadedUrls[docKind] = uploadRes.publicUrl;
+        uploadedFiles[docKind] = uploadRes.storageKey;
       }
 
-      const documentImageUrl = uploadedUrls.document_front ?? "";
-      const selfieImageUrl = uploadedUrls.selfie ?? "";
+      const documentImageUrl = uploadedFiles.document_front ?? "";
+      const selfieImageUrl = uploadedFiles.selfie ?? "";
 
       dispatch(
         setUploadedUrls({
@@ -107,6 +110,15 @@ const Step3 = () => {
         idempotencyKey,
       }).unwrap();
 
+      logger.error(
+        kycData.legalName,'\n',
+        kycData.country,'\n',
+         kycData.documentType,'\n',
+         kycData.documentNumber,'\n',
+         documentImageUrl,'\n',
+         selfieImageUrl,'\n',
+         idempotencyKey,'\n',);
+
       showSuccessToast({
         title: "Verification Submitted",
         message:
@@ -119,8 +131,11 @@ const Step3 = () => {
       showErrorToast({
         title: "Upload Failed",
         message:
-          "An error occurred while uploading your documents. Please try again.",
+          getErrorMessage(error,"An error occurred while uploading your documents. Please try again."),
       });
+      logger.error(error);
+
+
     }
   };
 
@@ -142,7 +157,7 @@ const Step3 = () => {
         variant: "primary",
         title: "Submit for review",
         disabled: !selectedFiles.document_front || !selfieFile || isLoading,
-        iconComponent: isLoading ? <ActivityIndicator /> : null,
+        iconComponent: isLoading ? <ActivityIndicator color={Colors.backgroundInk} /> : null,
         textStyle: {
           fontSize: ms(14),
           fontFamily: Fonts.bold,

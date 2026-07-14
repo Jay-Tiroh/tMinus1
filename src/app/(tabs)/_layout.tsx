@@ -47,7 +47,7 @@ export default function TabsLayout() {
           name={tab.name}
           options={{
             title: tab.label,
-            tabBarIcon: ({ color, focused }) => renderIcon(tab.icon, focused),
+            tabBarIcon: ({  focused }) => renderIcon(tab.icon, focused),
             headerShown: false,
           }}
           // TabsLayout.tsx

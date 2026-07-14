@@ -15,9 +15,8 @@ import QRCode from "react-native-qrcode-svg";
 
 const DepositAddressScreen = () => {
   const { asset } = useLocalSearchParams();
-  const { getDepositAddressBySymbol, wallet } = useWallet();
+  const { getDepositAddressBySymbol } = useWallet();
   const depositAddress = getDepositAddressBySymbol(asset as string);
-  // console.log(wallet);
 
   // When API is ready:
   // const { data: depositInfo } = useGetDepositNetworkQuery(assetId);

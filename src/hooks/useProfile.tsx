@@ -35,7 +35,7 @@ export default function useProfile(pollIntervalMs?: number) {
   // Destructure for ease of access in components
   const verification = user?.verification;
   const kycStatus = user?.kycStatus;
-  const watchlist = user?.watchlist ?? [];
+  const watchlist = user?.watchlist;
   const twoFactorEnabled = user?.twoFactorEnabled ?? false;
 
   // Prefer the direct settings query, fallback to the settings object inside the profile payload

@@ -1,4 +1,5 @@
-import LockAppBtn from "@/components/LockAppBtn";
+import ErrorState from "@/components/ErrorComponent";
+import LogOutBtn from "@/components/LogOutBtn";
 import { ModalSelector } from "@/components/OptionPicker";
 import { Spacer } from "@/components/Spacer";
 import { ThemedText } from "@/components/ThemedText";
@@ -196,7 +197,7 @@ const ProfileScreen = () => {
         <Spacer size={40} />
 
         {/* Menu Items */}
-        <View style={{ gap: 12 }}>
+        {isError?<ErrorState onRetry={handleRefetch}  />:<View style={{ gap: 12 }}>
           {menuItems.map((item, index) => (
             <ListItem
               key={index}
@@ -207,7 +208,7 @@ const ProfileScreen = () => {
               onPress={item.onPress}
             />
           ))}
-        </View>
+        </View>}
       </View>
       <Spacer size={40} />
       <View
@@ -217,7 +218,7 @@ const ProfileScreen = () => {
           flex: 1,
         }}
       >
-        <LockAppBtn />
+        <LogOutBtn />
       </View>
 
       <ModalSelector

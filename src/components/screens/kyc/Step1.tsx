@@ -118,7 +118,7 @@ const Step1 = () => {
             style={[styles.input, { color: Colors.textMidGray }]}
             color={Colors.textMidGray}
           >
-            🇳🇬{"  "}Nigeria
+            🇳🇬Nigeria
           </ThemedText>
         </View>
 
@@ -150,7 +150,6 @@ const Step1 = () => {
                   options={KYC_DOCUMENT_LABELS}
                   value={value}
                   setValue={onChange}
-                  width={s(200)}
                 />
               </Pressable>
               {errors.documentType && (

@@ -5,16 +5,15 @@ import { ThemedButton } from "@/components/ThemedButton";
 import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { Spacing } from "@/constants/Spacing";
-import { showErrorToast, showSuccessToast } from "@/hooks/showToast";
+import { showErrorToast, showInfoToast, showSuccessToast } from "@/hooks/showToast";
 import {
   useRequestOTPMutation,
   useVerifyOTPMutation,
 } from "@/store/services/authApi";
 import { ms, s, vs } from "@/utils/responsive";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import * as Notifications from "expo-notifications";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   ImageBackground,
   ScrollView,
@@ -41,22 +40,7 @@ export default function VerifyScreen() {
   const [verifyOtp, { isLoading: isVerifying }] = useVerifyOTPMutation();
   const [requestOtp, { isLoading: isRequesting }] = useRequestOTPMutation();
 
-  useEffect(() => {
-    const subscription = Notifications.addNotificationReceivedListener(
-      (notification) => {
-        const pushData = notification.request.content.data;
-        const extractedCode = pushData?.code;
 
-        if (extractedCode && String(extractedCode).length === OTP_LENGTH) {
-          const codeString = String(extractedCode);
-          setCode(codeString);
-          otpRef.current?.setValue(codeString);
-        }
-      },
-    );
-
-    return () => subscription.remove();
-  }, []);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -66,42 +50,35 @@ export default function VerifyScreen() {
     return () => clearTimeout(timer);
   }, [countdown]);
 
-  const handleRequestOtp = async () => {
+  const handleRequestOtp = useCallback(async () => {
     if (!email) return;
-
     try {
       const result = await requestOtp(email).unwrap();
-
       setCountdown(RESEND_COOLDOWN);
-
-      await Notifications.scheduleNotificationAsync({
-        content: {
-          title: "Verification Code",
-          body: `Your authentication code is ${result.demoCode}`,
-          sound: true,
-          data: { code: result.demoCode },
-        },
-        trigger: null,
-      });
-
-      showSuccessToast({
-        title: "Code Sent",
-        message: "Check your push notifications.",
-      });
+      if (result.demoCode) {
+        showInfoToast({
+          title: "Demo Verification Code",
+          message: `Your code: ${result.demoCode}`,
+          visibilityTime: 30000,
+        });
+      }
     } catch (error: any) {
       showErrorToast({
         title: "Failed to send",
         message: error?.data?.message ?? "Could not request OTP.",
       });
     }
-  };
+  }, [email, requestOtp]);
+
+  // Fire once on mount / when email becomes available — not every time countdown hits 0
+  const hasSentRef = useRef(false);
 
   useEffect(() => {
-    if (email && countdown === 0) {
+    if (email && !hasSentRef.current) {
+      hasSentRef.current = true;
       handleRequestOtp();
     }
-  }, [email]);
-
+  }, [email, handleRequestOtp]);
   const handleVerify = async (submitCode?: string) => {
     const finalCode = submitCode ?? code;
     if (finalCode.length !== OTP_LENGTH || !email) return;
@@ -126,11 +103,7 @@ export default function VerifyScreen() {
     }
   };
 
-  const maskEmail = (mail: string) => {
-    if (!mail) return "";
-    const [name, domain] = mail.split("@");
-    return `${name.slice(0, 3)}***@${domain}`;
-  };
+
 
   return (
     <ImageBackground
@@ -160,7 +133,7 @@ export default function VerifyScreen() {
 
           <TextBlock
             title="Verify Email"
-            body={`Please type the code we sent to ${maskEmail(email || "")}`}
+            body={`Please type the code we sent to you.`}
             titleStyle={{ fontSize: ms(28) }}
           />
           <Spacer size={40} />
@@ -192,7 +165,7 @@ export default function VerifyScreen() {
 
           <View style={{ gap: vs(4), alignItems: "center" }}>
             <ThemedText size={14} color={Colors.textMidGray}>
-              Didn't receive the code?
+              {"Didn't receive the code?"}
             </ThemedText>
             <TouchableOpacity
               onPress={handleRequestOtp}
@@ -208,7 +181,7 @@ export default function VerifyScreen() {
               >
                 {countdown > 0
                   ? `Resend code in ${countdown}s`
-                  : "Resend Push Notification"}
+                  : "Resend verification code"}
               </ThemedText>
             </TouchableOpacity>
           </View>

@@ -1,8 +1,10 @@
+import ErrorState from "@/components/ErrorComponent";
+import Loader from "@/components/Loader";
 import { Spacer } from "@/components/Spacer";
 import { ThemedText } from "@/components/ThemedText";
 import Template from "@/components/trades/Template";
 import AdvancedLineChart from "@/components/wallets/AdvancedLineChart";
-import CryptoAssetItem from "@/components/wallets/CryptoAsset"; // Correctly using your component
+import CryptoAssetItem from "@/components/wallets/CryptoAssetItem"; // Correctly using your component
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
 import { formatAmount, timeAgo } from "@/helpers/functions";
@@ -26,57 +28,71 @@ const PortfolioHistoryScreen = () => {
     data: chartData,
     isLoading,
     isError,
-    isSuccess,
+    refetch,
   } = useGetPortfolioHistoryQuery({ range: timeControl });
   const displayedData = chartData?.data.slice(-5).reverse();
   const { portfolioValueUsd } = useWallet();
   const { symbol } = useFiat();
+
   return (
     <Template
       textBlockProps={{
         title: "Portfolio history",
         body: "Track total balance movement over time.",
       }}
+      refetch={refetch}
       ctaProps={undefined}
     >
-      <View style={GeneralStyles.wrapper}>
-        <AdvancedLineChart
-          symbol="PORTFOLIO"
-          priceUsd={portfolioValueUsd}
-          change24h={5}
-          chartData={chartData?.data || []}
-          setTimeControl={setTimeControl}
-          timeControl={timeControl}
-        />
-      </View>
+      {isLoading ? (
+        <Loader />
+      ) : isError ? (
+        <ErrorState onRetry={refetch} />
+      ) : (
+        <>
+          <View style={GeneralStyles.wrapper}>
+            <AdvancedLineChart
+              symbol="PORTFOLIO"
+              priceUsd={portfolioValueUsd}
+              change24h={5}
+              chartData={chartData?.data || []}
+              setTimeControl={setTimeControl}
+              timeControl={timeControl}
+            />
+          </View>
 
-      <Spacer size={32} />
+          <Spacer size={32} />
 
-      <View style={[GeneralStyles.wrapper, { gap: 10 }]}>
-        {displayedData?.map((item) => (
-          <CryptoAssetItem
-            key={item.time}
-            iconComponent={
-              <View
-                style={[
-                  styles.iconCircle,
-                  {
-                    backgroundColor: Colors.primaryClean,
-                  },
-                ]}
-              >
-                <ThemedText weight="bold" size={16} color={Colors.surfaceNavy}>
-                  P
-                </ThemedText>
-              </View>
-            }
-            leftTitle={timeAgo(item.time)}
-            leftBody="Portfolio value"
-            rightTitle={symbol + formatAmount(item.value)}
-            rightBody={item.currency}
-          />
-        ))}
-      </View>
+          <View style={[GeneralStyles.wrapper, { gap: 10 }]}>
+            {displayedData?.map((item) => (
+              <CryptoAssetItem
+                key={item.time}
+                iconComponent={
+                  <View
+                    style={[
+                      styles.iconCircle,
+                      {
+                        backgroundColor: Colors.primaryClean,
+                      },
+                    ]}
+                  >
+                    <ThemedText
+                      weight="bold"
+                      size={16}
+                      color={Colors.surfaceNavy}
+                    >
+                      P
+                    </ThemedText>
+                  </View>
+                }
+                leftTitle={timeAgo(item.time)}
+                leftBody="Portfolio value"
+                rightTitle={symbol + formatAmount(item.value)}
+                rightBody={item.currency}
+              />
+            ))}
+          </View>
+        </>
+      )}
     </Template>
   );
 };

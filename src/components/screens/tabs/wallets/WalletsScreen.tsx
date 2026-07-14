@@ -4,7 +4,7 @@ import { ThemedText } from "@/components/ThemedText";
 import Template from "@/components/trades/Template";
 import ActionTabs from "@/components/wallets/ActionTabs";
 import Balance from "@/components/wallets/Balance";
-import CryptoAssetItem from "@/components/wallets/CryptoAsset";
+import CryptoAssetItem from "@/components/wallets/CryptoAssetItem";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
 // Make sure formatAmount is imported here alongside timeAgo
@@ -17,9 +17,8 @@ import useProfile from "@/hooks/useProfile";
 import { useTransactions } from "@/hooks/useTransactions";
 import useWallet from "@/hooks/useWallet";
 import React from "react";
-import { Dimensions, Pressable, StyleSheet, View } from "react-native";
+import {  Pressable, View } from "react-native";
 
-const SCREEN_HEIGHT = Dimensions.get("window").height;
 
 const RecentTransactions = () => {
   const { transactions } = useTransactions();
@@ -82,7 +81,7 @@ const WalletsScreen = () => {
     assetsHeld.includes(coin.symbol),
   );
 
-  const { symbol, fiat, convertFromUSD } = useFiat();
+  const { symbol, convertFromUSD } = useFiat();
 
   const handleRefresh = () => {
     kycRefetch();
@@ -149,15 +148,3 @@ const WalletsScreen = () => {
 };
 
 export default WalletsScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  header: {
-    width: "100%",
-    backgroundColor: Colors.surfaceDark,
-    padding: 24,
-    paddingBottom: 12,
-  },
-});

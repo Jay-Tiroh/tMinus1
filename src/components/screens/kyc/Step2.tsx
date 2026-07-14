@@ -8,10 +8,11 @@ import { showErrorToast } from "@/hooks/showToast";
 import { useGoToRoute } from "@/hooks/useGoToRoute";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { selectKycFiles, setKycFile } from "@/store/slices/kycSlice";
-import { ms, s, vs } from "@/utils/responsive";
+import { logger } from "@/utils/logger";
+import { ms, vs } from "@/utils/responsive";
 import * as ImagePicker from "expo-image-picker";
 import React, { useState } from "react";
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { ActivityIndicator, View } from "react-native";
 
 const PhaseConfig = {
   1: {
@@ -24,11 +25,7 @@ const PhaseConfig = {
   },
 };
 
-export default function Step2({
-  handlePress: proceedToNextStep,
-}: {
-  handlePress?: (step: number) => void;
-}) {
+export default function Step2() {
   const [currentPhase, setCurrentPhase] = useState<1 | 2>(1);
   const [isUploading] = useState(false);
 
@@ -82,7 +79,7 @@ export default function Step2({
         );
       }
     } catch (error) {
-      console.error("Camera acquisition failure:", error);
+      logger.error("Camera acquisition failure:", error);
     }
   };
 
@@ -159,20 +156,3 @@ export default function Step2({
     </Template>
   );
 }
-
-const styles = StyleSheet.create({
-  inputContainer: {
-    borderRadius: ms(12),
-    justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: Colors.backgroundDark,
-    flexDirection: "row",
-    paddingHorizontal: s(12),
-    paddingVertical: vs(8),
-  },
-  input: {
-    flex: 1,
-    fontFamily: Fonts.regular,
-    color: Colors.snowGray,
-  },
-});

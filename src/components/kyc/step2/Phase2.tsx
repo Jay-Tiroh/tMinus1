@@ -5,6 +5,7 @@ import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { selectKycFiles, setKycFile } from "@/store/slices/kycSlice";
+import { logger } from "@/utils/logger";
 import { ms, s, vs } from "@/utils/responsive";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import * as ImagePicker from "expo-image-picker";
@@ -57,7 +58,7 @@ const Phase2 = () => {
         );
       }
     } catch (error) {
-      console.error("Camera acquisition failure:", error);
+      logger.error("Camera acquisition failure:", error);
     }
   };
 

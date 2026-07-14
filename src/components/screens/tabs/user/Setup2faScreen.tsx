@@ -11,6 +11,9 @@ import {
   useSetup2FAMutation,
 } from "@/store/services/2faApi";
 import { Setup2FAResponseData } from "@/types/2fa";
+import { getErrorMessage } from "@/utils/errors";
+import { logger } from "@/utils/logger";
+import { setPendingRecoveryCodes } from "@/utils/recoveryCodesTransfer";
 import * as Clipboard from "expo-clipboard";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -40,15 +43,16 @@ const Setup2FAScreen = () => {
         const response: Setup2FAResponseData = await setup().unwrap();
         setSetupResponse(response);
       } catch (error) {
-        console.error("2FA setup failed:", error);
+        logger.error("2FA setup failed:", error);
         showErrorToast({
-          title: "Failed to initialize 2FA. Please try again.",
+          title: "Failed to initialize 2FA.",
+          message: getErrorMessage(error, "We couldn't initialize 2FA right now. Please try again."),
         });
       }
     };
 
     runSetup();
-  }, []);
+  }, [setup]);
 
   const handleCopyKey = async () => {
     if (setupResponse?.secret) {
@@ -63,16 +67,16 @@ const Setup2FAScreen = () => {
     try {
       const result = await enable({ code: authCode }).unwrap();
       showSuccessToast({ title: "2FA enabled successfully!" });
-      const code = result?.recoveryCodes;
-      console.log("result:", result);
-      console.log("Recovery codes:", code);
-      router.replace(`/user/two-factor/recovery-codes?code=${code.join(",")}`);
+      const codes = result?.recoveryCodes;
+      setPendingRecoveryCodes(codes);
+      router.replace("/user/two-factor/recovery-codes");
     } catch (error) {
-      console.error("Enable 2FA failed:", error);
-      showErrorToast({ title: "Invalid code. Please try again." });
+      showErrorToast({
+        title: "Invalid code.",
+        message: getErrorMessage(error, "Please check the code and try again.")
+      });
     }
   };
-
   return (
     <Template
       textBlockProps={{

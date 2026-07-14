@@ -8,6 +8,7 @@ import {
   UpdateSettingsRequest,
   UpdateSettingsRequestData,
 } from "@/types/profile";
+import { logger } from "@/utils/logger";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
@@ -80,16 +81,16 @@ const Item = ({
       const result = await updateSettings(update);
 
       if ("error" in result) {
-        console.error("Failed to update setting:", result.error);
+        logger.error("Failed to update setting:", result.error);
         setSelectedOption(confirmedOption); // Revert to last confirmed value
       } else {
         setConfirmedOption(selectedOption); // Commit new value
-        // console.log("Update result:", result);
+        // logger.log("Update result:", result);
       }
     };
 
     run();
-  }, [selectedOption]);
+  }, [selectedOption, confirmedOption, settingKey, updateSettings]);
 
   const toggleSwitch = async () => {
     const nextState = !isEnabled;
@@ -103,10 +104,10 @@ const Item = ({
       const result = await updateSettings(update);
 
       if ("error" in result) {
-        console.error("Failed to update setting:", result.error);
+        logger.error("Failed to update setting:", result.error);
         setIsEnabled(!nextState);
       }
-      // console.log("Update result:", result);
+      // logger.log("Update result:", result);
     }
   };
 

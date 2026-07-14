@@ -1,3 +1,5 @@
+import ErrorState from "@/components/ErrorComponent";
+import Loader from "@/components/Loader";
 import { ListItem } from "@/components/screens/tabs/user/ProfileScreen";
 import { ThemedButton } from "@/components/ThemedButton";
 import { ThemedText } from "@/components/ThemedText";
@@ -14,6 +16,7 @@ import {
   useUpdatePriceAlertMutation,
 } from "@/store/services/priceAlertsApi";
 import { RTKErrorResponse } from "@/types/utility";
+import { getErrorMessage } from "@/utils/errors";
 import Feather from "@expo/vector-icons/Feather";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import React, { useEffect, useState } from "react";
@@ -61,7 +64,7 @@ const SwipeableAlertItem = ({
       damping: 100,
       stiffness: 2000,
     });
-  }, [isOpen]);
+  }, [isOpen, translateX]);
 
   const toggle = () => {
     if (isOpen) {
@@ -171,7 +174,7 @@ const PriceAlertsScreen = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedAlertId, setSelectedAlertId] = useState<string | null>(null);
   const [activeAlertId, setActiveAlertId] = useState<string | null>(null);
-  const { data, isLoading, isError } = useGetPriceAlertsQuery();
+  const { data, isLoading, isError, refetch } = useGetPriceAlertsQuery();
   const alertsData = data?.data ?? [];
   const [deletePriceAlert] = useDeletePriceAlertMutation();
 
@@ -195,11 +198,10 @@ const PriceAlertsScreen = () => {
     }
   };
 
-  const [updatePriceAlert, { isLoading: isUpdating }] =
-    useUpdatePriceAlertMutation();
+  const [updatePriceAlert] = useUpdatePriceAlertMutation();
   const handleToggleAlert = async (alertId: string, isActive: boolean) => {
     try {
-      const result = await updatePriceAlert({
+      await updatePriceAlert({
         alertId: alertId,
         data: {
           isActive: !isActive,
@@ -212,7 +214,7 @@ const PriceAlertsScreen = () => {
     } catch (error: unknown) {
       showErrorToast({
         title: "Error",
-        message: err?.data?.message ?? "Failed to update alert.",
+        message: getErrorMessage(error, "Failed to update alert."),
       });
     }
   };
@@ -235,23 +237,29 @@ const PriceAlertsScreen = () => {
         ctaProps={undefined}
         topSpacerSize={32}
       >
-        <View style={GeneralStyles.wrapper}>
-          <View style={{ gap: 12, width: "100%" }}>
-            {alertsData.map((item, index) => (
-              <SwipeableAlertItem
-                key={item.id}
-                item={item}
-                index={index}
-                isOpen={activeAlertId === item.id}
-                onOpen={() => setActiveAlertId(item.id)}
-                onClose={() => setActiveAlertId(null)}
-                onPressDelete={handlePressDelete}
-                onPressEdit={handlePressAlert}
-                onLongPress={() => handleToggleAlert(item.id, item.isActive)}
-              />
-            ))}
+        {isLoading ? (
+          <Loader />
+        ) : isError ? (
+          <ErrorState onRetry={refetch} isLoading={isLoading} />
+        ) : (
+          <View style={GeneralStyles.wrapper}>
+            <View style={{ gap: 12, width: "100%" }}>
+              {alertsData.map((item, index) => (
+                <SwipeableAlertItem
+                  key={item.id}
+                  item={item}
+                  index={index}
+                  isOpen={activeAlertId === item.id}
+                  onOpen={() => setActiveAlertId(item.id)}
+                  onClose={() => setActiveAlertId(null)}
+                  onPressDelete={handlePressDelete}
+                  onPressEdit={handlePressAlert}
+                  onLongPress={() => handleToggleAlert(item.id, item.isActive)}
+                />
+              ))}
+            </View>
           </View>
-        </View>
+        )}
       </Template>
 
       <Modal

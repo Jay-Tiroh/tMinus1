@@ -59,7 +59,6 @@ const AlertScreen = () => {
   };
 
   const { data } = useGetPriceAlertsQuery();
-  const alertsData = data?.data ?? [];
 
   useFocusEffect(
     useCallback(() => {
@@ -69,14 +68,17 @@ const AlertScreen = () => {
     }, []),
   );
 
+  const alertsData = data?.data;
+
   useEffect(() => {
+    const alerts = alertsData ?? [];
     if (
       alertAction === "edit" &&
       alertId &&
-      alertsData.length > 0 &&
+      alerts.length > 0 &&
       !alertToEdit
     ) {
-      const alert = alertsData.find((a: PriceAlert) => a.id === alertId);
+      const alert = alerts.find((a: PriceAlert) => a.id === alertId);
       if (alert) {
         setAlertToEdit(alert);
       } else {
@@ -86,8 +88,7 @@ const AlertScreen = () => {
         });
       }
     }
-  }, [alertsData, alertId, alertAction]);
-
+  }, [alertsData, alertId, alertAction, alertToEdit]);
   const handleViewAlerts = useGoToRoute("/user/price-alerts");
 
   const Config: ConfigType[] = [
@@ -238,7 +239,7 @@ const CreateAlert = ({
 
   useEffect(() => {
     onSubmittingChange(isLoading);
-  }, [isLoading]);
+  }, [isLoading, onSubmittingChange]);
 
   submitRef.current = handleCreateAlert;
 
@@ -255,7 +256,7 @@ const CreateAlert = ({
     {
       label: "Trigger",
       value: `${asset.toUpperCase()} ${activeDirection.toLowerCase()} $${
-        formatAmount(parseFloat(amount)) || "—"
+        formatAmount(parseFloat(amount),false) || "—"
       }`,
     },
     {

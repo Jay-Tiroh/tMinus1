@@ -101,3 +101,18 @@ npm start # or yarn start
 | Wallets | Withdrawal |
 | :---: | :---: |
 | ![Wallets](images/wallets.jpg) | ![Withdrawal](images/withdrawal.jpg) |
+
+
+## Firebase config (google-services.json)
+
+This file is gitignored and required for Android builds (Firebase/FCM).
+
+**Local development:**
+1. Get the file from Firebase Console → Project Settings → Your apps → Android app → Download `google-services.json`
+2. Place it at `android/app/google-services.json`
+
+**EAS builds:**
+The file is stored as an EAS file-type secret (`GOOGLE_SERVICES_JSON`) and injected automatically via
+the `eas-build-pre-install` hook in `package.json` — no manual step needed for cloud builds.
+
+See `android/app/google-services.json.example` for the expected file structure.

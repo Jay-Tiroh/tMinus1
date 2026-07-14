@@ -16,7 +16,7 @@ export interface CryptoAssetItemProps {
   numberOfLines?: number;
 }
 
-export const CryptoAssetItem = ({
+export default function CryptoAssetItem({
   leftTitle,
   leftBody,
   rightTitle,
@@ -24,7 +24,7 @@ export const CryptoAssetItem = ({
   iconSymbol,
   iconComponent,
   numberOfLines,
-}: CryptoAssetItemProps) => {
+}: CryptoAssetItemProps) {
   return (
     <View style={styles.card}>
       <View style={styles.leftSection}>
@@ -86,5 +86,3 @@ const styles = StyleSheet.create({
     textAlign: "right",
   },
 });
-
-export default CryptoAssetItem;

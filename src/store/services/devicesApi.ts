@@ -36,6 +36,7 @@ const devicesApi = baseApi.injectEndpoints({
 
 export const {
   useGetDevicesQuery,
+  useLazyGetDevicesQuery,
   useRegisterDeviceMutation,
   useDeleteDeviceMutation,
 } = devicesApi;

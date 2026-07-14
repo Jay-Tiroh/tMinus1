@@ -31,7 +31,7 @@ export default function useWallet(pollIntervalMs = 30000) {
   const portfolioValue = data?.portfolioValue ?? 0;
   const portfolioValueUsd = data?.portfolioValueUsd ?? 0;
   const portfolioCurrency = data?.portfolioCurrency ?? "USD";
-  const balances: Balance[] = wallet?.balances ?? [];
+  const balances: Balance[] = wallet?.balances;
 
   const getDepositAddressBySymbol = useCallback(
     (symbol: string) => {

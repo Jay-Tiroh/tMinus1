@@ -1,6 +1,7 @@
 import type { RootState } from "@/store";
-import { clearCredentials, setCredentials } from "@/store/slices/authSlice"; // Adjust path if needed
-import type { RefreshResponse } from "@/types/auth"; // Adjust path if needed
+import { clearCredentials, setCredentials } from "@/store/slices/authSlice";
+import { saveToken, clearTokens } from "@/utils/secureStore";
+import type { RefreshResponse } from "@/types/auth";
 import type {
   BaseQueryFn,
   FetchArgs,
@@ -8,13 +9,15 @@ import type {
 } from "@reduxjs/toolkit/query";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Mutex } from "async-mutex";
+import { showErrorToast } from "@/hooks/showToast";
+import { getErrorMessage } from "@/utils/errors";
 
 // Create a new mutex to prevent multiple simultaneous refresh calls
 const mutex = new Mutex();
-
+const BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL
 // 1. Define your standard base query
 const baseQuery = fetchBaseQuery({
-  baseUrl: "https://crypto-api-guwm.onrender.com",
+  baseUrl: BASE_URL,
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState).auth?.token;
     if (token) {
@@ -37,15 +40,14 @@ const baseQueryWithReauth: BaseQueryFn<
   let result = await baseQuery(args, api, extraOptions);
 
   // If the token is expired (401 Unauthorized)
+
+
   if (result.error && result.error.status === 401) {
-    // Check if the mutex is locked (meaning another request is already refreshing the token)
     if (!mutex.isLocked()) {
       const release = await mutex.acquire();
       try {
         const refreshToken = (api.getState() as RootState).auth?.refreshToken;
-
         if (refreshToken) {
-          // Attempt to refresh using baseQuery to avoid infinite loops
           const refreshResult = await baseQuery(
             {
               url: "/auth/refresh",
@@ -57,41 +59,51 @@ const baseQueryWithReauth: BaseQueryFn<
           );
 
           if (refreshResult.data) {
-            // Success: extract new tokens
             const refreshData = refreshResult.data as RefreshResponse;
             const data = refreshData.data;
 
-            // Dispatch the new tokens to the Redux store
-            api.dispatch(
-              setCredentials({
-                user: data.user,
-                token: data.token,
-                refreshToken: data.refreshToken,
-              }),
-            );
+            try {
+              // Persist BEFORE updating Redux/retrying — if this throws,
+              // we must not proceed as if the session is healthy.
+              await saveToken("ACCESS_TOKEN", data.token);
+              await saveToken("REFRESH_TOKEN", data.refreshToken);
 
-            // Retry the original query with the fresh token
-            result = await baseQuery(args, api, extraOptions);
+              api.dispatch(
+                setCredentials({
+                  user: data.user,
+                  token: data.token,
+                  refreshToken: data.refreshToken,
+                }),
+              );
+
+              result = await baseQuery(args, api, extraOptions);
+            } catch (persistError) {
+              showErrorToast({
+                title: "Session Error",
+                message:
+                  getErrorMessage(persistError,"Failed to persist session data. Please log in again."),
+              });
+              await clearTokens();
+              api.dispatch(clearCredentials());
+            }
           } else {
             // Refresh failed (e.g., refresh token is expired/invalid)
+            await clearTokens();
             api.dispatch(clearCredentials());
           }
         } else {
           // No refresh token available to send
+          await clearTokens();
           api.dispatch(clearCredentials());
         }
       } finally {
-        // Release the mutex lock so other waiting requests can proceed
         release();
       }
     } else {
-      // If the mutex is already locked, wait for it to be unlocked by the first request
       await mutex.waitForUnlock();
-      // Retry the original request (it will automatically grab the new token from the store)
       result = await baseQuery(args, api, extraOptions);
     }
   }
-
   return result;
 };
 

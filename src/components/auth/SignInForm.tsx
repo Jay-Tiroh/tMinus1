@@ -17,6 +17,8 @@ import { useAppDispatch } from "@/store/hooks";
 import { useLoginMutation } from "@/store/services/authApi";
 import { setCredentials } from "@/store/slices/authSlice";
 import { LoginRequest } from "@/types/auth";
+import { getErrorMessage } from "@/utils/errors";
+import { logger } from "@/utils/logger";
 import { vs } from "@/utils/responsive";
 import { saveToken } from "@/utils/secureStore";
 import Feather from "@expo/vector-icons/Feather";
@@ -28,13 +30,10 @@ import { Control, FieldValues, useForm } from "react-hook-form";
 import {
   ActivityIndicator,
   StyleSheet,
-  TouchableOpacity,
   View,
 } from "react-native";
 
-interface ApiError {
-  data?: { message?: string };
-}
+
 
 const SignInForm = () => {
   const [isEmail, setIsEmail] = useState(true);
@@ -85,7 +84,7 @@ const SignInForm = () => {
     };
 
     const result = await login(formattedData);
-    console.log("LOGIN RESULT", result);
+    logger.log("LOGIN RESULT", result);
     if ("data" in result && result.data) {
       if (isTwoFactorResponse(result.data)) {
         router.replace({
@@ -127,12 +126,8 @@ const SignInForm = () => {
       return;
     }
     if ("error" in result) {
-      const isApiError = (err: unknown): err is ApiError =>
-        typeof err === "object" && err !== null;
-
-      const loginError =
-        (isApiError(result.error) && result.error.data?.message) ||
-        "Something went wrong";
+      const loginError = getErrorMessage(result.error);
+       setErrorMessage(loginError);
       setErrorMessage(loginError);
       showErrorToast({ title: "Login Failed", message: loginError });
     }
@@ -204,11 +199,7 @@ const SignInForm = () => {
         />
       </View>
 
-      <TouchableOpacity style={styles.forgotRow}>
-        <ThemedText color={Colors.primaryClean} size={14} weight="medium">
-          Forgot password?
-        </ThemedText>
-      </TouchableOpacity>
+
 
       <Spacer size={32} />
 
@@ -217,7 +208,7 @@ const SignInForm = () => {
           title="Sign in"
           variant="primary"
           onPress={activeForm.handleSubmit(onSubmit, (errors) => {
-            console.log("VALIDATION ERRORS", errors);
+            logger.log("VALIDATION ERRORS", errors);
           })}
           disabled={isLoading}
           iconComponent={

@@ -13,7 +13,6 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import React, { useEffect } from "react";
 import {
   ActivityIndicator,
-  StyleSheet,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -106,11 +105,3 @@ const Balance = () => {
 };
 
 export default Balance;
-
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: "center",
-    gap: vs(12),
-    marginBottom: vs(30),
-  },
-});

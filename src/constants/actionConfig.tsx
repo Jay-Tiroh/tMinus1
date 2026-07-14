@@ -67,11 +67,11 @@ export interface ActionPageConfig {
     currency: string;
     onPress?: () => void;
   };
-  meta: Array<{
+  meta: {
     label: string;
     value: string;
     valueColor?: string;
-  }>;
+  }[];
   cta: {
     label: string;
     variant: ButtonVariant;

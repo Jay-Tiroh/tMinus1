@@ -1,5 +1,5 @@
 // store/slices/notificationSlice.ts
-import { baseApi } from "@/store/services/baseApi";
+import { notificationsApi } from "@/store/services/notificationsApi";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface NotificationState {
@@ -25,23 +25,20 @@ const notificationSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // sync unread count whenever the notifications query succeeds
     builder.addMatcher(
-      baseApi.endpoints.notifications.matchFulfilled,
+      notificationsApi.endpoints.notifications.matchFulfilled,
       (state, action) => {
         state.unread = action.payload.meta.unread;
       },
     );
-    // decrement on single mark-read success
     builder.addMatcher(
-      baseApi.endpoints.markNotificationRead.matchFulfilled,
+      notificationsApi.endpoints.markNotificationRead.matchFulfilled,
       (state) => {
         state.unread = Math.max(0, state.unread - 1);
       },
     );
-    // zero out on mark-all-read success
     builder.addMatcher(
-      baseApi.endpoints.markAllNotificationsRead.matchFulfilled,
+      notificationsApi.endpoints.markAllNotificationsRead.matchFulfilled,
       (state) => {
         state.unread = 0;
       },

@@ -115,7 +115,7 @@ const ActionTabs = ({ timeControl, onSelect }: ActionTabsProps) => {
         width: "100%",
       }}
     >
-      {Object.entries(timeOptions).map(([key, label]) => (
+      {Object.entries(timeOptions).map(([key]) => (
         <Pressable
           key={key}
           style={{

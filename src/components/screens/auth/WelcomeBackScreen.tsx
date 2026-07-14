@@ -7,10 +7,10 @@ import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
 import { showErrorToast, showSuccessToast } from "@/hooks/showToast";
 import { useBiometrics } from "@/hooks/useBiometrics";
+import { useLogout } from "@/hooks/useLogout";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { useLoginMutation, useLogoutMutation } from "@/store/services/authApi";
+import { useLoginMutation } from "@/store/services/authApi";
 import {
-  clearCredentials,
   setCredentials,
   unlockSession,
 } from "@/store/slices/authSlice";
@@ -57,13 +57,16 @@ const WelcomeBackScreen = () => {
   const { isSupported, isEnrolled, authenticate } = useBiometrics();
 
   const [login, { isLoading: isLoginLoading }] = useLoginMutation();
-  const [logout, { isLoading: isLogoutLoading }] = useLogoutMutation();
+
+  const { performLogout, isLoading:isLoggingOut } = useLogout();
+
+  const handleNotYou = performLogout;
 
   useEffect(() => {
     if (!user) {
       router.replace("/(auth)");
     }
-  }, [user]);
+  }, [user, router]);
 
   if (!user) return null;
 
@@ -151,18 +154,6 @@ const WelcomeBackScreen = () => {
     router.replace("/(tabs)/home");
   };
 
-  const handleNotYou = async () => {
-    try {
-      await logout().unwrap();
-    } catch {
-      // API call failed — still clear locally
-    } finally {
-      dispatch(clearCredentials());
-      await saveToken("SESSION_LOCKED", "false");
-      showSuccessToast({ title: "Logged out successfully" });
-      router.replace("/(auth)");
-    }
-  };
 
   const isPasswordValid = password.length >= 8;
 
@@ -193,7 +184,7 @@ const WelcomeBackScreen = () => {
             onPress={handleNotYou}
             activeOpacity={0.7}
             style={styles.notYouCta}
-            disabled={isLogoutLoading}
+            disabled={isLoggingOut}
           >
             <ThemedText color={Colors.textMidGray} size={14} weight="medium">
               Not you?

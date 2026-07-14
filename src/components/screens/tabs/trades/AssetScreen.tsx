@@ -34,6 +34,7 @@ import useProfile from "@/hooks/useProfile";
 import { useWatchlist } from "@/hooks/useWatchlist";
 import { ms, s, vs } from "@/utils/responsive";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { getErrorMessage } from "@/utils/errors";
 
 const AssetScreen = () => {
   useBackToHome();
@@ -66,7 +67,7 @@ const AssetScreen = () => {
     {
       title: "Alert",
       onPress: () => {
-        push("alert");
+        push("alert",{ asset });
       },
     },
   ];
@@ -122,7 +123,7 @@ const AssetScreen = () => {
     } catch (error) {
       showErrorToast({
         title: "Action Failed",
-        message: `Couldn't add ${coinDetails?.name}.`,
+        message: getErrorMessage(error,`Couldn't add ${coinDetails?.name}.`),
       });
     }
   };

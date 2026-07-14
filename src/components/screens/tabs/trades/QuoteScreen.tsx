@@ -12,7 +12,7 @@ import { useAssetRoute } from "@/hooks/useAssetRoute";
 import useTrade from "@/hooks/useTrade";
 import { ms, s, vs } from "@/utils/responsive";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-import { useLocalSearchParams, useRouter } from "expo-router";
+
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, TextStyle, View, ViewStyle } from "react-native";
 
@@ -31,12 +31,10 @@ export type ConfigType = {
 
   topSpacerSize: number;
 };
-type ScreenState = "confirm" | "completed" | "failed";
+
 
 const QuoteScreen = () => {
-  const { asset } = useLocalSearchParams();
   const { replace } = useAssetRoute();
-  const router = useRouter();
   const {
     activeQuote,
     isQuoteExpired,

@@ -14,7 +14,6 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { Href, useRouter } from "expo-router";
 import React from "react";
 import { Image, Pressable, StyleSheet, View } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 interface ThemedHeaderProps {
   goBack?: true;
   title?: string;
@@ -34,7 +33,6 @@ const ThemedHeader = ({
   headerRight,
   basic,
 }: ThemedHeaderProps) => {
-  const insets = useSafeAreaInsets();
   const router = useRouter();
   const handleGoBack = () => {
     router.back();
@@ -120,10 +118,6 @@ const NormalRight = () => {
   );
 };
 const TradeRight = () => {
-  const router = useRouter();
-  const pushTo = (route: Href) => {
-    router.replace(route);
-  };
   return (
     <View style={{ flexDirection: "row", alignItems: "center", gap: 34 }}>
       <Candle hitSlop={10} />

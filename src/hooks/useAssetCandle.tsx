@@ -6,6 +6,7 @@ interface UseAssetCandleReturn {
   isLoading: boolean;
   isError: boolean;
   isSuccess: boolean;
+  refetch: () => void;
 }
 
 export function useAssetCandle(
@@ -20,6 +21,7 @@ export function useAssetCandle(
     isLoading,
     isError,
     isSuccess,
+    refetch,
   } = useGetCandlesQuery(
     { symbol, interval, limit },
     {
@@ -33,5 +35,6 @@ export function useAssetCandle(
     isLoading,
     isError,
     isSuccess,
+    refetch,
   };
 }

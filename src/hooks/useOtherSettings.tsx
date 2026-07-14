@@ -6,6 +6,8 @@ import {
 } from "@/store/services/profileApi";
 import { updateUserSettings } from "@/store/slices/authSlice";
 import { FiatCurrency, UpdateSettingsRequest } from "@/types/profile";
+import { getErrorMessage } from "@/utils/errors";
+import { logger } from "@/utils/logger";
 
 export default function useOtherSettings() {
   const [
@@ -37,9 +39,9 @@ export default function useOtherSettings() {
       showErrorToast({
         title: "Action Failed!",
         message:
-          "Could not toggle biometric setting. Please check your network connection.",
+          getErrorMessage(error,"Could not toggle biometric setting. Please check your network connection."),
       });
-      console.log(error);
+      logger.log(error);
     }
   };
 
@@ -50,7 +52,7 @@ export default function useOtherSettings() {
       fiatCurrency: newCurrency,
     };
     try {
-      const result = await updateSettings(update).unwrap();
+      await updateSettings(update).unwrap();
 
       showSuccessToast({
         title: "Fiat currency updated!",
@@ -59,10 +61,10 @@ export default function useOtherSettings() {
       showErrorToast({
         title: "Action Failed!",
         message:
-          "Could not change fiat currency. Please check your network connection.",
+          getErrorMessage(error, "Could not change fiat currency. Please check your network connection."),
       });
 
-      console.log(error);
+      logger.log(error);
     }
   };
 

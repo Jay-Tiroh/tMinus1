@@ -12,7 +12,6 @@ import React, { useCallback, useState } from "react";
 import {
   ImageBackground,
   RefreshControl,
-  StyleSheet,
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -112,16 +111,3 @@ const WatchlistScreen = () => {
 };
 
 export default WatchlistScreen;
-
-const styles = StyleSheet.create({
-  topGainerContainer: {
-    width: "100%",
-    backgroundColor: Colors.surfaceGreenDark,
-    borderRadius: ms(18),
-    padding: ms(16),
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    maxHeight: vs(150),
-  },
-});

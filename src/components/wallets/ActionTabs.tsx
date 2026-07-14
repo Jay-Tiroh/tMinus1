@@ -28,7 +28,7 @@ const Tabs: Tab[] = [
 ];
 
 const ActionTabs = () => {
-  const [activeTab, setActiveTab] = React.useState(Tabs[0].name);
+  const [_activeTab, setActiveTab] = React.useState(Tabs[0].name);
 
   const handleTabPress = (tabName: "Deposit" | "Withdraw" | "Transfer") => {
     setActiveTab(tabName);

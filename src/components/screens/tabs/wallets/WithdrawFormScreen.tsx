@@ -15,21 +15,14 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import React from "react";
 import { Pressable, TextInput, View } from "react-native";
 
-// Replace with a real saved-addresses source when available
-// (e.g. a future `useSavedAddresses()` hook backed by its own endpoint).
-const SAVED_ADDRESSES: {
-  id: string;
-  label: string;
-  address: string;
-  network: string;
-}[] = [];
+
 
 const WithdrawFormScreen = () => {
   const { balances, verification } = useWallet();
   const { coins } = useAllAssets();
 
   const [modalVisible, setModalVisible] = React.useState(false);
-  const [addressPickerVisible, setAddressPickerVisible] = React.useState(false);
+
   const [selectedAsset, setSelectedAsset] = React.useState("USDT");
   const [amount, setAmount] = React.useState("");
   const [address, setAddress] = React.useState("");
@@ -175,13 +168,7 @@ const WithdrawFormScreen = () => {
                     padding: 0,
                   }}
                 />
-                {SAVED_ADDRESSES.length > 0 && (
-                  <Pressable onPress={() => setAddressPickerVisible(true)}>
-                    <ThemedText size={12} color={Colors.primary}>
-                      Choose from saved addresses
-                    </ThemedText>
-                  </Pressable>
-                )}
+
               </View>
             ) : (
               <Pressable

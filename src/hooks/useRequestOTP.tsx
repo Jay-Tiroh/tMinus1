@@ -1,4 +1,5 @@
 import { useRequestOTPMutation } from "@/store/services/authApi";
+import { logger } from "@/utils/logger";
 import { useEffect, useRef, useState } from "react";
 
 export const useRequestOtp = () => {
@@ -30,11 +31,10 @@ export const useRequestOtp = () => {
     if (countdown > 0) return;
 
     try {
-      const result = await requestOtp(email).unwrap();
-      // console.log(result);
+       await requestOtp(email).unwrap();
       startCooldown();
     } catch (err) {
-      console.error("Failed to dispatch OTP", err);
+      logger.error("Failed to dispatch OTP", err);
     }
   };
 

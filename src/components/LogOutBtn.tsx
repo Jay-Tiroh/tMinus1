@@ -1,31 +1,13 @@
 import { ThemedButton } from "@/components/ThemedButton";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
-import { showErrorToast, showSuccessToast } from "@/hooks/showToast";
-import { useLogoutMutation } from "@/store/services/authApi";
+import { useLogout } from "@/hooks/useLogout";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { useRouter } from "expo-router";
 import React from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
-const LogOutBtn = () => {
-  const [logout, { isLoading, isError, isSuccess }] = useLogoutMutation();
-  const router = useRouter();
-  const handleLogout = async () => {
-    try {
-      const result = await logout().unwrap();
 
-      showSuccessToast({
-        title: "Logged out successfully",
-      });
-      router.replace("/(auth)");
-    } catch (error) {
-      showErrorToast({
-        title: "Logout failed",
-        message:
-          error?.data?.error?.message || "An error occurred while logging out",
-      });
-    }
-  };
+const LogOutBtn = () => {
+  const { performLogout, isLoading } = useLogout();
 
   return (
     <View style={styles.container}>
@@ -46,7 +28,7 @@ const LogOutBtn = () => {
           )
         }
         disabled={isLoading}
-        onPress={handleLogout}
+        onPress={performLogout}
       />
     </View>
   );

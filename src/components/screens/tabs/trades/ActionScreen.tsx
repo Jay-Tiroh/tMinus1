@@ -19,10 +19,11 @@ import { useSafeBottom } from "@/hooks/useSafeBottom";
 import useTrade from "@/hooks/useTrade";
 import useWallet from "@/hooks/useWallet";
 import { TradeType } from "@/types/trades";
+import { logger } from "@/utils/logger";
 import { ms, s, vs } from "@/utils/responsive";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useLocalSearchParams } from "expo-router";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   Dimensions,
   ImageBackground,
@@ -33,8 +34,13 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  ActivityIndicator
 } from "react-native";
+import {Decimal} from "decimal.js";
+
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+  const TAB_INDEX: Record<Action, number> = { Buy: 0, Sell: 1, Swap: 2 };
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
@@ -264,8 +270,6 @@ const ActionScreen = () => {
   const {
     buyPriceUsd,
     sellPriceUsd,
-    swapInPriceUsd,
-    swapOutPriceUsd,
     getBuyReceive,
     getSellReceive,
     getSwapReceive,
@@ -277,10 +281,7 @@ const ActionScreen = () => {
   );
 
   const [availableAssets, setAvailableAssets] = useState(["USDT"]);
-  const getAvailableAssets = () => {
-    const assetsHeld = balances.map((balance) => balance.assetSymbol);
-    setAvailableAssets((prev) => [...prev, ...assetsHeld]);
-  };
+
 
   // Modal Controls
   const [modalVisible, setModalVisible] = useState(false);
@@ -300,19 +301,27 @@ const ActionScreen = () => {
     { title: "Sell", bgColor: Colors.lossBright, color: Colors.snowGray },
     { title: "Swap", bgColor: Colors.infoBright, color: Colors.surfaceNavy },
   ];
-  const tabIndex: Record<Action, number> = { Buy: 0, Sell: 1, Swap: 2 };
 
-  const handleTabPress = (title: Action) => {
-    scrollRef.current?.scrollTo({
-      x: tabIndex[title] * SCREEN_WIDTH,
-      animated: true,
-    });
-  };
+
+  const getAvailableAssets = useCallback(() => {
+    const assetsHeld = balances.map((balance) => balance.assetSymbol);
+    setAvailableAssets(assetsHeld); // replace, don't append
+  }, [balances]);
+
+  const handleTabPress = useCallback(
+    (title: Action) => {
+      scrollRef.current?.scrollTo({
+        x: TAB_INDEX[title] * SCREEN_WIDTH,
+        animated: true,
+      });
+    },
+    [],
+  );
 
   useEffect(() => {
     handleTabPress(action);
     getAvailableAssets();
-  }, []);
+  }, [action, getAvailableAssets, handleTabPress]);
 
   const handleMomentumScrollEnd = (
     e: NativeSyntheticEvent<NativeScrollEvent>,
@@ -352,20 +361,30 @@ const ActionScreen = () => {
     setSwapOutputSymbol(swapInputSymbol);
   };
 
-  const parsedSellAmount = parseFloat(sellAmount) || 0;
-  const sellReturns = getSellReceive(parsedSellAmount);
-  const sellFee = 0.01 * sellReturns;
 
-  const parsedSwapAmount = parseFloat(swapAmount) || 0;
+  // Keep raw Decimal instances as the source of truth for math
+  const sellAmountDecimal = new Decimal(sellAmount || 0);
+  const buyAmountDecimal = new Decimal(buyAmount || 0);
+  const swapAmountDecimal = new Decimal(swapAmount || 0);
+
+  // Only convert to number where a downstream function/UI genuinely needs it
+  const parsedSellAmount = sellAmountDecimal.toNumber();
+  const sellReturns = getSellReceive(parsedSellAmount); // if this fn does more math internally, it should eventually take/return Decimal too
+  const sellFee = new Decimal(0.01).times(sellReturns).toNumber();
+
+  const parsedSwapAmount = swapAmountDecimal.toNumber();
   const swapReturns = getSwapReceive(parsedSwapAmount);
 
-  // Pre-calculate all math outputs
-  const parsedBuyAmount = parseFloat(buyAmount) || 0;
-  const isBuyInsufficient = parsedBuyAmount > portfolioValue;
-  const isSellInsufficient =
-    parsedSellAmount > (getBalanceBySymbol(sellInputSymbol)?.available || 0);
-  const isSwapInsufficient =
-    parsedSwapAmount > (getBalanceBySymbol(swapInputSymbol)?.available || 0);
+  const parsedBuyAmount = buyAmountDecimal.toNumber();
+
+  // Balance comparisons — this is the highest-risk spot, do these in Decimal directly
+  const isBuyInsufficient = buyAmountDecimal.gt(portfolioValue);
+  const isSellInsufficient = sellAmountDecimal.gt(
+    getBalanceBySymbol(sellInputSymbol)?.available || 0,
+  );
+  const isSwapInsufficient = swapAmountDecimal.gt(
+    getBalanceBySymbol(swapInputSymbol)?.available || 0,
+  );
 
   // <-- 3. Implement the dynamic handleSubmit -->
   const handleSubmit = async () => {
@@ -442,10 +461,10 @@ const ActionScreen = () => {
       });
 
       // Navigate to the quote review screen on success
-      console.log(data);
+      logger.log(data);
       push("quote", { asset: params.asset });
     } catch (error: any) {
-      console.error("Quote creation failed:", error);
+      logger.error("Quote creation failed:", error);
 
       // Extract the exact error message from the thrown RTK Query payload
       const apiErrorMessage = error?.data?.error?.message;
@@ -506,7 +525,7 @@ const ActionScreen = () => {
     isSwapInsufficient,
   });
 
-  const [assetValid, setAssetValid] = useState(false);
+
 
   return (
     <ImageBackground
@@ -519,8 +538,8 @@ const ActionScreen = () => {
       {/* ── Header + Tab Controls ── */}
       <View style={[GeneralStyles.wrapper, { gap: 8, marginBottom: 16 }]}>
         <TextBlock
-          title={config[tabIndex[activeTab]].title}
-          body={config[tabIndex[activeTab]].desc}
+          title={config[TAB_INDEX[activeTab]].title}
+          body={config[TAB_INDEX[activeTab]].desc}
           bodyStyle={{ fontSize: 12 }}
         />
         <Spacer size={12} />
@@ -648,6 +667,8 @@ const ActionScreen = () => {
                     : undefined,
                 ]}
                 onPress={page.cta.onPress}
+                disabled={isCreating}
+                iconComponent={isCreating ? <ActivityIndicator color={Colors.backgroundInk} /> : undefined}
               />
             </View>
           </ScrollView>

@@ -2,6 +2,7 @@
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { useRegisterDeviceMutation } from "@/store/services/devicesApi";
 import { notificationsApi } from "@/store/services/notificationsApi";
+import { logger } from "@/utils/logger";
 import Constants from "expo-constants";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
@@ -57,15 +58,15 @@ export function usePushRegistration() {
           projectId: Constants.expoConfig?.extra?.eas?.projectId,
         },
       );
-      console.log("📱 Expo Push Token:", expoPushToken);
+      logger.log("📱 Expo Push Token:", expoPushToken);
       try {
         await registerDevice({
           expoPushToken,
           platform: Platform.OS as "ios" | "android",
         }).unwrap();
-        console.log("✅ Device registered successfully");
+        logger.log("✅ Device registered successfully");
       } catch (err) {
-        console.warn("Failed to register push device:", err);
+        logger.warn("Failed to register push device:", err);
       }
     };
 
@@ -75,7 +76,7 @@ export function usePushRegistration() {
     // Fires immediately when the push lands — no screen visit needed.
     notificationListener.current =
       Notifications.addNotificationReceivedListener((notification) => {
-        console.log("🔔 Notification received:", notification); // ← add this
+        logger.log("🔔 Notification received:", notification); // ← add this
         dispatch(
           notificationsApi.util.invalidateTags([
             { type: "Notifications", id: "LIST" },
@@ -85,7 +86,7 @@ export function usePushRegistration() {
 
     responseListener.current =
       Notifications.addNotificationResponseReceivedListener((response) => {
-        console.log("👆 Notification tapped:", response); // ← add this
+        logger.log("👆 Notification tapped:", response); // ← add this
         dispatch(
           notificationsApi.util.invalidateTags([
             { type: "Notifications", id: "LIST" },

@@ -20,6 +20,7 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+  const TABS = ["All", "Gainers", "Watchlist"]; // move outside component, or module scope
 
 const MarketsScreen = () => {
   useBackToHome();
@@ -28,29 +29,22 @@ const MarketsScreen = () => {
   const [query, setQuery] = useState("");
   const debouncedQuery = useDebounce(query, 400);
   const { coins, refetch } = useAllAssets(debouncedQuery);
-  const tabs = ["All", "Gainers", "Watchlist"];
   const [activeTab, setActiveTab] = useState("All");
   const router = useRouter();
 
-  const handleTabChange = (tab: string) => {
-    setActiveTab(tab);
-    if (tab === "Gainers") {
-      router.replace("/(tabs)/markets/trending");
-    } else if (tab === "Watchlist") {
-      router.replace("/(tabs)/markets/watchlist");
-    }
-  };
 
-  const [isRefreshing, setIsRefreshing] = useState(false);
 
-  const handleRefresh = useCallback(async () => {
-    setIsRefreshing(true);
-    try {
-      await refetch();
-    } finally {
-      setIsRefreshing(false);
-    }
-  }, [refetch]);
+  const handleTabChange = useCallback(
+    (tab: string) => {
+      setActiveTab(tab);
+      if (tab === "Gainers") {
+        router.replace("/(tabs)/markets/trending");
+      } else if (tab === "Watchlist") {
+        router.replace("/(tabs)/markets/watchlist");
+      }
+    },
+    [router],
+  );
 
   const header = useMemo(
     () => (
@@ -62,12 +56,23 @@ const MarketsScreen = () => {
         <Spacer size={16} />
         <SearchBar value={query} onChangeText={setQuery} />
         <Spacer size={22} />
-        <Tabs tabs={tabs} activeTab={activeTab} handlePress={handleTabChange} />
+        <Tabs tabs={TABS} activeTab={activeTab} handlePress={handleTabChange} />
         <Spacer size={26} />
       </View>
     ),
-    [query, activeTab],
+    [query, activeTab, handleTabChange],
   );
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleRefresh = useCallback(async () => {
+    setIsRefreshing(true);
+    try {
+      await refetch();
+    } finally {
+      setIsRefreshing(false);
+    }
+  }, [refetch]);
+
 
   return (
     <ImageBackground

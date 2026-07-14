@@ -1,12 +1,13 @@
 import { LabelValueItem } from "@/components/LabelValueItem";
 import { Spacer } from "@/components/Spacer";
+import { ThemedButton } from "@/components/ThemedButton";
 import { ThemedText } from "@/components/ThemedText";
 
 import Template from "@/components/trades/Template";
 import { Colors } from "@/constants/Colors";
-import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
 import { formatAmount } from "@/helpers/functions";
+import { showErrorToast } from "@/hooks/showToast";
 import { useGoToRoute } from "@/hooks/useGoToRoute";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { useRequestWithdrawalMutation } from "@/store/services/walletsApi";
@@ -14,18 +15,15 @@ import {
   clearWithdrawalDraft,
   setLastWithdrawal,
 } from "@/store/slices/walletsSlice";
+import { logger } from "@/utils/logger";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
-import { View } from "react-native";
-import { OtpInput } from "react-native-otp-entry";
+import React from "react";
+import { ActivityIndicator , View } from "react-native";
 
 const WithdrawConfirmationScreen = () => {
   const dispatch = useAppDispatch();
   const toSuccess = useGoToRoute("/wallets/success?type=withdrawal");
   const draft = useAppSelector((s) => s.wallets.withdrawalDraft);
-
-  const [error, setError] = useState<string | null>(null);
-  const [pinAttempt, setPinAttempt] = useState(0);
   const [requestWithdrawal, { isLoading }] = useRequestWithdrawalMutation();
   const router = useRouter();
 
@@ -59,16 +57,18 @@ const WithdrawConfirmationScreen = () => {
     { id: "network", label: "Network", value: draft.network },
   ];
 
-  const handlePinComplete = async (pin: string) => {
-    setError(null);
+  const handleConfirmWithdrawal = async () => {
     try {
       const result = await requestWithdrawal(draft).unwrap();
       dispatch(setLastWithdrawal(result));
       dispatch(clearWithdrawalDraft());
       toSuccess();
     } catch (e) {
-      setError("Withdrawal failed. Check your PIN and try again.");
-      setPinAttempt((n) => n + 1);
+      logger.error("Withdrawal failed:", e);
+      showErrorToast({
+        title: "Withdrawal failed",
+        message: (e as any)?.data?.error?.message || "Please try again.",
+      })
     }
   };
 
@@ -103,56 +103,15 @@ const WithdrawConfirmationScreen = () => {
       </View>
       <Spacer size={24} />
       <View style={GeneralStyles.wrapper}>
-        <View
-          style={[
-            GeneralStyles.box,
-            { padding: 20, gap: 8, backgroundColor: "transparent" },
-          ]}
-        >
-          <ThemedText size={12} color={Colors.textMidGray}>
-            Transaction PIN
-          </ThemedText>
-          <Spacer size={8} />
-
-          <OtpInput
-            key={pinAttempt}
-            numberOfDigits={4}
-            onFilled={handlePinComplete}
-            secureTextEntry
-            theme={{
-              pinCodeTextStyle: {
-                color: Colors.snowGray,
-                fontFamily: Fonts.bold,
-              },
-              focusedPinCodeContainerStyle: {
-                borderColor: Colors.primaryClean,
-              },
-              pinCodeContainerStyle: {
-                minWidth: 80,
-                borderColor: Colors.surface,
-              },
-            }}
-          />
-        </View>
+        <ThemedButton
+          title={isLoading? "Submitting..." :"Confirm Withdrawal"}
+          onPress={handleConfirmWithdrawal}
+          variant="primary"
+          disabled={isLoading}
+          iconComponent={isLoading ? <ActivityIndicator color={ Colors.backgroundInk} /> : undefined}
+        />
       </View>
-      {error && (
-        <View style={GeneralStyles.wrapper}>
-          <ThemedText size={12} color={Colors.loss} style={{ marginTop: 8 }}>
-            {error}
-          </ThemedText>
-        </View>
-      )}
-      {isLoading && (
-        <View style={GeneralStyles.wrapper}>
-          <ThemedText
-            size={12}
-            color={Colors.textMidGray}
-            style={{ marginTop: 8 }}
-          >
-            Submitting...
-          </ThemedText>
-        </View>
-      )}
+
     </Template>
   );
 };
