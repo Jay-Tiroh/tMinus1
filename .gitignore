@@ -51,3 +51,10 @@ service-account.json
 *.keystore
 google-services.json
 build_log.txt
+
+
+android/build/
+android/app/build/
+android/.gradle/
+android/.cxx/
+android/local.properties
