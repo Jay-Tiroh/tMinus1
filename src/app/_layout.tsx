@@ -1,3 +1,4 @@
+import { CustomSplash } from "@/components/CustomSplash";
 import { InactivityLockProvider } from "@/components/InactivityLockProvider";
 import { Colors } from "@/constants/Colors";
 import { toastConfig } from "@/constants/toastConfig";
@@ -29,6 +30,7 @@ function RootLayoutNav() {
   const [bootstrapRoute, setBootstrapRoute] = useState<BootstrapRoute | null>(
     null,
   );
+  const [nativeSplashHidden, setNativeSplashHidden] = useState(false);
   usePushRegistration();
 
   const [fontsLoaded, fontError] = useFonts({
@@ -55,9 +57,10 @@ function RootLayoutNav() {
         }
 
         try {
-
           const result = await store.dispatch(
-            authApi.endpoints.getSession.initiate(undefined, { forceRefetch: true }),
+            authApi.endpoints.getSession.initiate(undefined, {
+              forceRefetch: true,
+            }),
           );
 
           if (result.error || !result.data) {
@@ -93,6 +96,10 @@ function RootLayoutNav() {
   }, []);
 
   useEffect(() => {
+    SplashScreen.hideAsync().then(() => setNativeSplashHidden(true));
+  }, []);
+
+  useEffect(() => {
     if (!fontsLoaded || !isBootstrapped || bootstrapRoute === null) return;
 
     switch (bootstrapRoute) {
@@ -105,16 +112,12 @@ function RootLayoutNav() {
         router.replace("/welcome-back");
         break;
     }
-
-    SplashScreen.hideAsync();
   }, [fontsLoaded, isBootstrapped, bootstrapRoute, router]);
 
-  useEffect(() => {
-    if (fontError && isBootstrapped) SplashScreen.hideAsync();
-  }, [fontError, isBootstrapped]);
-
-  if (!fontsLoaded && !fontError) return null;
-  if (!isBootstrapped) return null;
+  // Still loading fonts/bootstrap? Show OUR custom splash, not null.
+  if (!nativeSplashHidden || (!fontsLoaded && !fontError) || !isBootstrapped) {
+    return <CustomSplash />;
+  }
 
   return (
     <SafeAreaProvider>
