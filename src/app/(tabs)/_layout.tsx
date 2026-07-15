@@ -1,7 +1,7 @@
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { TABS, TabBarColors, TabBarStyle } from "@/constants/TabsConfig";
-import { usePushRegistration } from "@/hooks/usePushRegistration";
+import { usePushRegistration } from "@/shared/hooks/usePushRegistration";
 import { Tabs } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SvgProps } from "react-native-svg";
@@ -47,7 +47,7 @@ export default function TabsLayout() {
           name={tab.name}
           options={{
             title: tab.label,
-            tabBarIcon: ({  focused }) => renderIcon(tab.icon, focused),
+            tabBarIcon: ({ focused }) => renderIcon(tab.icon, focused),
             headerShown: false,
           }}
           // TabsLayout.tsx

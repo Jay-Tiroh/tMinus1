@@ -1,5 +1,8 @@
-import { Notification, NotificationsResponse } from "@/types/notification";
-import { baseApi } from "./baseApi";
+import {
+  Notification,
+  NotificationsResponse,
+} from "@/features/notifications/types/notification";
+import { baseApi } from "@/store/services/baseApi";
 
 export const notificationsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({

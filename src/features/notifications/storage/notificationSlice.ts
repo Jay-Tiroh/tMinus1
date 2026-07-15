@@ -1,5 +1,5 @@
 // store/slices/notificationSlice.ts
-import { notificationsApi } from "@/store/services/notificationsApi";
+import { notificationsApi } from "@/features/notifications/api/notificationsApi";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface NotificationState {

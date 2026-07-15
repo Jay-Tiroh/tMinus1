@@ -6,10 +6,10 @@ import { ThemedText } from "@/components/ThemedText";
 import Template from "@/components/trades/Template";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
+import { useNotificationsQuery } from "@/features/notifications/api/notificationsApi";
 import { useBackToHome } from "@/hooks/useBackToHome";
 import useOtherSettings from "@/hooks/useOtherSettings";
 import useProfile from "@/hooks/useProfile";
-import { useNotificationsQuery } from "@/store/services/notificationsApi";
 import { useGetPriceAlertsQuery } from "@/store/services/priceAlertsApi";
 import { FIAT_CURRENCIES, FiatCurrency } from "@/types/profile";
 import { Href, useRouter } from "expo-router";
@@ -197,18 +197,22 @@ const ProfileScreen = () => {
         <Spacer size={40} />
 
         {/* Menu Items */}
-        {isError?<ErrorState onRetry={handleRefetch}  />:<View style={{ gap: 12 }}>
-          {menuItems.map((item, index) => (
-            <ListItem
-              key={index}
-              title={item.title}
-              subtitle={item.subtitle}
-              trailingText={item.trailing}
-              iconColor={Colors.primaryClean}
-              onPress={item.onPress}
-            />
-          ))}
-        </View>}
+        {isError ? (
+          <ErrorState onRetry={handleRefetch} />
+        ) : (
+          <View style={{ gap: 12 }}>
+            {menuItems.map((item, index) => (
+              <ListItem
+                key={index}
+                title={item.title}
+                subtitle={item.subtitle}
+                trailingText={item.trailing}
+                iconColor={Colors.primaryClean}
+                onPress={item.onPress}
+              />
+            ))}
+          </View>
+        )}
       </View>
       <Spacer size={40} />
       <View

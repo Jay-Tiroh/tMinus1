@@ -2,7 +2,7 @@ import { CustomSplash } from "@/components/CustomSplash";
 import { InactivityLockProvider } from "@/components/InactivityLockProvider";
 import { Colors } from "@/constants/Colors";
 import { toastConfig } from "@/constants/toastConfig";
-import { usePushRegistration } from "@/hooks/usePushRegistration";
+import { usePushRegistration } from "@/shared/hooks/usePushRegistration";
 import { store } from "@/store";
 import { authApi } from "@/store/services/authApi";
 import { clearCredentials, setCredentials } from "@/store/slices/authSlice";

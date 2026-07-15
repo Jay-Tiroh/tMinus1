@@ -1,11 +1,11 @@
 import { countriesApi } from "@/store/country-picker/countriesApi";
 import { configureStore } from "@reduxjs/toolkit";
+import notificationReducer from "../features/notifications/storage/notificationSlice";
 import { baseApi } from "./services/baseApi";
 import bottomSheetReducer from "./slices/BottomSheetSlice";
 import menuReducer from "./slices/MenuSlice";
 import authReducer from "./slices/authSlice";
 import kycReducer from "./slices/kycSlice";
-import notificationReducer from "./slices/notificationSlice";
 import tradesReducer from "./slices/tradesSlice";
 import userReducer from "./slices/userSlice";
 import walletsReducer from "./slices/walletsSlice";
