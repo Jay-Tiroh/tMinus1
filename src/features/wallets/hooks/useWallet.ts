@@ -1,9 +1,11 @@
 import {
   useGetDepositAddressesQuery,
   useGetWalletQuery,
-} from "@/store/services/walletsApi";
-import { Balance } from "@/types/wallets";
+} from "@/features/wallets/api/walletsApi";
+import { Balance } from "@/features/wallets/types/wallets";
 import { useCallback } from "react";
+
+type Balances = Balance[] | undefined;
 
 export default function useWallet(pollIntervalMs = 30000) {
   const {
@@ -31,7 +33,7 @@ export default function useWallet(pollIntervalMs = 30000) {
   const portfolioValue = data?.portfolioValue ?? 0;
   const portfolioValueUsd = data?.portfolioValueUsd ?? 0;
   const portfolioCurrency = data?.portfolioCurrency ?? "USD";
-  const balances: Balance[] = wallet?.balances;
+  const balances: Balances = wallet?.balances;
 
   const getDepositAddressBySymbol = useCallback(
     (symbol: string) => {
@@ -54,7 +56,7 @@ export default function useWallet(pollIntervalMs = 30000) {
     (symbol: string) => {
       if (!symbol) return null;
       return (
-        balances.find((b) => b.assetSymbol === symbol.toUpperCase()) ?? null
+        balances?.find((b) => b.assetSymbol === symbol.toUpperCase()) ?? null
       );
     },
     [balances],
@@ -76,7 +78,6 @@ export default function useWallet(pollIntervalMs = 30000) {
     isSuccess,
     isUninitialized,
     refetch,
-    // deposit addresses state
     isDepositAddressesLoading,
     refetchDepositAddresses,
   };

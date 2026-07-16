@@ -4,7 +4,7 @@ import {
   SimulateDepositResponse,
   Withdrawal,
   WithdrawalRequest,
-} from "@/types/wallets";
+} from "@/features/wallets/types/wallets";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export type RecentContact = {

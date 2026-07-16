@@ -8,7 +8,7 @@ import authReducer from "./slices/authSlice";
 import kycReducer from "./slices/kycSlice";
 import tradesReducer from "./slices/tradesSlice";
 import userReducer from "./slices/userSlice";
-import walletsReducer from "./slices/walletsSlice";
+import walletsReducer from "../features/wallets/storage/walletsSlice";
 export const store = configureStore({
   reducer: {
     [baseApi.reducerPath]: baseApi.reducer,

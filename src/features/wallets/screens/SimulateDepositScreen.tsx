@@ -4,77 +4,20 @@ import Template from "@/components/trades/Template";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
-import { showErrorToast } from "@/hooks/showToast";
-import { useAppDispatch } from "@/store/hooks";
-import { useSimulateDepositMutation } from "@/store/services/walletsApi";
-import { setLastDeposit } from "@/store/slices/walletsSlice";
-import { getErrorMessage } from "@/utils/errors";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import React from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import { ActivityIndicator, StyleSheet, TextInput, View } from "react-native";
-import { z } from "zod";
+import { useSimulateDepositFlow } from "../hooks/useSimulateDepositFlow";
 
-const schema = z.object({
-  amount: z
-    .string()
-    .min(1, "Amount is required")
-    .refine(
-      (v) => !isNaN(Number(v)) && Number(v) > 0,
-      "Must be a positive number",
-    ),
-  delay: z
-    .string()
-    .min(1, "Delay is required")
-    .refine(
-      (v) =>
-        !isNaN(Number(v)) &&
-        Number.isInteger(Number(v)) &&
-        Number(v) >= 0 &&
-        Number(v) <= 60,
-      "Must be a whole number between 0 and 60",
-    ),
-});
+export const SimulateDepositScreen = () => {
+  const { asset } = useLocalSearchParams<{ asset: string }>();
 
-type FormValues = z.infer<typeof schema>;
-
-const SimulateDepositScreen = () => {
-  const { asset } = useLocalSearchParams();
-
+  const { form, onSubmit, isPending, amountPreview } = useSimulateDepositFlow();
   const {
     control,
-    handleSubmit,
-    watch,
     formState: { errors },
-  } = useForm<FormValues>({
-    resolver: zodResolver(schema),
-    mode: "onChange",
-    defaultValues: { amount: "200", delay: "5" },
-  });
-
-  const amount = watch("amount");
-
-  const [simulateDeposit, { isLoading, isSuccess }] =
-    useSimulateDepositMutation();
-  const router = useRouter();
-  const dispatch = useAppDispatch();
-  const onSubmit = async (data: FormValues) => {
-    try {
-      const result = await simulateDeposit({
-        amount: Number(data.amount),
-        settlementDelaySeconds: Number(data.delay),
-      }).unwrap();
-      dispatch(setLastDeposit(result));
-      router.replace("/wallets/success");
-      // SimulateDepositScreen.tsx
-    } catch (error) {
-      showErrorToast({
-        title: "Failed to create sandbox deposit",
-        message: getErrorMessage(error),
-      });
-    }
-  };
+  } = form;
 
   return (
     <Template
@@ -85,16 +28,14 @@ const SimulateDepositScreen = () => {
       ctaProps={{
         title: "Create sandbox deposit",
         variant: "primary",
-        onPress: handleSubmit(onSubmit),
-        disabled: isLoading || isSuccess,
-        iconComponent:
-          isLoading || isSuccess ? (
-            <ActivityIndicator color={Colors.white} />
-          ) : undefined,
+        onPress: onSubmit,
+        disabled: isPending,
+        iconComponent: isPending ? (
+          <ActivityIndicator color={Colors.white} />
+        ) : undefined,
       }}
     >
       <View style={[GeneralStyles.wrapper, { gap: 16 }]}>
-        {/* Static: Asset */}
         <View style={[GeneralStyles.box, { padding: 16, gap: 4 }]}>
           <ThemedText size={12} color={Colors.textMidGray}>
             Asset
@@ -104,7 +45,6 @@ const SimulateDepositScreen = () => {
           </ThemedText>
         </View>
 
-        {/* Controlled: Amount */}
         <Controller
           control={control}
           name="amount"
@@ -137,7 +77,6 @@ const SimulateDepositScreen = () => {
           )}
         />
 
-        {/* Controlled: Settlement delay */}
         <Controller
           control={control}
           name="delay"
@@ -189,7 +128,7 @@ const SimulateDepositScreen = () => {
             color={Colors.primaryClean}
             style={{ marginBottom: 8 }}
           >
-            +{amount || "0"} {asset}
+            +{amountPreview || "0"} {asset}
           </ThemedText>
           <ThemedText size={13} color={Colors.textMidGray}>
             Status starts as pending, then completes automatically.
@@ -213,9 +152,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: Fonts.medium,
     color: Colors.snowGray,
-    padding: 0, // remove default TextInput padding so it aligns flush
+    padding: 0,
     margin: 0,
   },
 });
-
-export default SimulateDepositScreen;

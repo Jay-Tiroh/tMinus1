@@ -9,6 +9,7 @@ import { BuildActionConfig } from "@/constants/actionConfig";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
+import useWallet from "@/features/wallets/hooks/useWallet";
 import { formatAmount } from "@/helpers/functions";
 import { showErrorToast, showWarningToast } from "@/hooks/showToast";
 import { useAssetChart } from "@/hooks/useAssetChart";
@@ -17,14 +18,15 @@ import { useGoToRoute } from "@/hooks/useGoToRoute";
 import { useKyc } from "@/hooks/useKyc";
 import { useSafeBottom } from "@/hooks/useSafeBottom";
 import useTrade from "@/hooks/useTrade";
-import useWallet from "@/hooks/useWallet";
 import { TradeType } from "@/types/trades";
 import { logger } from "@/utils/logger";
 import { ms, s, vs } from "@/utils/responsive";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { Decimal } from "decimal.js";
 import { useLocalSearchParams } from "expo-router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
+  ActivityIndicator,
   Dimensions,
   ImageBackground,
   NativeScrollEvent,
@@ -34,13 +36,11 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  ActivityIndicator
 } from "react-native";
-import {Decimal} from "decimal.js";
 
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-  const TAB_INDEX: Record<Action, number> = { Buy: 0, Sell: 1, Swap: 2 };
+const TAB_INDEX: Record<Action, number> = { Buy: 0, Sell: 1, Swap: 2 };
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
@@ -282,7 +282,6 @@ const ActionScreen = () => {
 
   const [availableAssets, setAvailableAssets] = useState(["USDT"]);
 
-
   // Modal Controls
   const [modalVisible, setModalVisible] = useState(false);
   const [pickerTarget, setPickerTarget] = useState<PickerTarget | null>(null);
@@ -302,21 +301,17 @@ const ActionScreen = () => {
     { title: "Swap", bgColor: Colors.infoBright, color: Colors.surfaceNavy },
   ];
 
-
   const getAvailableAssets = useCallback(() => {
     const assetsHeld = balances.map((balance) => balance.assetSymbol);
     setAvailableAssets(assetsHeld); // replace, don't append
   }, [balances]);
 
-  const handleTabPress = useCallback(
-    (title: Action) => {
-      scrollRef.current?.scrollTo({
-        x: TAB_INDEX[title] * SCREEN_WIDTH,
-        animated: true,
-      });
-    },
-    [],
-  );
+  const handleTabPress = useCallback((title: Action) => {
+    scrollRef.current?.scrollTo({
+      x: TAB_INDEX[title] * SCREEN_WIDTH,
+      animated: true,
+    });
+  }, []);
 
   useEffect(() => {
     handleTabPress(action);
@@ -360,7 +355,6 @@ const ActionScreen = () => {
     setSwapInputSymbol(swapOutputSymbol);
     setSwapOutputSymbol(swapInputSymbol);
   };
-
 
   // Keep raw Decimal instances as the source of truth for math
   const sellAmountDecimal = new Decimal(sellAmount || 0);
@@ -525,8 +519,6 @@ const ActionScreen = () => {
     isSwapInsufficient,
   });
 
-
-
   return (
     <ImageBackground
       source={require("@/assets/images/new-bg.png")}
@@ -668,7 +660,11 @@ const ActionScreen = () => {
                 ]}
                 onPress={page.cta.onPress}
                 disabled={isCreating}
-                iconComponent={isCreating ? <ActivityIndicator color={Colors.backgroundInk} /> : undefined}
+                iconComponent={
+                  isCreating ? (
+                    <ActivityIndicator color={Colors.backgroundInk} />
+                  ) : undefined
+                }
               />
             </View>
           </ScrollView>

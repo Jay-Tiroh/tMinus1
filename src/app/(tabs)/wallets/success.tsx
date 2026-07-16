@@ -1,4 +1,4 @@
-import SuccessScreen from "@/components/screens/tabs/wallets/SuccessScreen";
+import SuccessScreen from "@/features/wallets/screens/SuccessScreen";
 
 export default function Success() {
   return <SuccessScreen />;

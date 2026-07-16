@@ -19,8 +19,8 @@ import {
   Withdrawal,
   WithdrawalRequest,
   WithdrawalResponse,
-} from "@/types/wallets";
-import { baseApi } from "./baseApi";
+} from "@/features/wallets/types/wallets";
+import { baseApi } from "../../../store/services/baseApi";
 
 const walletsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({

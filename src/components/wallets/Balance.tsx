@@ -6,7 +6,7 @@ import { formatAmount } from "@/helpers/functions";
 import { showErrorToast } from "@/hooks/showToast";
 import useFiat from "@/hooks/useFiat";
 import { useGoToRoute } from "@/hooks/useGoToRoute";
-import useWallet from "@/hooks/useWallet";
+import useWallet from "@/features/wallets/hooks/useWallet";
 import { ms, s, vs } from "@/utils/responsive";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";

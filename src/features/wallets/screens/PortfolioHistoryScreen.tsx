@@ -3,36 +3,35 @@ import Loader from "@/components/Loader";
 import { Spacer } from "@/components/Spacer";
 import { ThemedText } from "@/components/ThemedText";
 import Template from "@/components/trades/Template";
-import AdvancedLineChart from "@/components/wallets/AdvancedLineChart";
-import CryptoAssetItem from "@/components/wallets/CryptoAssetItem"; // Correctly using your component
+import CryptoAssetItem from "@/components/wallets/CryptoAssetItem";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
+import { useGetPortfolioHistoryQuery } from "@/features/wallets/api/walletsApi";
+import AdvancedLineChart from "@/features/wallets/components/AdvancedLineChart";
+import useWallet from "@/features/wallets/hooks/useWallet";
 import { formatAmount, timeAgo } from "@/helpers/functions";
 import useFiat from "@/hooks/useFiat";
-import useWallet from "@/hooks/useWallet";
-import { useGetPortfolioHistoryQuery } from "@/store/services/walletsApi";
-import React from "react";
+import React, { useMemo, useState } from "react";
 import { StyleSheet, View } from "react-native";
+import { PORTFOLIO_TIME_OPTIONS } from "../constants/wallets.constants";
 
-export const timeOptions = {
-  "1D": "1 Day",
-  "1W": "1 Week",
-  "1M": "1 Month",
-  "1Y": "1 Year",
-} as const;
-
-const PortfolioHistoryScreen = () => {
+export const PortfolioHistoryScreen = () => {
   const [timeControl, setTimeControl] =
-    React.useState<keyof typeof timeOptions>("1M");
+    useState<keyof typeof PORTFOLIO_TIME_OPTIONS>("1M");
+
   const {
     data: chartData,
     isLoading,
     isError,
     refetch,
   } = useGetPortfolioHistoryQuery({ range: timeControl });
-  const displayedData = chartData?.data.slice(-5).reverse();
   const { portfolioValueUsd } = useWallet();
   const { symbol } = useFiat();
+
+  // Memoize to prevent arrays mutating during render
+  const displayedData = useMemo(() => {
+    return chartData?.data ? [...chartData.data].slice(-5).reverse() : [];
+  }, [chartData]);
 
   return (
     <Template
@@ -63,16 +62,14 @@ const PortfolioHistoryScreen = () => {
           <Spacer size={32} />
 
           <View style={[GeneralStyles.wrapper, { gap: 10 }]}>
-            {displayedData?.map((item) => (
+            {displayedData.map((item) => (
               <CryptoAssetItem
                 key={item.time}
                 iconComponent={
                   <View
                     style={[
                       styles.iconCircle,
-                      {
-                        backgroundColor: Colors.primaryClean,
-                      },
+                      { backgroundColor: Colors.primaryClean },
                     ]}
                   >
                     <ThemedText
@@ -97,15 +94,7 @@ const PortfolioHistoryScreen = () => {
   );
 };
 
-export default PortfolioHistoryScreen;
-
 const styles = StyleSheet.create({
-  timeFilters: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 10,
-  },
-  filterPill: { paddingVertical: 6, paddingHorizontal: 16, borderRadius: 12 },
   iconCircle: {
     width: 40,
     height: 40,

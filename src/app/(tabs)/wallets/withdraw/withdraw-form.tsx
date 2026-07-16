@@ -1,4 +1,4 @@
-import WithdrawFormScreen from "@/components/screens/tabs/wallets/WithdrawFormScreen";
+import WithdrawFormScreen from "@/features/wallets/screens/WithdrawFormScreen";
 
 export default function WithdrawForm() {
   return <WithdrawFormScreen />;

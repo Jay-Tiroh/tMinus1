@@ -2,30 +2,17 @@ import { LabelValueItem } from "@/components/LabelValueItem";
 import { Spacer } from "@/components/Spacer";
 import { ThemedButton } from "@/components/ThemedButton";
 import { ThemedText } from "@/components/ThemedText";
-
 import Template from "@/components/trades/Template";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
 import { formatAmount } from "@/helpers/functions";
-import { showErrorToast } from "@/hooks/showToast";
-import { useGoToRoute } from "@/hooks/useGoToRoute";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { useRequestWithdrawalMutation } from "@/store/services/walletsApi";
-import {
-  clearWithdrawalDraft,
-  setLastWithdrawal,
-} from "@/store/slices/walletsSlice";
-import { logger } from "@/utils/logger";
-import { useRouter } from "expo-router";
 import React from "react";
-import { ActivityIndicator , View } from "react-native";
+import { ActivityIndicator, View } from "react-native";
+import { useWithdrawConfirmationFlow } from "../hooks/useWithdrawConfirmationFlow";
 
-const WithdrawConfirmationScreen = () => {
-  const dispatch = useAppDispatch();
-  const toSuccess = useGoToRoute("/wallets/success?type=withdrawal");
-  const draft = useAppSelector((s) => s.wallets.withdrawalDraft);
-  const [requestWithdrawal, { isLoading }] = useRequestWithdrawalMutation();
-  const router = useRouter();
+export const WithdrawConfirmationScreen = () => {
+  const { draft, isLoading, handleConfirmWithdrawal, handleCancel } =
+    useWithdrawConfirmationFlow();
 
   if (!draft) {
     return (
@@ -37,9 +24,7 @@ const WithdrawConfirmationScreen = () => {
         ctaProps={{
           title: "Back to withdraw",
           variant: "primary",
-          onPress: () => {
-            router.replace("/wallets/withdraw/withdraw-form");
-          },
+          onPress: handleCancel,
         }}
       >
         <View style={GeneralStyles.wrapper}>
@@ -56,21 +41,6 @@ const WithdrawConfirmationScreen = () => {
     { id: "address", label: "Destination address", value: draft.address },
     { id: "network", label: "Network", value: draft.network },
   ];
-
-  const handleConfirmWithdrawal = async () => {
-    try {
-      const result = await requestWithdrawal(draft).unwrap();
-      dispatch(setLastWithdrawal(result));
-      dispatch(clearWithdrawalDraft());
-      toSuccess();
-    } catch (e) {
-      logger.error("Withdrawal failed:", e);
-      showErrorToast({
-        title: "Withdrawal failed",
-        message: (e as any)?.data?.error?.message || "Please try again.",
-      })
-    }
-  };
 
   return (
     <Template
@@ -104,16 +74,17 @@ const WithdrawConfirmationScreen = () => {
       <Spacer size={24} />
       <View style={GeneralStyles.wrapper}>
         <ThemedButton
-          title={isLoading? "Submitting..." :"Confirm Withdrawal"}
+          title={isLoading ? "Submitting..." : "Confirm Withdrawal"}
           onPress={handleConfirmWithdrawal}
           variant="primary"
           disabled={isLoading}
-          iconComponent={isLoading ? <ActivityIndicator color={ Colors.backgroundInk} /> : undefined}
+          iconComponent={
+            isLoading ? (
+              <ActivityIndicator color={Colors.backgroundInk} />
+            ) : undefined
+          }
         />
       </View>
-
     </Template>
   );
 };
-
-export default WithdrawConfirmationScreen;

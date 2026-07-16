@@ -1,4 +1,4 @@
-import WalletsScreen from "@/components/screens/tabs/wallets/WalletsScreen";
+import WalletsScreen from "@/features/wallets/screens/WalletsScreen";
 
 export default function Wallets() {
   return <WalletsScreen />;

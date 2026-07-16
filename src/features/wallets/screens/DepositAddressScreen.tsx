@@ -4,22 +4,23 @@ import { ThemedText } from "@/components/ThemedText";
 import Template from "@/components/trades/Template";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
+import useWallet from "@/features/wallets/hooks/useWallet";
 import { showInfoToast } from "@/hooks/showToast";
-import useWallet from "@/hooks/useWallet";
 import Octicons from "@expo/vector-icons/Octicons";
 import * as Clipboard from "expo-clipboard";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React from "react";
 import { View } from "react-native";
 import QRCode from "react-native-qrcode-svg";
+import { WalletNoticeBox } from "../components/WalletNoticeBox";
 
-const DepositAddressScreen = () => {
-  const { asset } = useLocalSearchParams();
+export const DepositAddressScreen = () => {
+  const { asset } = useLocalSearchParams<{ asset: string }>();
+  const router = useRouter();
+
   const { getDepositAddressBySymbol } = useWallet();
   const depositAddress = getDepositAddressBySymbol(asset as string);
-
-  // When API is ready:
-  // const { data: depositInfo } = useGetDepositNetworkQuery(assetId);
+  const isUsdt = asset === "USDT";
 
   const contextFields = [
     { id: "da_1", label: "Network", value: depositAddress?.network },
@@ -33,8 +34,6 @@ const DepositAddressScreen = () => {
     }
   };
 
-  const router = useRouter();
-  const isUsdt = asset === "USDT";
   return (
     <Template
       textBlockProps={{
@@ -55,7 +54,7 @@ const DepositAddressScreen = () => {
           }}
         >
           <QRCode
-            value={depositAddress?.address}
+            value={depositAddress?.address || ""}
             size={180}
             color="black"
             backgroundColor="white"
@@ -105,7 +104,10 @@ const DepositAddressScreen = () => {
             variant="secondary"
             style={{ flex: 1 }}
             onPress={() =>
-              router.replace(`/wallets/deposit/simulate-deposit?asset=${asset}`)
+              router.replace({
+                pathname: "/wallets/deposit/simulate-deposit",
+                params: { asset },
+              })
             }
           />
         )}
@@ -114,33 +116,12 @@ const DepositAddressScreen = () => {
       <Spacer size={32} />
 
       <View style={GeneralStyles.wrapper}>
-        <View
-          style={[
-            GeneralStyles.box,
-            {
-              padding: 20,
-              backgroundColor: Colors.warningBrown + "30",
-              borderColor: Colors.warningBrown,
-              borderWidth: 1,
-            },
-          ]}
-        >
-          <ThemedText
-            weight="bold"
-            size={14}
-            color={Colors.snowGray}
-            style={{ marginBottom: 8 }}
-          >
-            Important
-          </ThemedText>
-          <ThemedText size={13} color={Colors.warningGold}>
-            Only use the sandbox simulator in class. This address is not real
-            custody.
-          </ThemedText>
-        </View>
+        <WalletNoticeBox
+          type="warning"
+          title="Important"
+          description="Only use the sandbox simulator in class. This address is not real custody."
+        />
       </View>
     </Template>
   );
 };
-
-export default DepositAddressScreen;
