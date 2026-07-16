@@ -1,7 +1,7 @@
 import ChangeText from "@/components/ChangeText";
 import Chart from "@/components/LineChart";
-import TextBlock from "@/components/TextBlock";
-import { ThemedText } from "@/components/ThemedText";
+import TextBlock from "@/shared/components/TextBlock";
+import { ThemedText } from "@/shared/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { PortfolioChartPoint } from "@/features/wallets/types/wallets";
 import { formatCurrency } from "@/helpers/functions";

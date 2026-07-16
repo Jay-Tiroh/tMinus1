@@ -1,4 +1,4 @@
-import { ThemedText } from "@/components/ThemedText";
+import { ThemedText } from "@/shared/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { ms, s, vs } from "@/utils/responsive";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";

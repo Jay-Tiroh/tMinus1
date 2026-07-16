@@ -1,6 +1,6 @@
 import Header from "@/components/kyc/Header";
-import { Spacer } from "@/components/Spacer";
-import { ThemedButton } from "@/components/ThemedButton";
+import { Spacer } from "@/shared/components/Spacer";
+import { ThemedButton } from "@/shared/components/ThemedButton";
 import { GeneralStyles } from "@/constants/themes";
 import { useSafeBottom } from "@/hooks/useSafeBottom";
 import { vs } from "@/utils/responsive";

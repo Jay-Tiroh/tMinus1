@@ -1,8 +1,4 @@
-import ErrorState from "@/components/ErrorComponent";
-import Loader from "@/components/Loader";
 import { ListItem } from "@/components/screens/tabs/user/ProfileScreen";
-import { ThemedButton } from "@/components/ThemedButton";
-import { ThemedText } from "@/components/ThemedText";
 import Template from "@/components/trades/Template";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
@@ -10,6 +6,10 @@ import { GeneralStyles } from "@/constants/themes";
 import { formatAmount, timeAgo } from "@/helpers/functions";
 import { showErrorToast, showSuccessToast } from "@/hooks/showToast";
 import { useAssetRoute } from "@/hooks/useAssetRoute";
+import ErrorState from "@/shared//components/ErrorComponent";
+import Loader from "@/shared/components/Loader";
+import { ThemedButton } from "@/shared/components/ThemedButton";
+import { ThemedText } from "@/shared/components/ThemedText";
 import {
   useDeletePriceAlertMutation,
   useGetPriceAlertsQuery,

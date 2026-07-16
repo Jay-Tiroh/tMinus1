@@ -1,7 +1,7 @@
 import { LabelValueItem } from "@/components/LabelValueItem";
-import { Spacer } from "@/components/Spacer";
-import { ThemedButton } from "@/components/ThemedButton";
-import { ThemedText } from "@/components/ThemedText";
+import { Spacer } from "@/shared/components/Spacer";
+import { ThemedButton } from "@/shared/components/ThemedButton";
+import { ThemedText } from "@/shared/components/ThemedText";
 import Template from "@/components/trades/Template";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";

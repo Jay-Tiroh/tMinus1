@@ -1,9 +1,9 @@
 import Ill1 from "@/assets/images/onboard1.svg";
 import Ill2 from "@/assets/images/onboard2.svg";
 import Ill3 from "@/assets/images/onboard3.svg";
-import { Spacer } from "@/components/Spacer";
-import { ThemedButton } from "@/components/ThemedButton";
-import { ThemedText } from "@/components/ThemedText";
+import { Spacer } from "@/shared/components/Spacer";
+import { ThemedButton } from "@/shared/components/ThemedButton";
+import { ThemedText } from "@/shared/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { Colors } from "@/constants/Colors";
 import { Spacing } from "@/constants/Spacing";

@@ -1,10 +1,10 @@
 import { CoinCard } from "@/components/home/CoinCard";
 import CoinCardsSkeleton from "@/components/home/CoinCardSkeleton";
-import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
+import { Asset } from "@/features/markets/types/assets";
 import { useAllAssets } from "@/hooks/useAllAssets";
 import { useTrendingAssets } from "@/hooks/useTrendingAssets";
-import { Asset } from "@/types/assets";
+import { ThemedText } from "@/shared/components/ThemedText";
 import { memo, useCallback } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 

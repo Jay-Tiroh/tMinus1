@@ -1,4 +1,4 @@
-import { Asset } from "@/types/assets";
+import { Asset } from "@/features/markets/types/assets";
 
 export interface WatchlistMeta {
   requestId: string;

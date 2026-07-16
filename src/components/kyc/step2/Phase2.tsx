@@ -1,6 +1,6 @@
 import { UploadCTA } from "@/components/kyc/step2/Phase1";
-import { Spacer } from "@/components/Spacer";
-import { ThemedText } from "@/components/ThemedText";
+import { Spacer } from "@/shared/components/Spacer";
+import { ThemedText } from "@/shared/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";

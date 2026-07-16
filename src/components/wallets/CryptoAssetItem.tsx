@@ -1,5 +1,5 @@
 import { CryptoIcon } from "@/components/CryptoIcon";
-import TextBlock from "@/components/TextBlock";
+import TextBlock from "@/shared/components/TextBlock";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
 import { ms, s, vs } from "@/utils/responsive";

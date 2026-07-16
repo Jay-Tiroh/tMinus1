@@ -1,4 +1,4 @@
-import { ThemedText } from "@/components/ThemedText";
+import { ThemedText } from "@/shared/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import React from "react";
 import { StyleProp, StyleSheet, TextStyle, View } from "react-native";

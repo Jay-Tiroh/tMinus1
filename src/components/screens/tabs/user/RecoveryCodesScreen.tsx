@@ -1,5 +1,5 @@
-import { Spacer } from "@/components/Spacer";
-import { ThemedText } from "@/components/ThemedText";
+import { Spacer } from "@/shared/components/Spacer";
+import { ThemedText } from "@/shared/components/ThemedText";
 import Template from "@/components/trades/Template";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
@@ -13,8 +13,8 @@ import { StyleSheet, View } from "react-native";
 
 import { ThemedInput } from "@/components/auth/ThemedTextInput";
 import BadgeStuff from "@/components/BadgeStuff";
-import TextBlock from "@/components/TextBlock";
-import { ThemedButton } from "@/components/ThemedButton";
+import TextBlock from "@/shared/components/TextBlock";
+import { ThemedButton } from "@/shared/components/ThemedButton";
 import { useRegenerateRecoveryCodesMutation } from "@/store/services/2faApi";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";

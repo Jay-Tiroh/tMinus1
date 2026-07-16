@@ -1,8 +1,8 @@
 import ErrorState from "@/components/ErrorComponent";
 import LogOutBtn from "@/components/LogOutBtn";
 import { ModalSelector } from "@/components/OptionPicker";
-import { Spacer } from "@/components/Spacer";
-import { ThemedText } from "@/components/ThemedText";
+import { Spacer } from "@/shared/components/Spacer";
+import { ThemedText } from "@/shared/components/ThemedText";
 import Template from "@/components/trades/Template";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";

@@ -1,5 +1,5 @@
 import { Colors } from "@/constants/Colors";
-import { Candle } from "@/types/assets";
+import { Candle } from "@/features/markets/types/assets";
 import { useMemo } from "react";
 import { G, Line, Rect, Svg } from "react-native-svg";
 

@@ -1,6 +1,6 @@
-import { Spacer } from "@/components/Spacer";
-import TextBlock, { TextBlockProps } from "@/components/TextBlock";
-import { ThemedButton } from "@/components/ThemedButton";
+import { Spacer } from "@/shared/components/Spacer";
+import TextBlock, { TextBlockProps } from "@/shared/components/TextBlock";
+import { ThemedButton } from "@/shared/components/ThemedButton";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
 import { useSafeBottom } from "@/hooks/useSafeBottom";

@@ -1,14 +1,12 @@
 import { ThemedInput } from "@/components/auth/ThemedTextInput";
-import { Spacer } from "@/components/Spacer";
-import { ThemedButton } from "@/components/ThemedButton";
-import { ThemedText } from "@/components/ThemedText";
+import { Spacer } from "@/shared/components/Spacer";
+import { ThemedButton } from "@/shared/components/ThemedButton";
+import { ThemedText } from "@/shared/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { formatPhoneInternational } from "@/helpers/functions";
 import { showErrorToast } from "@/hooks/showToast"; // Adjust import path if needed
 import { signupSchema } from "@/schemas/authSchemas";
-import {
-  useValidateSignupMutation,
-} from "@/store/services/authApi"; // Adjust import path if needed
+import { useValidateSignupMutation } from "@/store/services/authApi"; // Adjust import path if needed
 
 import { ms, vs } from "@/utils/responsive";
 import Feather from "@expo/vector-icons/Feather";
@@ -52,8 +50,7 @@ const SignUpForm = () => {
   const [validateSignup, { isLoading: isValidating }] =
     useValidateSignupMutation();
 
-
-  const isLoading = isValidating ;
+  const isLoading = isValidating;
 
   // 4. Form Submission Flow
   const onSubmit = async (data: SignUpFormValues) => {
@@ -82,7 +79,6 @@ const SignUpForm = () => {
         });
         return;
       }
-
 
       router.replace({
         pathname: "/verify",

@@ -1,8 +1,8 @@
 import CandlestickChart from "@/components/CandlestickChart";
 import ChangeText from "@/components/ChangeText";
-import Skeleton from "@/components/Skeleton";
-import TextBlock from "@/components/TextBlock";
-import { ThemedText } from "@/components/ThemedText";
+import Skeleton from "@/shared/components/Skeleton";
+import TextBlock from "@/shared/components/TextBlock";
+import { ThemedText } from "@/shared/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { formatCurrency } from "@/helpers/functions";
 import { useAssetCandle } from "@/hooks/useAssetCandle";

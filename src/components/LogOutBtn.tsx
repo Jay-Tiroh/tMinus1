@@ -1,4 +1,4 @@
-import { ThemedButton } from "@/components/ThemedButton";
+import { ThemedButton } from "@/shared/components/ThemedButton";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { useLogout } from "@/hooks/useLogout";

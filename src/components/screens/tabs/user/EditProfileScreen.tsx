@@ -1,6 +1,6 @@
-import { Spacer } from "@/components/Spacer";
-import { ThemedButton } from "@/components/ThemedButton";
-import { ThemedText } from "@/components/ThemedText";
+import { Spacer } from "@/shared/components/Spacer";
+import { ThemedButton } from "@/shared/components/ThemedButton";
+import { ThemedText } from "@/shared/components/ThemedText";
 import Template from "@/components/trades/Template";
 import { ThemedTextInput } from "@/components/user/ThemedTextInput";
 import { Colors } from "@/constants/Colors";
@@ -63,7 +63,10 @@ const EditProfileScreen = () => {
       logger.error("Failed to update profile:", error);
       showErrorToast({
         title: "Update Failed",
-        message: getErrorMessage(error,"We couldn't update your profile right now. Please try again."),
+        message: getErrorMessage(
+          error,
+          "We couldn't update your profile right now. Please try again.",
+        ),
       });
     }
   };

@@ -1,6 +1,6 @@
 import { AssetPickerModal } from "@/components/AssetPicker";
-import { Spacer } from "@/components/Spacer";
-import { ThemedText } from "@/components/ThemedText";
+import { Spacer } from "@/shared/components/Spacer";
+import { ThemedText } from "@/shared/components/ThemedText";
 import Template from "@/components/trades/Template";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";

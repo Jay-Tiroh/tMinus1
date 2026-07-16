@@ -1,5 +1,8 @@
-import { useGetAssetQuery } from "@/store/services/marketsApi";
-import { AssetDetailsResponse, ChartData } from "@/types/assets";
+import { useGetAssetQuery } from "@/features/markets/api/marketsApi";
+import {
+  AssetDetailsResponse,
+  ChartData,
+} from "@/features/markets/types/assets";
 
 interface UseAssetChartReturn {
   chart: ChartData[];

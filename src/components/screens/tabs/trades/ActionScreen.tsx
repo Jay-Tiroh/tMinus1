@@ -1,10 +1,10 @@
 import { Asset, AssetPickerModal } from "@/components/AssetPicker";
 import { CryptoIcon } from "@/components/CryptoIcon";
 import { LabelValueItem } from "@/components/LabelValueItem";
-import { Spacer } from "@/components/Spacer";
-import TextBlock from "@/components/TextBlock";
-import { ThemedButton } from "@/components/ThemedButton";
-import { ThemedText } from "@/components/ThemedText";
+import { Spacer } from "@/shared/components/Spacer";
+import TextBlock from "@/shared/components/TextBlock";
+import { ThemedButton } from "@/shared/components/ThemedButton";
+import { ThemedText } from "@/shared/components/ThemedText";
 import { BuildActionConfig } from "@/constants/actionConfig";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";

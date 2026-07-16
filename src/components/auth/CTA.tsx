@@ -1,6 +1,6 @@
 import Facebook from "@/assets/icons/facebook.svg";
 import Google from "@/assets/icons/google.svg";
-import { ThemedButton } from "@/components/ThemedButton";
+import { ThemedButton } from "@/shared/components/ThemedButton";
 import { Colors } from "@/constants/Colors";
 import { ms, s, vs } from "@/utils/responsive";
 import React from "react";
@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { ThemedText } from "../ThemedText";
+import { ThemedText } from "../../shared/components/ThemedText";
 
 const CTA = ({
   onPress,

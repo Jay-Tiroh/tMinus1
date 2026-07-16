@@ -2,8 +2,8 @@ import BadgeStuff from "@/components/BadgeStuff";
 import { LabelValueItem } from "@/components/LabelValueItem";
 import { ConfigType } from "@/components/screens/tabs/trades/QuoteScreen";
 
-import { Spacer } from "@/components/Spacer";
-import { ThemedText } from "@/components/ThemedText";
+import { Spacer } from "@/shared/components/Spacer";
+import { ThemedText } from "@/shared/components/ThemedText";
 import Template from "@/components/trades/Template";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";

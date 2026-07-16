@@ -1,7 +1,7 @@
 import BadgeStuff from "@/components/BadgeStuff";
-import { Spacer } from "@/components/Spacer";
-import TextBlock from "@/components/TextBlock";
-import { ThemedButton } from "@/components/ThemedButton";
+import { Spacer } from "@/shared/components/Spacer";
+import TextBlock from "@/shared/components/TextBlock";
+import { ThemedButton } from "@/shared/components/ThemedButton";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";

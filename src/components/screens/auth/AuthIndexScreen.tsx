@@ -1,8 +1,8 @@
 import SignInForm from "@/components/auth/SignInForm";
 import SignUpForm from "@/components/auth/SignUpForm";
-import { Spacer } from "@/components/Spacer";
-import TextBlock from "@/components/TextBlock";
-import { ThemedText } from "@/components/ThemedText";
+import { Spacer } from "@/shared/components/Spacer";
+import TextBlock from "@/shared/components/TextBlock";
+import { ThemedText } from "@/shared/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { Colors } from "@/constants/Colors";
 import { Spacing } from "@/constants/Spacing";

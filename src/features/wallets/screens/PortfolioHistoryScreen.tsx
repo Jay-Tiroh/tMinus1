@@ -1,7 +1,3 @@
-import ErrorState from "@/components/ErrorComponent";
-import Loader from "@/components/Loader";
-import { Spacer } from "@/components/Spacer";
-import { ThemedText } from "@/components/ThemedText";
 import Template from "@/components/trades/Template";
 import CryptoAssetItem from "@/components/wallets/CryptoAssetItem";
 import { Colors } from "@/constants/Colors";
@@ -11,6 +7,10 @@ import AdvancedLineChart from "@/features/wallets/components/AdvancedLineChart";
 import useWallet from "@/features/wallets/hooks/useWallet";
 import { formatAmount, timeAgo } from "@/helpers/functions";
 import useFiat from "@/hooks/useFiat";
+import ErrorState from "@/shared/components/ErrorComponent";
+import Loader from "@/shared/components/Loader";
+import { Spacer } from "@/shared/components/Spacer";
+import { ThemedText } from "@/shared/components/ThemedText";
 import React, { useMemo, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { PORTFOLIO_TIME_OPTIONS } from "../constants/wallets.constants";

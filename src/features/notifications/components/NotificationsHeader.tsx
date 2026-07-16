@@ -1,5 +1,5 @@
-import TextBlock from "@/components/TextBlock";
-import { ThemedButton } from "@/components/ThemedButton";
+import TextBlock from "@/shared/components/TextBlock";
+import { ThemedButton } from "@/shared/components/ThemedButton";
 import { Colors } from "@/constants/Colors";
 import React from "react";
 import { StyleSheet, View } from "react-native";

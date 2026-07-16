@@ -1,8 +1,8 @@
 import { InfoBanner } from "@/components/auth/InfoBanner";
 import { ThemedInput } from "@/components/auth/ThemedTextInput";
-import { Spacer } from "@/components/Spacer";
-import { ThemedButton } from "@/components/ThemedButton";
-import { ThemedText } from "@/components/ThemedText";
+import { Spacer } from "@/shared/components/Spacer";
+import { ThemedButton } from "@/shared/components/ThemedButton";
+import { ThemedText } from "@/shared/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { formatPhoneInternational } from "@/helpers/functions";
@@ -27,13 +27,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Control, FieldValues, useForm } from "react-hook-form";
-import {
-  ActivityIndicator,
-  StyleSheet,
-  View,
-} from "react-native";
-
-
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 
 const SignInForm = () => {
   const [isEmail, setIsEmail] = useState(true);
@@ -127,7 +121,7 @@ const SignInForm = () => {
     }
     if ("error" in result) {
       const loginError = getErrorMessage(result.error);
-       setErrorMessage(loginError);
+      setErrorMessage(loginError);
       setErrorMessage(loginError);
       showErrorToast({ title: "Login Failed", message: loginError });
     }
@@ -198,8 +192,6 @@ const SignInForm = () => {
           hasToggle
         />
       </View>
-
-
 
       <Spacer size={32} />
 

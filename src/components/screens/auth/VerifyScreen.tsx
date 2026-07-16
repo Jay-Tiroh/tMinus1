@@ -1,11 +1,15 @@
 import { InfoBanner } from "@/components/auth/InfoBanner";
-import { Spacer } from "@/components/Spacer";
-import TextBlock from "@/components/TextBlock";
-import { ThemedButton } from "@/components/ThemedButton";
-import { ThemedText } from "@/components/ThemedText";
+import { Spacer } from "@/shared/components/Spacer";
+import TextBlock from "@/shared/components/TextBlock";
+import { ThemedButton } from "@/shared/components/ThemedButton";
+import { ThemedText } from "@/shared/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { Spacing } from "@/constants/Spacing";
-import { showErrorToast, showInfoToast, showSuccessToast } from "@/hooks/showToast";
+import {
+  showErrorToast,
+  showInfoToast,
+  showSuccessToast,
+} from "@/hooks/showToast";
 import {
   useRequestOTPMutation,
   useVerifyOTPMutation,
@@ -39,8 +43,6 @@ export default function VerifyScreen() {
 
   const [verifyOtp, { isLoading: isVerifying }] = useVerifyOTPMutation();
   const [requestOtp, { isLoading: isRequesting }] = useRequestOTPMutation();
-
-
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -102,8 +104,6 @@ export default function VerifyScreen() {
       });
     }
   };
-
-
 
   return (
     <ImageBackground

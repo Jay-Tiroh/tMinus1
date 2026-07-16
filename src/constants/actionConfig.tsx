@@ -1,4 +1,4 @@
-import { ButtonVariant } from "@/components/ThemedButton";
+import { ButtonVariant } from "@/shared/components/ThemedButton";
 import { Colors } from "@/constants/Colors";
 import { formatAmount } from "@/helpers/functions";
 import useFiat from "@/hooks/useFiat";

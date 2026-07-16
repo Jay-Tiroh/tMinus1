@@ -1,8 +1,8 @@
 import ChangeText from "@/components/ChangeText";
 import { CryptoIcon } from "@/components/CryptoIcon";
-import TextBlock from "@/components/TextBlock";
-import { ThemedButton } from "@/components/ThemedButton";
-import { ThemedText } from "@/components/ThemedText";
+import TextBlock from "@/shared/components/TextBlock";
+import { ThemedButton } from "@/shared/components/ThemedButton";
+import { ThemedText } from "@/shared/components/ThemedText";
 import CandlestickComponent from "@/components/trades/CandlestickComponent";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
@@ -25,7 +25,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import Add from "@/assets/icons/markets/add-circle.svg";
 import KycLocked from "@/components/KycLocked";
-import { Spacer } from "@/components/Spacer";
+import { Spacer } from "@/shared/components/Spacer";
 import { showErrorToast, showSuccessToast } from "@/hooks/showToast";
 import { useAssetRoute } from "@/hooks/useAssetRoute";
 import { useBackToHome } from "@/hooks/useBackToHome";

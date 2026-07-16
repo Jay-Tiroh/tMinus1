@@ -1,7 +1,9 @@
-import CoinItem from "@/components/CoinItem";
-import Loader from "@/components/Loader";
 import { Colors } from "@/constants/Colors";
-import { Asset } from "@/types/assets";
+import RemoveFromWatchlistModal from "@/features/markets/components/Modal";
+import { Asset } from "@/features/markets/types/assets";
+import { showErrorToast, showSuccessToast } from "@/hooks/showToast";
+import { useWatchlist } from "@/hooks/useWatchlist";
+import Loader from "@/shared/components/Loader";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useCallback, useEffect, useState } from "react";
 import {
@@ -12,8 +14,7 @@ import {
   View,
   ViewStyle,
 } from "react-native";
-
-// ─── Types ────────────────────────────────────────────────────────────────────
+import { CoinItem } from "./CoinItem";
 
 export type CoinItemConfig = {
   showChange?: boolean;
@@ -21,7 +22,7 @@ export type CoinItemConfig = {
   amountInUsd?: number;
 };
 
-type CoinListProps = {
+export type CoinListProps = {
   data: Asset[] | undefined;
   coinItemConfig?: CoinItemConfig;
   contentContainerStyle?: ViewStyle;
@@ -32,21 +33,13 @@ type CoinListProps = {
   refreshControl?: FlatListProps<Asset>["refreshControl"];
 };
 
-// ─── Separator ────────────────────────────────────────────────────────────────
-
 const Separator = () => (
-  <View style={{ paddingVertical: 6 }}>
-    <View
-      style={{
-        width: "100%",
-      }}
-    />
+  <View style={styles.separatorContainer}>
+    <View style={styles.separatorLine} />
   </View>
 );
 
-// ─── CoinList ─────────────────────────────────────────────────────────────────
-
-const CoinList = React.memo(function CoinList({
+export const CoinList = React.memo(function CoinList({
   data,
   coinItemConfig,
   contentContainerStyle,
@@ -57,6 +50,12 @@ const CoinList = React.memo(function CoinList({
   refreshControl,
 }: CoinListProps) {
   const [isReady, setIsReady] = useState(false);
+
+  // Track modal state at the list level to prevent N-modals in the DOM
+  const [modalAsset, setModalAsset] = useState<Asset | null>(null);
+  const [removeLoading, setRemoveLoading] = useState(false);
+
+  const { removeFromWatchlist } = useWatchlist();
 
   const {
     showChange = false,
@@ -71,6 +70,38 @@ const CoinList = React.memo(function CoinList({
     return () => task.cancel();
   }, []);
 
+  const handleLongPress = useCallback(
+    (asset: Asset) => {
+      if (hasModal) {
+        setModalAsset(asset);
+      }
+    },
+    [hasModal],
+  );
+
+  const handleConfirmRemove = async () => {
+    if (!modalAsset) return;
+    setRemoveLoading(true);
+
+    try {
+      await removeFromWatchlist(modalAsset.symbol).unwrap();
+      showSuccessToast({
+        title: `${modalAsset.name} removed from Watchlist`,
+      });
+    } catch {
+      showErrorToast({
+        title: `Error removing ${modalAsset.name} from Watchlist`,
+      });
+    } finally {
+      setRemoveLoading(false);
+      setModalAsset(null);
+    }
+  };
+
+  const handleDismissModal = () => {
+    setModalAsset(null);
+  };
+
   const renderItem = useCallback(
     ({ item }: { item: Asset }) => (
       <View style={styles.coinItemWrapper}>
@@ -82,11 +113,11 @@ const CoinList = React.memo(function CoinList({
           showChange={showChange}
           showChart={showChart}
           useHrefs={useHrefs}
-          hasModal={hasModal}
+          onLongPress={() => handleLongPress(item)}
         />
       </View>
     ),
-    [showChange, showChart, useHrefs, hasModal, amountInUsd],
+    [showChange, showChart, useHrefs, amountInUsd, handleLongPress],
   );
 
   const keyExtractor = useCallback((item: Asset) => item.id, []);
@@ -94,7 +125,7 @@ const CoinList = React.memo(function CoinList({
   if (!isReady) return <Loader />;
 
   return (
-    <View style={[styles.coinListContainer]}>
+    <View style={styles.coinListContainer}>
       <FlatList
         data={data}
         keyExtractor={keyExtractor}
@@ -113,11 +144,19 @@ const CoinList = React.memo(function CoinList({
         colors={["transparent", Colors.black]}
         style={styles.fadeGradient}
       />
+
+      {hasModal && (
+        <RemoveFromWatchlistModal
+          visible={!!modalAsset}
+          coinName={modalAsset?.name || ""}
+          actionLoading={removeLoading}
+          onConfirm={handleConfirmRemove}
+          onDismiss={handleDismissModal}
+        />
+      )}
     </View>
   );
 });
-
-export default CoinList;
 
 const styles = StyleSheet.create({
   coinListContainer: {
@@ -127,6 +166,12 @@ const styles = StyleSheet.create({
   },
   coinItemWrapper: {
     paddingHorizontal: 24,
+  },
+  separatorContainer: {
+    paddingVertical: 6,
+  },
+  separatorLine: {
+    width: "100%",
   },
   fadeGradient: {
     position: "absolute",

@@ -1,7 +1,7 @@
 import { CryptoIcon } from "@/components/CryptoIcon";
-import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { useAllAssets } from "@/hooks/useAllAssets";
+import { ThemedText } from "@/shared/components/ThemedText";
 import React, { useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,

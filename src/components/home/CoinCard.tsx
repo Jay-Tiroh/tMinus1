@@ -1,11 +1,11 @@
-import { CryptoIcon } from "@/components/CryptoIcon";
-import Chart from "@/components/LineChart";
-import { ThemedText } from "@/components/ThemedText";
 import { Colors } from "@/constants/Colors";
+import Chart from "@/features/markets/components/LineChart";
+import { Asset } from "@/features/markets/types/assets";
 import { formatCurrency } from "@/helpers/functions";
 import { useAssetChart } from "@/hooks/useAssetChart";
 import useFiat from "@/hooks/useFiat";
-import { Asset } from "@/types/assets";
+import { CryptoIcon } from "@/shared/components/CryptoIcon";
+import { ThemedText } from "@/shared/components/ThemedText";
 import { ms, s, vs } from "@/utils/responsive";
 import { memo, useState } from "react";
 import { StyleSheet, View } from "react-native";

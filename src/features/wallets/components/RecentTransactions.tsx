@@ -1,5 +1,5 @@
-import { Spacer } from "@/components/Spacer";
-import { ThemedText } from "@/components/ThemedText";
+import { Spacer } from "@/shared/components/Spacer";
+import { ThemedText } from "@/shared/components/ThemedText";
 import CryptoAssetItem from "@/components/wallets/CryptoAssetItem";
 import { Colors } from "@/constants/Colors";
 import { useTransactions } from "@/features/wallets/hooks/useTransactions";

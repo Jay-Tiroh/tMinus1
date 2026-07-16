@@ -5,7 +5,7 @@ import DollarCircle from "@/assets/icons/dollar-circle.svg";
 import Menu from "@/assets/icons/menu.svg";
 import Scanner from "@/assets/icons/scanner.svg";
 import Star from "@/assets/icons/star.svg";
-import { ThemedText } from "@/components/ThemedText";
+import { ThemedText } from "@/shared/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
 import { Colors } from "@/constants/Colors";
 import { useAppDispatch } from "@/store/hooks";

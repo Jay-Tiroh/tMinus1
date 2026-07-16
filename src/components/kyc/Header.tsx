@@ -1,6 +1,6 @@
-import { Spacer } from "@/components/Spacer";
-import TextBlock from "@/components/TextBlock";
-import { ThemedText } from "@/components/ThemedText";
+import { Spacer } from "@/shared/components/Spacer";
+import TextBlock from "@/shared/components/TextBlock";
+import { ThemedText } from "@/shared/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
 import { ms, s, vs } from "@/utils/responsive";

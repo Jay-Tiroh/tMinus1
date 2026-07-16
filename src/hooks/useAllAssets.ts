@@ -1,5 +1,5 @@
-import { useAllAssetsQuery } from "@/store/services/marketsApi";
-import { AssetsQueryParams } from "@/types/assets";
+import { useAllAssetsQuery } from "@/features/markets/api/marketsApi";
+import { AssetsQueryParams } from "@/features/markets/types/assets";
 import { useMemo } from "react";
 
 export function useAllAssets(q?: string, pollIntervalMs = 10000) {

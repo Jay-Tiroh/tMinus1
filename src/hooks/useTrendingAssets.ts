@@ -1,5 +1,5 @@
-import { useTrendingWithMetaQuery } from "@/store/services/marketsApi";
-import { TrendingQueryParams } from "@/types/assets";
+import { useTrendingWithMetaQuery } from "@/features/markets/api/marketsApi";
+import { TrendingQueryParams } from "@/features/markets/types/assets";
 
 export function useTrendingAssets(
   params?: TrendingQueryParams,

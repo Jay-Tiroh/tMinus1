@@ -1,14 +1,14 @@
-import { Spacer } from "@/components/Spacer";
-import { ThemedButton } from "@/components/ThemedButton";
-import { ThemedText } from "@/components/ThemedText";
 import Template from "@/components/trades/Template";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
+import { useGetOrderBookQuery } from "@/features/markets/api/marketsApi";
 import { formatAmount } from "@/helpers/functions";
 import { useAssetRoute } from "@/hooks/useAssetRoute";
 import useFiat from "@/hooks/useFiat";
-import { useGetOrderBookQuery } from "@/store/services/marketsApi";
+import { Spacer } from "@/shared/components/Spacer";
+import { ThemedButton } from "@/shared/components/ThemedButton";
+import { ThemedText } from "@/shared/components/ThemedText";
 import { ms, s, vs } from "@/utils/responsive";
 import { useLocalSearchParams } from "expo-router";
 import React from "react";

@@ -1,5 +1,5 @@
 import Back from "@/assets/icons/back.svg";
-import { ThemedText } from "@/components/ThemedText";
+import { ThemedText } from "@/shared/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { Spacing } from "@/constants/Spacing";
 import { useRouter } from "expo-router";
