@@ -1,4 +1,4 @@
-import AssetScreen from "@/components/screens/tabs/trades/AssetScreen";
+import AssetScreen from "@/features/trades/screens/AssetScreen";
 import React from "react";
 
 const Asset = () => {

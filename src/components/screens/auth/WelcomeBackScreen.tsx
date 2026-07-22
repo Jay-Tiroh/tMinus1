@@ -1,19 +1,16 @@
-import { Spacer } from "@/shared/components/Spacer";
-import { ThemedButton } from "@/shared/components/ThemedButton";
-import { ThemedText } from "@/shared/components/ThemedText";
-import Template from "@/components/trades/Template";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
 import { showErrorToast, showSuccessToast } from "@/hooks/showToast";
 import { useBiometrics } from "@/hooks/useBiometrics";
 import { useLogout } from "@/hooks/useLogout";
+import { Spacer } from "@/shared/components/Spacer";
+import Template from "@/shared/components/Template";
+import { ThemedButton } from "@/shared/components/ThemedButton";
+import { ThemedText } from "@/shared/components/ThemedText";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { useLoginMutation } from "@/store/services/authApi";
-import {
-  setCredentials,
-  unlockSession,
-} from "@/store/slices/authSlice";
+import { setCredentials, unlockSession } from "@/store/slices/authSlice";
 import { ms, s, vs } from "@/utils/responsive";
 import { saveToken } from "@/utils/secureStore";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
@@ -58,7 +55,7 @@ const WelcomeBackScreen = () => {
 
   const [login, { isLoading: isLoginLoading }] = useLoginMutation();
 
-  const { performLogout, isLoading:isLoggingOut } = useLogout();
+  const { performLogout, isLoading: isLoggingOut } = useLogout();
 
   const handleNotYou = performLogout;
 
@@ -153,7 +150,6 @@ const WelcomeBackScreen = () => {
     showSuccessToast({ title: "Welcome Back" });
     router.replace("/(tabs)/home");
   };
-
 
   const isPasswordValid = password.length >= 8;
 

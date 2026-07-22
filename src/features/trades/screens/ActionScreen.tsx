@@ -1,24 +1,22 @@
 import { Asset, AssetPickerModal } from "@/components/AssetPicker";
-import { CryptoIcon } from "@/components/CryptoIcon";
-import { LabelValueItem } from "@/components/LabelValueItem";
+
+import { Colors } from "@/constants/Colors";
+import { Fonts } from "@/constants/Fonts";
+import { GeneralStyles } from "@/constants/themes";
+import { TradeType } from "@/features/trades";
+import { BuildActionConfig } from "@/features/trades/constants/action.config";
+import { useAssetRoute } from "@/features/trades/hooks/useAssetRoute";
+import useWallet from "@/features/wallets/hooks/useWallet";
+import { formatAmount } from "@/helpers/functions";
+import { showErrorToast, showWarningToast } from "@/hooks/showToast";
+
+import { useGoToRoute } from "@/hooks/useGoToRoute";
+import { useKyc } from "@/hooks/useKyc";
+import { useSafeBottom } from "@/hooks/useSafeBottom";
 import { Spacer } from "@/shared/components/Spacer";
 import TextBlock from "@/shared/components/TextBlock";
 import { ThemedButton } from "@/shared/components/ThemedButton";
 import { ThemedText } from "@/shared/components/ThemedText";
-import { BuildActionConfig } from "@/constants/actionConfig";
-import { Colors } from "@/constants/Colors";
-import { Fonts } from "@/constants/Fonts";
-import { GeneralStyles } from "@/constants/themes";
-import useWallet from "@/features/wallets/hooks/useWallet";
-import { formatAmount } from "@/helpers/functions";
-import { showErrorToast, showWarningToast } from "@/hooks/showToast";
-import { useAssetChart } from "@/hooks/useAssetChart";
-import { useAssetRoute } from "@/hooks/useAssetRoute";
-import { useGoToRoute } from "@/hooks/useGoToRoute";
-import { useKyc } from "@/hooks/useKyc";
-import { useSafeBottom } from "@/hooks/useSafeBottom";
-import useTrade from "@/hooks/useTrade";
-import { TradeType } from "@/types/trades";
 import { logger } from "@/utils/logger";
 import { ms, s, vs } from "@/utils/responsive";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
@@ -33,228 +31,49 @@ import {
   NativeSyntheticEvent,
   ScrollView,
   StyleSheet,
-  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
-
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-const TAB_INDEX: Record<Action, number> = { Buy: 0, Sell: 1, Swap: 2 };
+// Import new boundary dependencies
+import { useAssetChart } from "@/features/markets";
+import useTrade from "@/features/trades/hooks/useTrade";
+import { LabelValueItem } from "@/shared/components/LabelValueItem";
+import {
+  StaticAmountBlock,
+  TextInputBlock,
+} from "../components/TradeInputBlocks";
+import { useTradeCalculations } from "../hooks/useTradeCalculations";
 
+const TAB_INDEX = { Buy: 0, Sell: 1, Swap: 2 };
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
-
 type Action = "Buy" | "Sell" | "Swap";
 type PickerTarget = "buyOutput" | "sellInput" | "swapInput" | "swapOutput";
 
-// ─── Custom Hook: Trade Calculations ───────────────────────────────────────────
-// This hook manages the RTK queries for all selected assets simultaneously
-// and returns the math functions so your UI stays perfectly synced.
-const useTradeCalculations = (
-  buyOutputSymbol: string,
-  sellInputSymbol: string,
-  swapInputSymbol: string,
-  swapOutputSymbol: string,
-) => {
-  const { coinInfo: buyCoin } = useAssetChart(buyOutputSymbol);
-  const { coinInfo: sellCoin } = useAssetChart(sellInputSymbol);
-  const { coinInfo: swapInCoin } = useAssetChart(swapInputSymbol);
-  const { coinInfo: swapOutCoin } = useAssetChart(swapOutputSymbol);
-
-  // Buy Math: USDT spent / target coin price
-  const getBuyReceive = (usdAmount: number) => {
-    if (!buyCoin?.priceUsd) return 0;
-    return usdAmount / buyCoin.priceUsd;
-  };
-
-  // Sell Math: Crypto spent * source coin price
-  const getSellReceive = (coinAmount: number) => {
-    if (!sellCoin?.priceUsd) return 0;
-    return coinAmount * sellCoin.priceUsd;
-  };
-
-  // Swap Math: (Crypto spent * source price) / target price
-  const getSwapReceive = (coinAmount: number) => {
-    if (!swapInCoin?.priceUsd || !swapOutCoin?.priceUsd) return 0;
-    const usdValue = coinAmount * swapInCoin.priceUsd;
-    return usdValue / swapOutCoin.priceUsd;
-  };
-
-  return {
-    buyPriceUsd: buyCoin?.priceUsd || 0,
-    sellPriceUsd: sellCoin?.priceUsd || 0,
-    swapInPriceUsd: swapInCoin?.priceUsd || 0,
-    swapOutPriceUsd: swapOutCoin?.priceUsd || 0,
-    getBuyReceive,
-    getSellReceive,
-    getSwapReceive,
-  };
-};
-
-// ─── TextInputBlock ────────────────────────────────────────────────────────────
-interface TextInputBlockProps {
-  label: string;
-  value: string;
-  symbol: string;
-  onChangeText: (value: string) => void;
-  onPressAsset?: () => void;
-}
-interface StaticAmountBlockProps {
-  label: string;
-  body: string;
-  symbol: string;
-  onPressAsset?: () => void;
-}
-
-const TextInputBlock = ({
-  label,
-  value,
-  symbol,
-  onChangeText,
-  onPressAsset,
-}: TextInputBlockProps) => {
-  const handleChange = (text: string) => {
-    const sanitized = text.replace(/[^0-9.]/g, "").replace(/(\..*)\./g, "$1");
-    onChangeText(sanitized);
-  };
-
-  return (
-    <View
-      style={[
-        GeneralStyles.box,
-        {
-          width: "100%",
-          height: vs(86),
-          borderRadius: ms(18),
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-          paddingHorizontal: s(16),
-        },
-      ]}
-    >
-      <View style={{ gap: vs(8), justifyContent: "center", flex: 1 }}>
-        <ThemedText color={Colors.textMidGray} size={12}>
-          {label}
-        </ThemedText>
-        <TextInput
-          value={value}
-          onChangeText={handleChange}
-          keyboardType="decimal-pad"
-          placeholder="0.00"
-          placeholderTextColor={Colors.textMidGray}
-          style={{
-            color: Colors.snowGray,
-            fontSize: ms(24),
-            fontFamily: Fonts.bold,
-            paddingBottom: 0,
-            paddingTop: 0,
-          }}
-          maxLength={10}
-        />
-      </View>
-
-      <TouchableOpacity
-        onPress={onPressAsset}
-        disabled={!onPressAsset}
-        style={{ flexDirection: "row", alignItems: "center", gap: s(8) }}
-      >
-        <CryptoIcon symbol={symbol} size={ms(24)} />
-        <ThemedText>{symbol}</ThemedText>
-        {onPressAsset && (
-          <MaterialCommunityIcons
-            name="chevron-down"
-            size={16}
-            color={Colors.textMidGray}
-          />
-        )}
-      </TouchableOpacity>
-    </View>
-  );
-};
-
-const StaticAmountBlock = ({
-  label,
-  body,
-  symbol,
-  onPressAsset,
-}: StaticAmountBlockProps) => (
-  <View
-    style={[
-      GeneralStyles.box,
-      {
-        width: "100%",
-        height: vs(86),
-        borderRadius: ms(18),
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        paddingHorizontal: s(16),
-      },
-    ]}
-  >
-    <TextBlock
-      title={label}
-      titleStyle={{
-        color: Colors.textMidGray,
-        fontSize: ms(12),
-        fontFamily: Fonts.regular,
-      }}
-      body={body}
-      bodyStyle={{
-        color: Colors.snowGray,
-        fontSize: ms(24),
-        fontFamily: Fonts.bold,
-        maxWidth: s(200),
-      }}
-    />
-    <TouchableOpacity
-      onPress={onPressAsset}
-      disabled={!onPressAsset}
-      style={{ flexDirection: "row", alignItems: "center", gap: s(8) }}
-    >
-      <CryptoIcon symbol={symbol} size={ms(24)} />
-      <ThemedText>{symbol}</ThemedText>
-      {onPressAsset && (
-        <MaterialCommunityIcons
-          name="chevron-down"
-          size={16}
-          color={Colors.textMidGray}
-        />
-      )}
-    </TouchableOpacity>
-  </View>
-);
-
-// ─── ActionScreen ──────────────────────────────────────────────────────────────
-const ActionScreen = () => {
+export const ActionScreen = () => {
   const params = useLocalSearchParams<{ asset: string; action: Action }>();
   const action = params.action;
   const insets = useSafeAreaInsets();
   const bottomPadding = useSafeBottom();
 
-  // Base Coin details for initial load
   const { coinInfo: initialCoinDetails } = useAssetChart(
     params.asset as string,
     false,
     15000,
   );
-
   const { balances, portfolioValue, getBalanceBySymbol } = useWallet();
   const { limits } = useKyc();
   const { push } = useAssetRoute();
   const goToKyc = useGoToRoute("/kyc");
   const scrollRef = useRef<ScrollView>(null);
   const [activeTab, setActiveTab] = useState<Action>(action);
-
   const { createQuote, isCreating } = useTrade();
 
-  // Input states
   const [buyAmount, setBuyAmount] = useState("1.00");
   const [sellAmount, setSellAmount] = useState("0.50");
   const [swapAmount, setSwapAmount] = useState("8.00");
 
-  // Dynamic asset picker states
   const [buyOutputSymbol, setBuyOutputSymbol] = useState(
     initialCoinDetails?.symbol ?? "BTC",
   );
@@ -266,7 +85,6 @@ const ActionScreen = () => {
     initialCoinDetails?.symbol ?? "BTC",
   );
 
-  // Hook into our new live price calculator
   const {
     buyPriceUsd,
     sellPriceUsd,
@@ -281,12 +99,12 @@ const ActionScreen = () => {
   );
 
   const [availableAssets, setAvailableAssets] = useState(["USDT"]);
-
-  // Modal Controls
   const [modalVisible, setModalVisible] = useState(false);
   const [pickerTarget, setPickerTarget] = useState<PickerTarget | null>(null);
+  const [assetsToShow, setAssetsToShow] = useState<string[] | undefined>(
+    undefined,
+  );
 
-  // Sync state if initialCoinDetails loads slightly after render
   useEffect(() => {
     if (initialCoinDetails?.symbol) {
       setBuyOutputSymbol(initialCoinDetails.symbol);
@@ -302,8 +120,8 @@ const ActionScreen = () => {
   ];
 
   const getAvailableAssets = useCallback(() => {
-    const assetsHeld = balances.map((balance) => balance.assetSymbol);
-    setAvailableAssets(assetsHeld); // replace, don't append
+    if (!balances || balances.length === 0) return;
+    setAvailableAssets(balances.map((balance) => balance.assetSymbol));
   }, [balances]);
 
   const handleTabPress = useCallback((title: Action) => {
@@ -325,20 +143,9 @@ const ActionScreen = () => {
     setActiveTab((["Buy", "Sell", "Swap"] as const)[index]);
   };
 
-  const [assetsToShow, setAssetsToShow] = useState<string[] | undefined>(
-    undefined,
-  );
-
   const openAssetPicker = (target: PickerTarget) => {
     setPickerTarget(target);
-
-    // Check 'target' directly instead of the 'pickerTarget' state
-    if (target === "swapInput") {
-      setAssetsToShow(availableAssets);
-    } else {
-      setAssetsToShow(undefined);
-    }
-
+    setAssetsToShow(target === "swapInput" ? availableAssets : undefined);
     setModalVisible(true);
   };
 
@@ -356,22 +163,17 @@ const ActionScreen = () => {
     setSwapOutputSymbol(swapInputSymbol);
   };
 
-  // Keep raw Decimal instances as the source of truth for math
   const sellAmountDecimal = new Decimal(sellAmount || 0);
   const buyAmountDecimal = new Decimal(buyAmount || 0);
   const swapAmountDecimal = new Decimal(swapAmount || 0);
 
-  // Only convert to number where a downstream function/UI genuinely needs it
   const parsedSellAmount = sellAmountDecimal.toNumber();
-  const sellReturns = getSellReceive(parsedSellAmount); // if this fn does more math internally, it should eventually take/return Decimal too
+  const sellReturns = getSellReceive(parsedSellAmount);
   const sellFee = new Decimal(0.01).times(sellReturns).toNumber();
-
   const parsedSwapAmount = swapAmountDecimal.toNumber();
   const swapReturns = getSwapReceive(parsedSwapAmount);
-
   const parsedBuyAmount = buyAmountDecimal.toNumber();
 
-  // Balance comparisons — this is the highest-risk spot, do these in Decimal directly
   const isBuyInsufficient = buyAmountDecimal.gt(portfolioValue);
   const isSellInsufficient = sellAmountDecimal.gt(
     getBalanceBySymbol(sellInputSymbol)?.available || 0,
@@ -380,7 +182,6 @@ const ActionScreen = () => {
     getBalanceBySymbol(swapInputSymbol)?.available || 0,
   );
 
-  // <-- 3. Implement the dynamic handleSubmit -->
   const handleSubmit = async () => {
     try {
       let type: TradeType = "buy";
@@ -391,7 +192,7 @@ const ActionScreen = () => {
       if (activeTab === "Sell") {
         type = "sell";
         fromAsset = sellInputSymbol;
-        toAsset = "USDT"; // Make sure this matches your backend's expected fiat/stablecoin symbol
+        toAsset = "USDT";
         fromAmount = parsedSellAmount;
       } else if (activeTab === "Swap") {
         type = "swap";
@@ -400,7 +201,6 @@ const ActionScreen = () => {
         fromAmount = parsedSwapAmount;
       }
 
-      // Basic zero-amount validation
       if (fromAmount <= 0) {
         showWarningToast({
           title: "Invalid Amount",
@@ -409,9 +209,6 @@ const ActionScreen = () => {
         return;
       }
 
-      // --- BALANCE VALIDATIONS ---
-
-      // Buy Validation
       if (activeTab === "Buy" && isBuyInsufficient) {
         showWarningToast({
           title: "Insufficient Balance",
@@ -419,80 +216,55 @@ const ActionScreen = () => {
         });
         return;
       }
-
-      // Sell Validation
-      if (activeTab === "Sell") {
-        const availableBalance =
-          getBalanceBySymbol(sellInputSymbol)?.available || 0;
-        if (parsedSellAmount > availableBalance) {
-          showWarningToast({
-            title: "Insufficient Balance",
-            message: `You don't have enough ${sellInputSymbol} to complete this sale.`,
-          });
-          return;
-        }
+      if (
+        activeTab === "Sell" &&
+        parsedSellAmount > (getBalanceBySymbol(sellInputSymbol)?.available || 0)
+      ) {
+        showWarningToast({
+          title: "Insufficient Balance",
+          message: `You don't have enough ${sellInputSymbol} to complete this sale.`,
+        });
+        return;
+      }
+      if (
+        activeTab === "Swap" &&
+        parsedSwapAmount > (getBalanceBySymbol(swapInputSymbol)?.available || 0)
+      ) {
+        showWarningToast({
+          title: "Insufficient Balance",
+          message: `You don't have enough ${swapInputSymbol} to swap.`,
+        });
+        return;
       }
 
-      // Swap Validation
-      if (activeTab === "Swap") {
-        const availableBalance =
-          getBalanceBySymbol(swapInputSymbol)?.available || 0;
-        if (parsedSwapAmount > availableBalance) {
-          showWarningToast({
-            title: "Insufficient Balance",
-            message: `You don't have enough ${swapInputSymbol} to swap.`,
-          });
-          return;
-        }
-      }
-
-      // Generate the quote
-      const data = await createQuote({
-        type,
-        fromAsset,
-        toAsset,
-        fromAmount,
-      });
-
-      // Navigate to the quote review screen on success
+      const data = await createQuote({ type, fromAsset, toAsset, fromAmount });
       logger.log(data);
       push("quote", { asset: params.asset });
     } catch (error: any) {
       logger.error("Quote creation failed:", error);
-
-      // Extract the exact error message from the thrown RTK Query payload
       const apiErrorMessage = error?.data?.error?.message;
-
-      const fallbackMessage =
-        error instanceof Error
-          ? error.message
-          : "An unexpected error occurred. Please try again.";
-
       showErrorToast({
         title: "Trade Failed",
-        message: apiErrorMessage || fallbackMessage,
+        message:
+          apiErrorMessage ||
+          (error instanceof Error
+            ? error.message
+            : "An unexpected error occurred. Please try again."),
       });
-
       if (
         apiErrorMessage ===
         "Complete identity verification before you can trade."
-      ) {
+      )
         goToKyc();
-      }
     }
   };
 
-  const assetAvailable = getBalanceBySymbol(sellInputSymbol)?.available || 0;
-
-  // Build the configuration
   const config = BuildActionConfig({
-    // General Data
     portfolioValue,
     limits,
     openAssetPicker,
     pushQuote: handleSubmit,
-    assetAvailable,
-    // Buy Data
+    assetAvailable: getBalanceBySymbol(sellInputSymbol)?.available || 0,
     buyAmount,
     setBuyAmount,
     parsedBuyAmount,
@@ -500,8 +272,6 @@ const ActionScreen = () => {
     buyOutputSymbol,
     buyPriceUsd,
     buyReceiveFormatted: getBuyReceive(parsedBuyAmount).toFixed(8),
-
-    // Sell Data
     sellAmount,
     setSellAmount,
     sellInputSymbol,
@@ -509,8 +279,6 @@ const ActionScreen = () => {
     sellReturns,
     sellFee,
     isSellInsufficient,
-
-    // Swap Data
     swapAmount,
     setSwapAmount,
     swapInputSymbol,
@@ -527,7 +295,6 @@ const ActionScreen = () => {
         { paddingTop: insets.top + 24, width: "100%" },
       ]}
     >
-      {/* ── Header + Tab Controls ── */}
       <View style={[GeneralStyles.wrapper, { gap: 8, marginBottom: 16 }]}>
         <TextBlock
           title={config[TAB_INDEX[activeTab]].title}
@@ -567,7 +334,6 @@ const ActionScreen = () => {
         </View>
       </View>
 
-      {/* ── Viewport View Slider ── */}
       <ScrollView
         ref={scrollRef}
         horizontal
@@ -587,10 +353,8 @@ const ActionScreen = () => {
               paddingBottom: bottomPadding + 50,
               gap: 16,
             }}
-            scrollEventThrottle={16}
             keyboardShouldPersistTaps="handled"
           >
-            {/* Input Wrapper Cards */}
             <View
               style={[GeneralStyles.wrapper, { gap: 22, position: "relative" }]}
             >
@@ -607,7 +371,6 @@ const ActionScreen = () => {
                   />
                 </TouchableOpacity>
               )}
-
               <TextInputBlock
                 label={page.inputDetail.title}
                 value={page.inputAmount}
@@ -615,7 +378,6 @@ const ActionScreen = () => {
                 symbol={page.inputDetail.currency}
                 onPressAsset={page.inputDetail.onPress}
               />
-
               <StaticAmountBlock
                 label={page.staticDetail.title}
                 body={formatAmount(parseFloat(page.staticDetail.body))}
@@ -623,10 +385,7 @@ const ActionScreen = () => {
                 onPressAsset={page.staticDetail.onPress}
               />
             </View>
-
             <Spacer size={40} />
-
-            {/* Asset Ledger/Metadata rows */}
             <View style={[GeneralStyles.wrapper, { gap: 12 }]}>
               {page.meta.map((item) => (
                 <LabelValueItem
@@ -637,9 +396,7 @@ const ActionScreen = () => {
                 />
               ))}
             </View>
-
             <Spacer size={112} />
-
             <View style={GeneralStyles.wrapper}>
               <ThemedButton
                 variant={page.cta.variant}
@@ -670,8 +427,6 @@ const ActionScreen = () => {
           </ScrollView>
         ))}
       </ScrollView>
-
-      {/* Extracted Asset Picker */}
       <AssetPickerModal
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
@@ -681,8 +436,6 @@ const ActionScreen = () => {
     </ImageBackground>
   );
 };
-
-export default ActionScreen;
 
 const styles = StyleSheet.create({
   arrowIconContainer: {

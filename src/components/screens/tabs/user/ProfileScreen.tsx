@@ -3,7 +3,7 @@ import LogOutBtn from "@/components/LogOutBtn";
 import { ModalSelector } from "@/components/OptionPicker";
 import { Spacer } from "@/shared/components/Spacer";
 import { ThemedText } from "@/shared/components/ThemedText";
-import Template from "@/components/trades/Template";
+import Template from "@/shared/components/Template";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
 import { useNotificationsQuery } from "@/features/notifications/api/notificationsApi";

@@ -1,20 +1,20 @@
-import Template from "@/components/trades/Template";
 import { Colors } from "@/constants/Colors";
-import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
 import { useGetOrderBookQuery } from "@/features/markets/api/marketsApi";
+import { useAssetRoute } from "@/features/trades/hooks/useAssetRoute";
 import { formatAmount } from "@/helpers/functions";
-import { useAssetRoute } from "@/hooks/useAssetRoute";
 import useFiat from "@/hooks/useFiat";
 import { Spacer } from "@/shared/components/Spacer";
-import { ThemedButton } from "@/shared/components/ThemedButton";
+import Template from "@/shared/components/Template";
 import { ThemedText } from "@/shared/components/ThemedText";
-import { ms, s, vs } from "@/utils/responsive";
+import { vs } from "@/utils/responsive";
 import { useLocalSearchParams } from "expo-router";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 
-const OrderBookScreen = () => {
+import { TradeNavigationTabs } from "../components/TradeNavigationTabs";
+
+export const OrderBookScreen = () => {
   const params = useLocalSearchParams<{ asset?: string }>();
   const asset = params?.asset ?? "BTC";
   const { data: orderBookData } = useGetOrderBookQuery(
@@ -28,6 +28,12 @@ const OrderBookScreen = () => {
   const spread = orderBookData?.spreadUsd ?? 0;
 
   const { replace } = useAssetRoute();
+
+  const handleSelectTab = (tab: "order-book" | "recent-trades") => {
+    if (tab === "recent-trades") {
+      replace("recent-trades", { asset });
+    }
+  };
 
   return (
     <Template
@@ -43,21 +49,10 @@ const OrderBookScreen = () => {
       topSpacerSize={20}
     >
       <View style={GeneralStyles.wrapper}>
-        <View style={styles.tabsContainer}>
-          <ThemedButton
-            title="Order book"
-            variant={"primary"}
-            style={[styles.tab]}
-            textStyle={[styles.tabText]}
-          />
-          <ThemedButton
-            title="Trades"
-            variant={"secondary"}
-            style={[styles.tab, { backgroundColor: Colors.surfaceNavy }]}
-            textStyle={[styles.tabText, { color: Colors.snowGray }]}
-            onPress={() => replace("recent-trades", { asset })}
-          />
-        </View>
+        <TradeNavigationTabs
+          activeTab="order-book"
+          onSelectTab={handleSelectTab}
+        />
         <Spacer size={24} />
 
         <View style={{ gap: vs(12) }}>
@@ -128,30 +123,13 @@ const OrderBookScreen = () => {
   );
 };
 
-export default OrderBookScreen;
-
 const styles = StyleSheet.create({
-  tabsContainer: {
-    flexDirection: "row",
-    gap: s(12),
-  },
-  tab: {
-    height: vs(36),
-    minWidth: s(100),
-    maxWidth: s(150),
-    borderRadius: ms(18),
-  },
-  tabText: {
-    fontSize: ms(13),
-    color: Colors.surfaceNavy,
-    fontFamily: Fonts.medium,
-  },
   summaryRow: {
     ...GeneralStyles.box,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: s(20),
+    paddingHorizontal: 20,
     height: vs(56),
   },
   tableHeader: {
@@ -161,7 +139,7 @@ const styles = StyleSheet.create({
   tableBody: {
     flexDirection: "row",
     justifyContent: "space-between",
-    gap: s(16),
+    gap: 16,
   },
   bookRow: {
     flexDirection: "row",

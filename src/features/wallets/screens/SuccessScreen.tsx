@@ -1,7 +1,7 @@
 import BadgeStuff from "@/components/BadgeStuff";
 import { LabelValueItem } from "@/components/LabelValueItem";
 import { Spacer } from "@/shared/components/Spacer";
-import Template from "@/components/trades/Template";
+import Template from "@/shared/components/Template";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
 import {

@@ -6,7 +6,7 @@ import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
 import CoinList from "@/features/markets/components/CoinList";
 import { useSafeBottom } from "@/hooks/useSafeBottom";
-import { useWatchlist } from "@/hooks/useWatchlist";
+import { useWatchlist } from "@/features/markets";
 import { vs } from "@/utils/responsive";
 import { WatchlistFooter } from "../components/WatchlistFooter";
 import { WatchlistHeader } from "../components/WatchlistHeader";

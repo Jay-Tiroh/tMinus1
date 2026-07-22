@@ -1,5 +1,5 @@
 // store/slices/tradesSlice.ts
-import { CreateQuoteRequest, Quote, Transaction } from "@/types/trades";
+import { CreateQuoteRequest, Quote, Transaction } from "@/features/trades";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type TradesState = {

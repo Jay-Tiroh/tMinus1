@@ -1,3 +1,4 @@
+import { useAllAssets } from "@/features/markets";
 import { useInternalTransferMutation } from "@/features/wallets/api/walletsApi";
 import useWallet from "@/features/wallets/hooks/useWallet";
 import {
@@ -5,7 +6,6 @@ import {
   setLastTransfer,
 } from "@/features/wallets/storage/walletsSlice";
 import { showErrorToast, showInfoToast } from "@/hooks/showToast";
-import { useAllAssets } from "@/hooks/useAllAssets";
 import { useAppDispatch } from "@/store/hooks";
 import { logger } from "@/utils/logger";
 import { useMemo, useState } from "react";

@@ -1,7 +1,7 @@
 import { Spacer } from "@/shared/components/Spacer";
 import { ThemedButton } from "@/shared/components/ThemedButton";
 import { ThemedText } from "@/shared/components/ThemedText";
-import Template from "@/components/trades/Template";
+import Template from "@/shared/components/Template";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
 import useWallet from "@/features/wallets/hooks/useWallet";

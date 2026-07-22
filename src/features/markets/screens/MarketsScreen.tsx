@@ -1,7 +1,7 @@
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
+import { useAllAssets } from "@/features/markets";
 import CoinList from "@/features/markets/components/CoinList";
-import { useAllAssets } from "@/hooks/useAllAssets";
 import { useBackToHome } from "@/hooks/useBackToHome";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useSafeBottom } from "@/hooks/useSafeBottom";

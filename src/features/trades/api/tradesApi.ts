@@ -5,8 +5,8 @@ import {
   ExecuteQuoteRequest,
   ExecuteQuoteResponse,
   QuoteResponse,
-} from "@/types/trades";
-import { baseApi } from "./baseApi";
+} from "@/features/trades";
+import { baseApi } from "@/store/services/baseApi";
 
 const tradesApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({

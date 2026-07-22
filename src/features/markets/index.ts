@@ -1,9 +1,15 @@
-// 1. Export Screens
+// 1. Screens
 export { MarketsScreen } from "./screens/MarketsScreen";
 export { TrendingScreen } from "./screens/TrendingScreen";
 export { WatchlistScreen } from "./screens/WatchlistScreen";
 
-// 2. Export API Hooks
+// 2. Feature Hooks
+export { useAllAssets } from "./hooks/useAllAssets";
+export { useAssetChart } from "./hooks/useAssetChart";
+export { useTrendingAssets } from "./hooks/useTrendingAssets";
+export { useWatchlist } from "./hooks/useWatchlist";
+
+// 3. API Query/Mutation Hooks
 export {
   useAllAssetsQuery,
   useAllAssetsWithMetaQuery,
@@ -17,8 +23,7 @@ export {
   useTrendingWithMetaQuery,
 } from "./api/marketsApi";
 
-// 3. Export Domain Models and Types (Public Contract)
-// Only export the types that other features genuinely need to know about.
+// 4. Domain Models and Types
 export type {
   Asset,
   AssetDetailsResponse,

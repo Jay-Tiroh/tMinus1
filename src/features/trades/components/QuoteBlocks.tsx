@@ -1,132 +1,20 @@
-import { LabelValueItem } from "@/components/LabelValueItem";
-
+import { Colors } from "@/constants/Colors";
+import { LabelValueItem } from "@/shared/components/LabelValueItem";
 import { Spacer } from "@/shared/components/Spacer";
 import TextBlock from "@/shared/components/TextBlock";
-import { ButtonVariant } from "@/shared/components/ThemedButton";
 import { ThemedText } from "@/shared/components/ThemedText";
-import Template from "@/components/trades/Template";
-import { Colors } from "@/constants/Colors";
-import { Fonts } from "@/constants/Fonts";
-import { GeneralStyles } from "@/constants/themes";
-import { useAssetRoute } from "@/hooks/useAssetRoute";
-import useTrade from "@/hooks/useTrade";
 import { ms, s, vs } from "@/utils/responsive";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import React from "react";
+import { View } from "react-native";
 
-import React, { useEffect, useState } from "react";
-import { ActivityIndicator, TextStyle, View, ViewStyle } from "react-native";
-
-export type ConfigType = {
-  title: string;
-  body: string;
-  cta: {
-    title: string;
-    onPress: () => void;
-    variant: ButtonVariant;
-    style?: ViewStyle;
-    textStyle?: TextStyle;
-  };
-
-  content: React.ReactNode;
-
-  topSpacerSize: number;
-};
-
-
-const QuoteScreen = () => {
-  const { replace } = useAssetRoute();
-  const {
-    activeQuote,
-    isQuoteExpired,
-    timeRemainingSeconds,
-    clearActiveQuote,
-    createQuote,
-    lastQuoteRequest,
-  } = useTrade();
-
-  const [localTimeLeft, setLocalTimeLeft] = useState(timeRemainingSeconds);
-
-  useEffect(() => {
-    setLocalTimeLeft(timeRemainingSeconds);
-  }, [timeRemainingSeconds]);
-
-  useEffect(() => {
-    if (localTimeLeft <= 0 || isQuoteExpired) return;
-    const timer = setInterval(() => {
-      setLocalTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
-    }, 1000);
-    return () => clearInterval(timer);
-  }, [localTimeLeft, isQuoteExpired]);
-
-  if (!activeQuote) {
-    return (
-      <View
-        style={[GeneralStyles.wrapper, { flex: 1, justifyContent: "center" }]}
-      >
-        <ActivityIndicator size="large" color={Colors.primaryClean} />
-      </View>
-    );
-  }
-
-  const isExpired = isQuoteExpired || localTimeLeft === 0;
-
-  const activeConfig: ConfigType = isExpired
-    ? {
-        title: "Quote expired",
-        body: "Rates moved. Request a fresh quote before trading.",
-        cta: {
-          title: "Get new quote",
-          onPress: async () => {
-            clearActiveQuote();
-            if (lastQuoteRequest) {
-              await createQuote(lastQuoteRequest);
-            }
-          },
-          variant: "primary",
-          style: { backgroundColor: Colors.warningAmber },
-          textStyle: { color: Colors.backgroundInk },
-        },
-        content: <Expired quote={activeQuote} />,
-        topSpacerSize: 42,
-      }
-    : {
-        title: "Quote preview",
-        body: "Confirm the rate before this quote expires.",
-        cta: {
-          title: "Confirm with PIN",
-          onPress: () => replace("execute"),
-          variant: "primary",
-        },
-        content: <Preview quote={activeQuote} timeLeft={localTimeLeft} />,
-        topSpacerSize: 14,
-      };
-
-  return (
-    <Template
-      textBlockProps={{
-        title: activeConfig.title,
-        body: activeConfig.body,
-      }}
-      ctaProps={{
-        title: activeConfig.cta.title,
-        onPress: activeConfig.cta.onPress,
-        variant: activeConfig.cta.variant,
-        style: activeConfig.cta.style,
-        textStyle: {
-          fontFamily: Fonts.bold,
-          fontSize: ms(14),
-        },
-      }}
-      topSpacerSize={activeConfig.topSpacerSize}
-    >
-      <View style={GeneralStyles.wrapper}>{activeConfig.content}</View>
-    </Template>
-  );
-};
-
-// --- Sub-components ---
-
-const Preview = ({ quote, timeLeft }: { quote: any; timeLeft: number }) => {
+export const QuotePreview = ({
+  quote,
+  timeLeft,
+}: {
+  quote: any;
+  timeLeft: number;
+}) => {
   const formattedTime = `00:${timeLeft.toString().padStart(2, "0")}`;
 
   const config = [
@@ -186,7 +74,7 @@ const Preview = ({ quote, timeLeft }: { quote: any; timeLeft: number }) => {
   );
 };
 
-const Expired = ({ quote }: { quote: any }) => {
+export const QuoteExpired = ({ quote }: { quote: any }) => {
   const config = [
     { label: "Expired quote", value: quote.id },
     { label: "Previous receive", value: `${quote.toAmount} ${quote.toAsset}` },
@@ -248,5 +136,3 @@ const Expired = ({ quote }: { quote: any }) => {
     </>
   );
 };
-
-export default QuoteScreen;

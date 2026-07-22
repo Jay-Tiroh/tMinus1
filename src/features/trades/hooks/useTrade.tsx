@@ -1,17 +1,18 @@
-import { showErrorToast } from "@/hooks/showToast";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
   useCreateQuoteMutation,
   useExecuteQuoteMutation,
   useGetQuoteQuery,
-} from "@/store/services/tradesApi";
+} from "@/features/trades/api/tradesApi";
 import {
   clearTrade,
   setActiveQuote,
   setLastQuoteRequest,
   setLastTransaction,
-} from "@/store/slices/tradesSlice";
-import { CreateQuoteRequest } from "@/types/trades";
+} from "@/features/trades/storage/tradesSlice";
+import { CreateQuoteRequest } from "@/features/trades/types/trades.types";
+import { showErrorToast } from "@/hooks/showToast";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+
 import { getErrorMessage } from "@/utils/errors";
 import { logger } from "@/utils/logger";
 import { useCallback, useEffect } from "react";
@@ -50,7 +51,10 @@ export default function useTrade(pollIntervalMs = 5000) {
       } catch (error) {
         showErrorToast({
           title: "Failed to create quote.",
-          message: getErrorMessage(error, "We couldn't create the quote right now. Please try again."),
+          message: getErrorMessage(
+            error,
+            "We couldn't create the quote right now. Please try again.",
+          ),
         });
         logger.error("Failed to create quote:", error);
         throw error;
@@ -76,7 +80,10 @@ export default function useTrade(pollIntervalMs = 5000) {
       } catch (error) {
         showErrorToast({
           title: "Failed to execute trade.",
-          message: getErrorMessage(error, "We couldn't execute the trade right now. Please try again."),
+          message: getErrorMessage(
+            error,
+            "We couldn't execute the trade right now. Please try again.",
+          ),
         });
         logger.error("Failed to execute trade:", error);
         throw error;

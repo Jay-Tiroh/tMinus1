@@ -1,7 +1,7 @@
 import Copy from "@/assets/icons/wallets/qr/copy.svg";
 import { Spacer } from "@/shared/components/Spacer";
 import { ThemedText } from "@/shared/components/ThemedText";
-import Template from "@/components/trades/Template";
+import Template from "@/shared/components/Template";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
@@ -46,7 +46,10 @@ const Setup2FAScreen = () => {
         logger.error("2FA setup failed:", error);
         showErrorToast({
           title: "Failed to initialize 2FA.",
-          message: getErrorMessage(error, "We couldn't initialize 2FA right now. Please try again."),
+          message: getErrorMessage(
+            error,
+            "We couldn't initialize 2FA right now. Please try again.",
+          ),
         });
       }
     };
@@ -73,7 +76,7 @@ const Setup2FAScreen = () => {
     } catch (error) {
       showErrorToast({
         title: "Invalid code.",
-        message: getErrorMessage(error, "Please check the code and try again.")
+        message: getErrorMessage(error, "Please check the code and try again."),
       });
     }
   };

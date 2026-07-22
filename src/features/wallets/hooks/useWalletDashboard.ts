@@ -1,5 +1,5 @@
 import useWallet from "@/features/wallets/hooks/useWallet";
-import { useAllAssets } from "@/hooks/useAllAssets";
+import { useAllAssets } from "@/features/markets";
 import useFiat from "@/hooks/useFiat";
 import useProfile from "@/hooks/useProfile";
 import { useCallback, useMemo } from "react";

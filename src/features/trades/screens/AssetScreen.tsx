@@ -1,14 +1,4 @@
-import ChangeText from "@/components/ChangeText";
-import { CryptoIcon } from "@/components/CryptoIcon";
-import TextBlock from "@/shared/components/TextBlock";
-import { ThemedButton } from "@/shared/components/ThemedButton";
-import { ThemedText } from "@/shared/components/ThemedText";
-import CandlestickComponent from "@/components/trades/CandlestickComponent";
-import { Colors } from "@/constants/Colors";
-import { GeneralStyles } from "@/constants/themes";
-import { formatCompactNumber, formatCurrency } from "@/helpers/functions";
-import { useAssetChart } from "@/hooks/useAssetChart";
-import { useSafeBottom } from "@/hooks/useSafeBottom";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useLocalSearchParams } from "expo-router";
 import React, { useCallback, useState } from "react";
 import {
@@ -18,25 +8,38 @@ import {
   RefreshControl,
   ScrollView,
   StyleSheet,
-  TouchableOpacity,
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import Add from "@/assets/icons/markets/add-circle.svg";
-import KycLocked from "@/components/KycLocked";
-import { Spacer } from "@/shared/components/Spacer";
+
+import { Colors } from "@/constants/Colors";
+import { GeneralStyles } from "@/constants/themes";
+import CandlestickComponent from "@/features/trades/components/CandlestickComponent";
+import { useAssetRoute } from "@/features/trades/hooks/useAssetRoute";
+import { formatCompactNumber, formatCurrency } from "@/helpers/functions";
 import { showErrorToast, showSuccessToast } from "@/hooks/showToast";
-import { useAssetRoute } from "@/hooks/useAssetRoute";
+import { useAssetChart } from "@/hooks/useAssetChart";
 import { useBackToHome } from "@/hooks/useBackToHome";
 import useFiat from "@/hooks/useFiat";
 import useProfile from "@/hooks/useProfile";
-import { useWatchlist } from "@/hooks/useWatchlist";
-import { ms, s, vs } from "@/utils/responsive";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import { useSafeBottom } from "@/hooks/useSafeBottom";
+import { useWatchlist } from "@/features/markets";
+import { Spacer } from "@/shared/components/Spacer";
+import TextBlock from "@/shared/components/TextBlock";
+import { ThemedButton } from "@/shared/components/ThemedButton";
+import { ThemedText } from "@/shared/components/ThemedText";
 import { getErrorMessage } from "@/utils/errors";
+import { ms, s, vs } from "@/utils/responsive";
 
-const AssetScreen = () => {
+import ChangeText from "@/shared/components/ChangeText";
+import { CryptoIcon } from "@/shared/components/CryptoIcon";
+import KycLocked from "@/shared/components/KycLocked";
+import { AssetActionButtons } from "../components/AssetActionButtons";
+import { AssetStatsGrid } from "../components/AssetStatsGrid";
+
+export const AssetScreen = () => {
   useBackToHome();
   const params = useLocalSearchParams<{ asset?: string }>();
   const asset = params.asset ?? "BTC";
@@ -67,7 +70,7 @@ const AssetScreen = () => {
     {
       title: "Alert",
       onPress: () => {
-        push("alert",{ asset });
+        push("alert", { asset });
       },
     },
   ];
@@ -101,7 +104,7 @@ const AssetScreen = () => {
       name: "Circulating",
       value:
         formatCompactNumber(coinDetails?.stats?.circulatingSupply ?? NaN) +
-        ` ${coinDetails?.symbol.toUpperCase()}`,
+        ` ${(coinDetails?.symbol ?? "").toUpperCase()}`,
     },
   ];
 
@@ -123,7 +126,7 @@ const AssetScreen = () => {
     } catch (error) {
       showErrorToast({
         title: "Action Failed",
-        message: getErrorMessage(error,`Couldn't add ${coinDetails?.name}.`),
+        message: getErrorMessage(error, `Couldn't add ${coinDetails?.name}.`),
       });
     }
   };
@@ -219,48 +222,9 @@ const AssetScreen = () => {
               />
             </View>
 
-            <View style={[GeneralStyles.wrapper, styles.tradeActions]}>
-              {actionConfig.map((item) => (
-                <TouchableOpacity
-                  key={item.title}
-                  onPress={item.onPress}
-                  style={styles.actionButton}
-                >
-                  <ThemedText
-                    color={
-                      item.title === "Alert"
-                        ? Colors.primaryClean
-                        : Colors.snowGray
-                    }
-                    size={12}
-                    weight="medium"
-                  >
-                    {item.title}
-                  </ThemedText>
-                </TouchableOpacity>
-              ))}
-            </View>
+            <AssetActionButtons actions={actionConfig} />
 
-            <View style={[GeneralStyles.wrapper, styles.statsGrid]}>
-              {stats.map((stat) => (
-                <View
-                  key={stat.name}
-                  style={[GeneralStyles.box, styles.statCard]}
-                >
-                  <ThemedText color={Colors.textMidGray} size={12}>
-                    {stat.name}
-                  </ThemedText>
-                  <ThemedText
-                    color={Colors.snowGray}
-                    size={15}
-                    weight="bold"
-                    style={{ alignSelf: "flex-end" }}
-                  >
-                    {stat.value}
-                  </ThemedText>
-                </View>
-              ))}
-            </View>
+            <AssetStatsGrid stats={stats} />
           </>
         )}
 
@@ -299,28 +263,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
-  tradeActions: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-  actionButton: {
-    borderRadius: ms(14),
-    backgroundColor: Colors.surfaceNavy,
-    width: s(112),
-    height: vs(46),
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  statsGrid: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "center",
-    alignItems: "center",
-    width: "100%",
-    gap: s(16),
-  },
-  statCard: { width: "46%", padding: ms(16), gap: vs(8) },
   dashedButton: {
     borderWidth: 1,
     borderStyle: "dashed",
@@ -328,5 +270,3 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.backgroundDark,
   },
 });
-
-export default AssetScreen;

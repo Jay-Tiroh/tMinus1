@@ -1,6 +1,6 @@
 import { Spacer } from "@/shared/components/Spacer";
 import { ThemedText } from "@/shared/components/ThemedText";
-import Template from "@/components/trades/Template";
+import Template from "@/shared/components/Template";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
 import { showErrorToast, showSuccessToast } from "@/hooks/showToast"; // Adjust path to where your toast functions live

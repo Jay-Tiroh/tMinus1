@@ -1,10 +1,10 @@
+import { Colors } from "@/constants/Colors";
+import { GeneralStyles } from "@/constants/themes";
 import { Spacer } from "@/shared/components/Spacer";
+import Template from "@/shared/components/Template";
 import TextBlock from "@/shared/components/TextBlock";
 import { ThemedButton } from "@/shared/components/ThemedButton";
 import { ThemedText } from "@/shared/components/ThemedText";
-import Template from "@/components/trades/Template";
-import { Colors } from "@/constants/Colors";
-import { GeneralStyles } from "@/constants/themes";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
 import { ThemedInput } from "@/components/auth/ThemedTextInput";

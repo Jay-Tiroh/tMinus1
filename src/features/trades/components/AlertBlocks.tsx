@@ -1,164 +1,29 @@
-import BadgeStuff from "@/components/BadgeStuff";
-import { CryptoIcon } from "@/components/CryptoIcon";
-import { LabelValueItem } from "@/components/LabelValueItem";
-import { ConfigType } from "@/components/screens/tabs/trades/QuoteScreen";
-import { Spacer } from "@/shared/components/Spacer";
-import TextBlock from "@/shared/components/TextBlock";
-import { ThemedText } from "@/shared/components/ThemedText";
-import Template from "@/components/trades/Template";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
 import { formatAmount } from "@/helpers/functions";
 import { showErrorToast } from "@/hooks/showToast";
 import { useAssetChart } from "@/hooks/useAssetChart";
-import { useGoToRoute } from "@/hooks/useGoToRoute";
+import BadgeStuff from "@/shared/components/BadgeStuff";
+import { CryptoIcon } from "@/shared/components/CryptoIcon";
+import { LabelValueItem } from "@/shared/components/LabelValueItem";
+import { Spacer } from "@/shared/components/Spacer";
+import TextBlock from "@/shared/components/TextBlock";
+import { ThemedText } from "@/shared/components/ThemedText";
 import {
   useCreatePriceAlertMutation,
-  useGetPriceAlertsQuery,
   useUpdatePriceAlertMutation,
 } from "@/store/services/priceAlertsApi";
-import {
-  CreatedPriceAlert,
-  PriceAlert,
-  UpdatedPriceAlert,
-} from "@/types/priceAlerts";
+import { CreatedPriceAlert, UpdatedPriceAlert } from "@/types/priceAlerts";
 import { ms, s, vs } from "@/utils/responsive";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-import { useFocusEffect, useLocalSearchParams } from "expo-router";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TextInput, TouchableOpacity, View } from "react-native";
 
 export type AlertAction = "create" | "edit";
 type Direction = "Above" | "Below";
 
-// ─── AlertScreen ─────────────────────────────────────────────────────────────
-const AlertScreen = () => {
-  const params = useLocalSearchParams<{
-    asset?: string;
-    alertAction?: AlertAction;
-    alertId?: string;
-  }>();
-  const asset = params.asset ?? "";
-  const alertAction = params.alertAction ?? "create";
-  const alertId = params.alertId ?? "";
-
-  const [alertToEdit, setAlertToEdit] = useState<CreatedPriceAlert | null>(
-    null,
-  );
-  const submitRef = useRef<() => void>(() => {});
-  const [activeConfigIndex, setActiveConfigIndex] = useState(0);
-  const [createdAlert, setCreatedAlert] = useState<
-    CreatedPriceAlert | UpdatedPriceAlert | null
-  >(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const toggleConfig = (alert?: CreatedPriceAlert | UpdatedPriceAlert) => {
-    if (alert) setCreatedAlert(alert);
-    setActiveConfigIndex((prev) => (prev === 0 ? 1 : 0));
-  };
-
-  const { data } = useGetPriceAlertsQuery();
-
-  useFocusEffect(
-    useCallback(() => {
-      setActiveConfigIndex(0);
-      setCreatedAlert(null);
-      setIsSubmitting(false);
-    }, []),
-  );
-
-  const alertsData = data?.data;
-
-  useEffect(() => {
-    const alerts = alertsData ?? [];
-    if (
-      alertAction === "edit" &&
-      alertId &&
-      alerts.length > 0 &&
-      !alertToEdit
-    ) {
-      const alert = alerts.find((a: PriceAlert) => a.id === alertId);
-      if (alert) {
-        setAlertToEdit(alert);
-      } else {
-        showErrorToast({
-          title: "Alert not found",
-          message: "The alert you are trying to edit does not exist.",
-        });
-      }
-    }
-  }, [alertsData, alertId, alertAction, alertToEdit]);
-  const handleViewAlerts = useGoToRoute("/user/price-alerts");
-
-  const Config: ConfigType[] = [
-    {
-      title: (alertAction === "create" ? "Create" : "Edit") + " price alert",
-      body: `Get notified when ${asset} crosses your target.`,
-      cta: {
-        title: isSubmitting
-          ? alertAction === "edit"
-            ? "Updating..."
-            : "Creating..."
-          : alertAction === "edit"
-            ? "Update alert"
-            : "Create alert",
-        onPress: () => submitRef.current?.(),
-        variant: "primary",
-      },
-      content: (
-        <CreateAlert
-          asset={asset}
-          submitRef={submitRef}
-          onSuccess={toggleConfig}
-          onSubmittingChange={setIsSubmitting}
-          alertToEdit={alertToEdit}
-          alertId={alertId}
-          alertAction={alertAction}
-        />
-      ),
-      topSpacerSize: 42,
-    },
-    {
-      title: alertAction === "edit" ? "Alert updated" : "Alert created",
-      body: "We will notify you when the target is reached.",
-      cta: {
-        title: "View alerts",
-        onPress: handleViewAlerts,
-        variant: "primary",
-      },
-      content: <Success alert={createdAlert} />,
-      topSpacerSize: 42,
-    },
-  ];
-
-  const activeConfig = Config[activeConfigIndex];
-
-  return (
-    <Template
-      textBlockProps={{
-        title: activeConfig.title,
-        body: activeConfig.body,
-      }}
-      ctaProps={{
-        title: activeConfig.cta.title,
-        onPress: activeConfig.cta.onPress,
-        variant: activeConfig.cta.variant,
-        textStyle: {
-          fontFamily: Fonts.bold,
-          fontSize: ms(14),
-        },
-      }}
-      topSpacerSize={activeConfig.topSpacerSize}
-    >
-      <View style={GeneralStyles.wrapper}>{activeConfig.content}</View>
-    </Template>
-  );
-};
-
-// ─── CreateAlert ─────────────────────────────────────────────────────────────
-
-type CreateAlertProps = {
+export interface CreateAlertProps {
   asset: string;
   submitRef: React.MutableRefObject<() => void>;
   onSuccess: (alert: CreatedPriceAlert | UpdatedPriceAlert) => void;
@@ -166,9 +31,9 @@ type CreateAlertProps = {
   alertToEdit?: CreatedPriceAlert | null;
   alertId?: string;
   alertAction?: AlertAction;
-};
+}
 
-const CreateAlert = ({
+export const CreateAlert = ({
   asset,
   submitRef,
   onSuccess,
@@ -256,7 +121,7 @@ const CreateAlert = ({
     {
       label: "Trigger",
       value: `${asset.toUpperCase()} ${activeDirection.toLowerCase()} $${
-        formatAmount(parseFloat(amount),false) || "—"
+        formatAmount(parseFloat(amount), false) || "—"
       }`,
     },
     {
@@ -389,13 +254,11 @@ const CreateAlert = ({
   );
 };
 
-// ─── Success ─────────────────────────────────────────────────────────────────
-
-type SuccessProps = {
+export interface AlertSuccessProps {
   alert: CreatedPriceAlert | UpdatedPriceAlert | null;
-};
+}
 
-const Success = ({ alert }: SuccessProps) => {
+export const AlertSuccess = ({ alert }: AlertSuccessProps) => {
   const config = [
     { label: "Asset", value: alert?.assetSymbol ?? "—" },
     { label: "Direction", value: alert?.direction ?? "—" },
@@ -431,5 +294,3 @@ const Success = ({ alert }: SuccessProps) => {
     </>
   );
 };
-
-export default AlertScreen;

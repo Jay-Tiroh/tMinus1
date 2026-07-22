@@ -2,7 +2,7 @@ import {
   useAddToWatchlistMutation,
   useGetWatchlistQuery,
   useRemoveFromWatchlistMutation,
-} from "@/store/services/watchlistApi";
+} from "@/features/markets/api/watchlistApi";
 
 export function useWatchlist(pollIntervalMs = 10000) {
   const { data, isLoading, isError, refetch, isUninitialized } =

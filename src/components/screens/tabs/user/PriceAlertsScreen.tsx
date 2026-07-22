@@ -1,13 +1,13 @@
 import { ListItem } from "@/components/screens/tabs/user/ProfileScreen";
-import Template from "@/components/trades/Template";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
+import { useAssetRoute } from "@/features/trades/hooks/useAssetRoute";
 import { formatAmount, timeAgo } from "@/helpers/functions";
 import { showErrorToast, showSuccessToast } from "@/hooks/showToast";
-import { useAssetRoute } from "@/hooks/useAssetRoute";
 import ErrorState from "@/shared//components/ErrorComponent";
 import Loader from "@/shared/components/Loader";
+import Template from "@/shared/components/Template";
 import { ThemedButton } from "@/shared/components/ThemedButton";
 import { ThemedText } from "@/shared/components/ThemedText";
 import {

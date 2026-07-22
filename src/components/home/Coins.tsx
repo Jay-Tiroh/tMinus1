@@ -1,8 +1,8 @@
 import { CoinCard } from "@/components/home/CoinCard";
 import CoinCardsSkeleton from "@/components/home/CoinCardSkeleton";
 import { Colors } from "@/constants/Colors";
+import { useAllAssets } from "@/features/markets";
 import { Asset } from "@/features/markets/types/assets";
-import { useAllAssets } from "@/hooks/useAllAssets";
 import { useTrendingAssets } from "@/hooks/useTrendingAssets";
 import { ThemedText } from "@/shared/components/ThemedText";
 import { memo, useCallback } from "react";

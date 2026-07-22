@@ -1,12 +1,13 @@
 import CandlestickChart from "@/components/CandlestickChart";
-import ChangeText from "@/components/ChangeText";
+
+import { Colors } from "@/constants/Colors";
+import { useAssetCandle } from "@/features/trades/hooks/useAssetCandle";
+import { formatCurrency } from "@/helpers/functions";
+import useFiat from "@/hooks/useFiat";
+import ChangeText from "@/shared/components/ChangeText";
 import Skeleton from "@/shared/components/Skeleton";
 import TextBlock from "@/shared/components/TextBlock";
 import { ThemedText } from "@/shared/components/ThemedText";
-import { Colors } from "@/constants/Colors";
-import { formatCurrency } from "@/helpers/functions";
-import { useAssetCandle } from "@/hooks/useAssetCandle";
-import useFiat from "@/hooks/useFiat";
 import React from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 

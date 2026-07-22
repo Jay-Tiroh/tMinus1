@@ -1,5 +1,5 @@
 import { Spacer } from "@/shared/components/Spacer";
-import Template from "@/components/trades/Template";
+import Template from "@/shared/components/Template";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
 import { useGoToRoute } from "@/hooks/useGoToRoute";
@@ -121,8 +121,6 @@ const SecuritySettingsScreen = () => {
         </View>
 
         <Spacer size={32} />
-
-
       </View>
     </Template>
   );

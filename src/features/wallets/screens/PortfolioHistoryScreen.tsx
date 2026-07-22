@@ -1,4 +1,4 @@
-import Template from "@/components/trades/Template";
+import Template from "@/shared/components/Template";
 import CryptoAssetItem from "@/components/wallets/CryptoAssetItem";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";

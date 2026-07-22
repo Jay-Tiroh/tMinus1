@@ -1,6 +1,6 @@
 import { CoinList } from "@/components/home/Coins";
 import KycLocked from "@/components/KycLocked";
-import Template from "@/components/trades/Template";
+import Template from "@/shared/components/Template";
 import Balance from "@/components/wallets/Balance";
 import CryptoAssetItem from "@/components/wallets/CryptoAssetItem";
 import { Colors } from "@/constants/Colors";
@@ -11,7 +11,7 @@ import { useExitOnDoubleBack } from "@/hooks/useExitOnDoubleBack";
 import useProfile from "@/hooks/useProfile";
 import { useTransactions } from "@/hooks/useTransactions";
 import { useTrendingAssets } from "@/hooks/useTrendingAssets";
-import { useWatchlist } from "@/hooks/useWatchlist";
+import { useWatchlist } from "@/features/markets";
 import { Spacer } from "@/shared/components/Spacer";
 import { ThemedButton } from "@/shared/components/ThemedButton";
 import { ThemedText } from "@/shared/components/ThemedText";

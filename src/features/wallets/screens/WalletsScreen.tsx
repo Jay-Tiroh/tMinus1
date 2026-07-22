@@ -1,6 +1,6 @@
 import KycLocked from "@/components/KycLocked";
 import { Spacer } from "@/shared/components/Spacer";
-import Template from "@/components/trades/Template";
+import Template from "@/shared/components/Template";
 import ActionTabs from "@/components/wallets/ActionTabs";
 import Balance from "@/components/wallets/Balance";
 import CryptoAssetItem from "@/components/wallets/CryptoAssetItem";
