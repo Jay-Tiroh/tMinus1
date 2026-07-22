@@ -5,7 +5,7 @@ import Template from "@/shared/components/Template";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
 import useWallet from "@/features/wallets/hooks/useWallet";
-import { showInfoToast } from "@/hooks/showToast";
+import { showInfoToast } from "@/shared/hooks/showToast";
 import Octicons from "@expo/vector-icons/Octicons";
 import * as Clipboard from "expo-clipboard";
 import { useLocalSearchParams, useRouter } from "expo-router";

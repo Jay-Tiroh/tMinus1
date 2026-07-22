@@ -1,8 +1,8 @@
-import IndexScreen from "@/components/screens/kyc/IndexScreen";
+import { KycHomeScreen } from "@/features/kyc/screens/KycHomeScreen";
 import React from "react";
 
 const Index = () => {
-  return <IndexScreen />;
+  return <KycHomeScreen />;
 };
 
 export default Index;

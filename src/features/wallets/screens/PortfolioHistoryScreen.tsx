@@ -6,7 +6,7 @@ import { useGetPortfolioHistoryQuery } from "@/features/wallets/api/walletsApi";
 import AdvancedLineChart from "@/features/wallets/components/AdvancedLineChart";
 import useWallet from "@/features/wallets/hooks/useWallet";
 import { formatAmount, timeAgo } from "@/helpers/functions";
-import useFiat from "@/hooks/useFiat";
+import useFiat from "@/shared/hooks/useFiat";
 import ErrorState from "@/shared/components/ErrorComponent";
 import Loader from "@/shared/components/Loader";
 import { Spacer } from "@/shared/components/Spacer";

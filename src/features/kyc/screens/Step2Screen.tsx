@@ -1,13 +1,14 @@
-import Phase1 from "@/components/kyc/step2/Phase1";
-import Phase2 from "@/components/kyc/step2/Phase2";
-import Template from "@/components/kyc/Template";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
-import { showErrorToast } from "@/hooks/showToast";
-import { useGoToRoute } from "@/hooks/useGoToRoute";
+import Phase1 from "@/features/kyc/components/Phase1";
+import Phase2 from "@/features/kyc/components/Phase2";
+import Template from "@/features/kyc/components/Template";
+import { showErrorToast } from "@/shared/hooks/showToast";
+import { useGoToRoute } from "@/shared/hooks/useGoToRoute";
+
+import { selectKycFiles, setKycFile } from "@/features/kyc/store/kycSlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { selectKycFiles, setKycFile } from "@/store/slices/kycSlice";
 import { logger } from "@/utils/logger";
 import { ms, vs } from "@/utils/responsive";
 import * as ImagePicker from "expo-image-picker";
@@ -25,7 +26,7 @@ const PhaseConfig = {
   },
 };
 
-export default function Step2() {
+export const Step2Screen = () => {
   const [currentPhase, setCurrentPhase] = useState<1 | 2>(1);
   const [isUploading] = useState(false);
 
@@ -155,4 +156,6 @@ export default function Step2() {
       </View>
     </Template>
   );
-}
+};
+
+export default Step2Screen;

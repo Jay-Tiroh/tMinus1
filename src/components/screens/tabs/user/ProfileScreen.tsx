@@ -7,7 +7,7 @@ import Template from "@/shared/components/Template";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
 import { useNotificationsQuery } from "@/features/notifications/api/notificationsApi";
-import { useBackToHome } from "@/hooks/useBackToHome";
+import { useBackToHome } from "@/shared/hooks/useBackToHome";
 import useOtherSettings from "@/hooks/useOtherSettings";
 import useProfile from "@/hooks/useProfile";
 import { useGetPriceAlertsQuery } from "@/store/services/priceAlertsApi";

@@ -9,7 +9,7 @@ import {
   showErrorToast,
   showInfoToast,
   showSuccessToast,
-} from "@/hooks/showToast";
+} from "@/shared/hooks/showToast";
 import {
   useRequestOTPMutation,
   useVerifyOTPMutation,

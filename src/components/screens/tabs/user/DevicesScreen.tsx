@@ -5,7 +5,7 @@ import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
 import { timeAgo } from "@/helpers/functions";
-import { showErrorToast, showSuccessToast } from "@/hooks/showToast";
+import { showErrorToast, showSuccessToast } from "@/shared/hooks/showToast";
 import { useSafeBottom } from "@/hooks/useSafeBottom";
 import {
   useDeleteDeviceMutation,

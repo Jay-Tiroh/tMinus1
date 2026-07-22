@@ -10,7 +10,7 @@ import {
   setLastTransaction,
 } from "@/features/trades/storage/tradesSlice";
 import { CreateQuoteRequest } from "@/features/trades/types/trades.types";
-import { showErrorToast } from "@/hooks/showToast";
+import { showErrorToast } from "@/shared/hooks/showToast";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
 import { getErrorMessage } from "@/utils/errors";

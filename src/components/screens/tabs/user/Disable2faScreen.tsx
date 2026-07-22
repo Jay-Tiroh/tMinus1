@@ -6,7 +6,7 @@ import { ThemedText } from "@/shared/components/ThemedText";
 import Template from "@/shared/components/Template";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
-import { showErrorToast, showSuccessToast } from "@/hooks/showToast";
+import { showErrorToast, showSuccessToast } from "@/shared/hooks/showToast";
 import { useDisable2FAMutation } from "@/store/services/2faApi";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";

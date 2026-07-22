@@ -1,14 +1,14 @@
-import Template from "@/components/kyc/Template";
-import { LabelValueItem } from "@/components/LabelValueItem";
-import { Spacer } from "@/shared/components/Spacer";
-import TextBlock from "@/shared/components/TextBlock";
-import { ThemedText } from "@/shared/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
+import { LabelValueItem } from "@/shared/components/LabelValueItem";
+import { Spacer } from "@/shared/components/Spacer";
+import TextBlock from "@/shared/components/TextBlock";
+import { ThemedText } from "@/shared/components/ThemedText";
 import { ms, s, vs } from "@/utils/responsive";
 import React from "react";
 import { View } from "react-native";
+import { Template } from "./Template";
 
 const features = [
   {
@@ -25,7 +25,7 @@ const features = [
   },
 ];
 
-const IndexPage = ({
+export const IndexPage = ({
   handlePress,
 }: {
   handlePress: (step: number) => void;

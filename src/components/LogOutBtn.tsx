@@ -1,7 +1,7 @@
 import { ThemedButton } from "@/shared/components/ThemedButton";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
-import { useLogout } from "@/hooks/useLogout";
+import { useLogout } from "@/shared/hooks/useLogout";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import React from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";

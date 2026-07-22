@@ -1,6 +1,6 @@
 import { useSimulateDepositMutation } from "@/features/wallets/api/walletsApi";
 import { setLastDeposit } from "@/features/wallets/storage/walletsSlice";
-import { showErrorToast } from "@/hooks/showToast";
+import { showErrorToast } from "@/shared/hooks/showToast";
 import { useAppDispatch } from "@/store/hooks";
 import { getErrorMessage } from "@/utils/errors";
 import { zodResolver } from "@hookform/resolvers/zod";

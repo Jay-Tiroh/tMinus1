@@ -3,7 +3,7 @@ import Chart from "@/features/markets/components/LineChart";
 import { Asset } from "@/features/markets/types/assets";
 import { formatCurrency } from "@/helpers/functions";
 import { useAssetChart } from "@/hooks/useAssetChart";
-import useFiat from "@/hooks/useFiat";
+import useFiat from "@/shared/hooks/useFiat";
 import { CryptoIcon } from "@/shared/components/CryptoIcon";
 import { ThemedText } from "@/shared/components/ThemedText";
 import { ms, s, vs } from "@/utils/responsive";

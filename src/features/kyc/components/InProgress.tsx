@@ -1,14 +1,17 @@
-import BadgeStuff from "@/components/BadgeStuff";
-import { LabelValueItem } from "@/components/LabelValueItem";
-import { Spacer } from "@/shared/components/Spacer";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
+import BadgeStuff from "@/shared/components/BadgeStuff";
+import { LabelValueItem } from "@/shared/components/LabelValueItem";
+import { Spacer } from "@/shared/components/Spacer";
+import useFiat from "@/shared/hooks/useFiat";
 import { vs } from "@/utils/responsive";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import React from "react";
 import { View } from "react-native";
 
-const InProgress = () => {
+export const InProgress = () => {
+  const { symbol, convertFromUSD } = useFiat();
+  const currency = symbol ?? "$";
   const config = [
     {
       label: "Current level",
@@ -16,9 +19,10 @@ const InProgress = () => {
     },
     {
       label: "Sandbox deposit",
-      value: "$250 max",
+      value: currency + convertFromUSD(250) + " max",
     },
   ];
+
   return (
     <View>
       <Spacer size={12} />

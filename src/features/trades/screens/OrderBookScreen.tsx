@@ -3,7 +3,7 @@ import { GeneralStyles } from "@/constants/themes";
 import { useGetOrderBookQuery } from "@/features/markets/api/marketsApi";
 import { useAssetRoute } from "@/features/trades/hooks/useAssetRoute";
 import { formatAmount } from "@/helpers/functions";
-import useFiat from "@/hooks/useFiat";
+import useFiat from "@/shared/hooks/useFiat";
 import { Spacer } from "@/shared/components/Spacer";
 import Template from "@/shared/components/Template";
 import { ThemedText } from "@/shared/components/ThemedText";

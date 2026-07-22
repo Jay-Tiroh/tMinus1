@@ -8,7 +8,7 @@ import { ThemedText } from "@/shared/components/ThemedText";
 import { useLocalSearchParams, useRouter } from "expo-router";
 
 import { ThemedInput } from "@/components/auth/ThemedTextInput";
-import { showErrorToast, showSuccessToast } from "@/hooks/showToast";
+import { showErrorToast, showSuccessToast } from "@/shared/hooks/showToast";
 import { useAppDispatch } from "@/store/hooks";
 import { useVerify2FAMutation } from "@/store/services/2faApi";
 import { setCredentials } from "@/store/slices/authSlice";

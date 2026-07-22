@@ -1,9 +1,9 @@
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
-import { showErrorToast, showSuccessToast } from "@/hooks/showToast";
-import { useBiometrics } from "@/hooks/useBiometrics";
-import { useLogout } from "@/hooks/useLogout";
+import { showErrorToast, showSuccessToast } from "@/shared/hooks/showToast";
+import { useBiometrics } from "@/shared/hooks/useBiometrics";
+import { useLogout } from "@/shared/hooks/useLogout";
 import { Spacer } from "@/shared/components/Spacer";
 import Template from "@/shared/components/Template";
 import { ThemedButton } from "@/shared/components/ThemedButton";

@@ -6,7 +6,7 @@ import { ThemedText } from "@/shared/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { formatPhoneInternational } from "@/helpers/functions";
-import { showErrorToast, showSuccessToast } from "@/hooks/showToast";
+import { showErrorToast, showSuccessToast } from "@/shared/hooks/showToast";
 import {
   EmailPasswordFormData,
   emailPasswordSchema,

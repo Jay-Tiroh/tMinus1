@@ -3,19 +3,15 @@ import { ThemedText } from "@/shared/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
 import { formatAmount } from "@/helpers/functions";
-import { showErrorToast } from "@/hooks/showToast";
-import useFiat from "@/hooks/useFiat";
-import { useGoToRoute } from "@/hooks/useGoToRoute";
+import { showErrorToast } from "@/shared/hooks/showToast";
+import useFiat from "@/shared/hooks/useFiat";
+import { useGoToRoute } from "@/shared/hooks/useGoToRoute";
 import useWallet from "@/features/wallets/hooks/useWallet";
 import { ms, s, vs } from "@/utils/responsive";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import React, { useEffect } from "react";
-import {
-  ActivityIndicator,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { ActivityIndicator, TouchableOpacity, View } from "react-native";
 
 const Balance = () => {
   const [isVisible, setIsVisible] = React.useState(false);

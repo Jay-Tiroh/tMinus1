@@ -1,24 +1,26 @@
-import BadgeStuff from "@/components/BadgeStuff";
-import { LabelValueItem } from "@/components/LabelValueItem";
-import { Spacer } from "@/shared/components/Spacer";
-import TextBlock from "@/shared/components/TextBlock";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
-import { useKyc } from "@/hooks/useKyc";
+import { useKyc } from "@/features/kyc/hooks/useKyc";
+import BadgeStuff from "@/shared/components/BadgeStuff";
+import { LabelValueItem } from "@/shared/components/LabelValueItem";
+import { Spacer } from "@/shared/components/Spacer";
+import TextBlock from "@/shared/components/TextBlock";
 import { ms, vs } from "@/utils/responsive";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import React from "react";
 import { View } from "react-native";
 
-const Failed = () => {
+export const Failed = () => {
   const { verification } = useKyc();
+
   const config = [
     {
       label: "Current level",
       value: verification?.level ?? "Starter",
     },
   ];
+
   return (
     <View>
       <Spacer size={12} />

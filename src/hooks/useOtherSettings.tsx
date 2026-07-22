@@ -1,4 +1,4 @@
-import { showErrorToast, showSuccessToast } from "@/hooks/showToast";
+import { showErrorToast, showSuccessToast } from "@/shared/hooks/showToast";
 import { useAppDispatch } from "@/store/hooks";
 import {
   useSettingsQuery,

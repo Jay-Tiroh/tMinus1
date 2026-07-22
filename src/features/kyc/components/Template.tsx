@@ -1,20 +1,12 @@
-import Header from "@/components/kyc/Header";
+import { GeneralStyles } from "@/constants/themes";
 import { Spacer } from "@/shared/components/Spacer";
 import { ThemedButton } from "@/shared/components/ThemedButton";
-import { GeneralStyles } from "@/constants/themes";
-import { useSafeBottom } from "@/hooks/useSafeBottom";
+import { useSafeBottom } from "@/shared/hooks/useSafeBottom";
 import { vs } from "@/utils/responsive";
 import React from "react";
 import { ImageBackground, ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-
-export type HeaderProps = {
-  title?: string;
-  body?: string;
-  stage?: number;
-  onBackPress?: () => void;
-  goBack?: boolean;
-};
+import { Header, HeaderProps } from "./Header";
 
 type TemplateProps = {
   children: React.ReactNode;
@@ -24,7 +16,7 @@ type TemplateProps = {
   topSpacerSize?: number;
 };
 
-const Template = ({
+export const Template = ({
   children,
   headerProps,
   ctaProps,

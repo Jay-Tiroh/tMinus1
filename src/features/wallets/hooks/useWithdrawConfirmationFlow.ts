@@ -3,8 +3,8 @@ import {
   clearWithdrawalDraft,
   setLastWithdrawal,
 } from "@/features/wallets/storage/walletsSlice";
-import { showErrorToast } from "@/hooks/showToast";
-import { useGoToRoute } from "@/hooks/useGoToRoute";
+import { showErrorToast } from "@/shared/hooks/showToast";
+import { useGoToRoute } from "@/shared/hooks/useGoToRoute";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { logger } from "@/utils/logger";
 import { useRouter } from "expo-router";

@@ -1,30 +1,29 @@
-import Template from "@/components/kyc/Template";
 import ModalSelector from "@/components/ModalSelector";
-import { Spacer } from "@/shared/components/Spacer";
-import TextBlock from "@/shared/components/TextBlock";
-import { ThemedText } from "@/shared/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
-import { useGoToRoute } from "@/hooks/useGoToRoute";
+import Template from "@/features/kyc/components/Template";
+import { setStep1Data } from "@/features/kyc/store/kycSlice";
 import { KycStep1FormValues, kycStep1Schema } from "@/schemas/kycSchemas";
+import { Spacer } from "@/shared/components/Spacer";
+import TextBlock from "@/shared/components/TextBlock";
+import { ThemedText } from "@/shared/components/ThemedText";
+import { useGoToRoute } from "@/shared/hooks/useGoToRoute";
 import { useAppDispatch } from "@/store/hooks";
-import { setStep1Data } from "@/store/slices/kycSlice";
-import {
-  getDocumentByLabel,
-  KYC_DOCUMENT_LABELS,
-  KycDocumentType,
-} from "@/types/kyc";
 import { ms, s, vs } from "@/utils/responsive";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Pressable, StyleSheet, TextInput, View } from "react-native";
+import { KycDocumentType } from "../types/kyc.types";
+import {
+  getDocumentByLabel,
+  KYC_DOCUMENT_LABELS,
+} from "../utils/kyc.constants";
 
-const Step1 = () => {
+export const Step1Screen = () => {
   const [isDocTypeModalVisible, setDocTypeModalVisible] = useState(false);
-
   const dispatch = useAppDispatch();
 
   const {
@@ -43,6 +42,7 @@ const Step1 = () => {
   });
 
   const handlePress = useGoToRoute("/kyc/step2");
+
   const onSubmit = (data: KycStep1FormValues) => {
     const strictDocumentType = (getDocumentByLabel(data.documentType)?.type ||
       data.documentType) as KycDocumentType;
@@ -233,7 +233,7 @@ const Step1 = () => {
   );
 };
 
-export default Step1;
+export default Step1Screen;
 
 const styles = StyleSheet.create({
   inputContainer: {

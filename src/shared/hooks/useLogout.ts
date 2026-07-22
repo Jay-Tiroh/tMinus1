@@ -4,8 +4,11 @@ import { useLogoutMutation } from "@/store/services/authApi";
 import { baseApi } from "@/store/services/baseApi";
 import { clearCredentials } from "@/store/slices/authSlice";
 import { clearTokens, saveToken } from "@/utils/secureStore";
-import { showSuccessToast } from "@/hooks/showToast";
-import { useLazyGetDevicesQuery, useDeleteDeviceMutation } from "@/store/services/devicesApi";
+import { showSuccessToast } from "@/shared/hooks/showToast";
+import {
+  useLazyGetDevicesQuery,
+  useDeleteDeviceMutation,
+} from "@/store/services/devicesApi";
 
 export function useLogout() {
   const dispatch = useDispatch();
@@ -27,7 +30,8 @@ export function useLogout() {
         const sorted = data?.length
           ? [...data].sort(
               (a, b) =>
-                new Date(b.lastSeenAt).getTime() - new Date(a.lastSeenAt).getTime(),
+                new Date(b.lastSeenAt).getTime() -
+                new Date(a.lastSeenAt).getTime(),
             )
           : [];
         const currentDeviceId = sorted[0]?.id;

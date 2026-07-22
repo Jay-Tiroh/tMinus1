@@ -2,7 +2,7 @@ import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
 import { formatAmount } from "@/helpers/functions";
-import { showErrorToast } from "@/hooks/showToast";
+import { showErrorToast } from "@/shared/hooks/showToast";
 import { useAssetChart } from "@/hooks/useAssetChart";
 import BadgeStuff from "@/shared/components/BadgeStuff";
 import { CryptoIcon } from "@/shared/components/CryptoIcon";

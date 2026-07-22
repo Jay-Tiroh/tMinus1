@@ -1,7 +1,7 @@
 import { Colors } from "@/constants/Colors";
 import RemoveFromWatchlistModal from "@/features/markets/components/Modal";
 import { Asset } from "@/features/markets/types/assets";
-import { showErrorToast, showSuccessToast } from "@/hooks/showToast";
+import { showErrorToast, showSuccessToast } from "@/shared/hooks/showToast";
 import { useWatchlist } from "@/features/markets";
 import Loader from "@/shared/components/Loader";
 import { LinearGradient } from "expo-linear-gradient";

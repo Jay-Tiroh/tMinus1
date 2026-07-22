@@ -1,4 +1,4 @@
-import { Asset, AssetPickerModal } from "@/components/AssetPicker";
+import { Asset, AssetPickerModal } from "@/shared/components/AssetPicker";
 
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
@@ -8,10 +8,10 @@ import { BuildActionConfig } from "@/features/trades/constants/action.config";
 import { useAssetRoute } from "@/features/trades/hooks/useAssetRoute";
 import useWallet from "@/features/wallets/hooks/useWallet";
 import { formatAmount } from "@/helpers/functions";
-import { showErrorToast, showWarningToast } from "@/hooks/showToast";
+import { showErrorToast, showWarningToast } from "@/shared/hooks/showToast";
 
-import { useGoToRoute } from "@/hooks/useGoToRoute";
-import { useKyc } from "@/hooks/useKyc";
+import { useGoToRoute } from "@/shared/hooks/useGoToRoute";
+import { useKyc } from "@/features/kyc/hooks/useKyc";
 import { useSafeBottom } from "@/hooks/useSafeBottom";
 import { Spacer } from "@/shared/components/Spacer";
 import TextBlock from "@/shared/components/TextBlock";

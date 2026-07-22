@@ -1,11 +1,11 @@
 import { ThemedInput } from "@/components/auth/ThemedTextInput";
+import { Colors } from "@/constants/Colors";
+import { formatPhoneInternational } from "@/helpers/functions";
+import { signupSchema } from "@/schemas/authSchemas";
 import { Spacer } from "@/shared/components/Spacer";
 import { ThemedButton } from "@/shared/components/ThemedButton";
 import { ThemedText } from "@/shared/components/ThemedText";
-import { Colors } from "@/constants/Colors";
-import { formatPhoneInternational } from "@/helpers/functions";
-import { showErrorToast } from "@/hooks/showToast"; // Adjust import path if needed
-import { signupSchema } from "@/schemas/authSchemas";
+import { showErrorToast } from "@/shared/hooks/showToast"; // Adjust import path if needed
 import { useValidateSignupMutation } from "@/store/services/authApi"; // Adjust import path if needed
 
 import { ms, vs } from "@/utils/responsive";

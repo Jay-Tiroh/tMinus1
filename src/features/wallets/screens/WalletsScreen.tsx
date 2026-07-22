@@ -6,7 +6,7 @@ import Balance from "@/components/wallets/Balance";
 import CryptoAssetItem from "@/components/wallets/CryptoAssetItem";
 import { GeneralStyles } from "@/constants/themes";
 import { formatAmount } from "@/helpers/functions";
-import { useBackToHome } from "@/hooks/useBackToHome";
+import { useBackToHome } from "@/shared/hooks/useBackToHome";
 import React from "react";
 import { View } from "react-native";
 import { RecentTransactions } from "../components/RecentTransactions";

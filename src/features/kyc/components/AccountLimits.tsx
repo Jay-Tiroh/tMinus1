@@ -1,14 +1,14 @@
-import Template from "@/components/kyc/Template";
-import { Spacer } from "@/shared/components/Spacer";
-import TextBlock from "@/shared/components/TextBlock";
-import { ThemedText } from "@/shared/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
-import { useGoToRoute } from "@/hooks/useGoToRoute";
+import { Spacer } from "@/shared/components/Spacer";
+import TextBlock from "@/shared/components/TextBlock";
+import { ThemedText } from "@/shared/components/ThemedText";
+import { useGoToRoute } from "@/shared/hooks/useGoToRoute";
 import { ms, s, vs } from "@/utils/responsive";
 import React from "react";
 import { View } from "react-native";
+import { Template } from "./Template";
 
 const steps = [
   {
@@ -28,7 +28,7 @@ const steps = [
   },
 ];
 
-const AccountLimits = ({
+export const AccountLimits = ({
   handlePress,
 }: {
   handlePress: (step: number) => void;

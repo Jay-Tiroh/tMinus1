@@ -1,5 +1,6 @@
 import { countriesApi } from "@/store/country-picker/countriesApi";
 import { configureStore } from "@reduxjs/toolkit";
+import kycReducer from "../features/kyc/store/kycSlice";
 import notificationReducer from "../features/notifications/storage/notificationSlice";
 import tradesReducer from "../features/trades/storage/tradesSlice";
 import walletsReducer from "../features/wallets/storage/walletsSlice";
@@ -7,7 +8,6 @@ import { baseApi } from "./services/baseApi";
 import bottomSheetReducer from "./slices/BottomSheetSlice";
 import menuReducer from "./slices/MenuSlice";
 import authReducer from "./slices/authSlice";
-import kycReducer from "./slices/kycSlice";
 import userReducer from "./slices/userSlice";
 export const store = configureStore({
   reducer: {

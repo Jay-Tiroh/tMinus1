@@ -1,6 +1,10 @@
 // store/slices/kycSlice.ts
+import {
+  KycDocumentType,
+  KycFileAsset,
+  SubmitKYCRequest,
+} from "@/features/kyc/types/kyc.types";
 import { RootState } from "@/store";
-import { KycDocumentType, KycFileAsset, SubmitKYCRequest } from "@/types/kyc";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export type KycFilesState = {

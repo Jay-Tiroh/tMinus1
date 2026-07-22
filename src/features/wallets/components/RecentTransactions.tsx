@@ -4,7 +4,7 @@ import CryptoAssetItem from "@/components/wallets/CryptoAssetItem";
 import { Colors } from "@/constants/Colors";
 import { useTransactions } from "@/features/wallets/hooks/useTransactions";
 import { formatAmount, timeAgo } from "@/helpers/functions";
-import { useGoToRoute } from "@/hooks/useGoToRoute";
+import { useGoToRoute } from "@/shared/hooks/useGoToRoute";
 import React, { useMemo } from "react";
 import { Pressable, View } from "react-native";
 

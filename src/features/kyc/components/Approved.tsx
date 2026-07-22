@@ -1,36 +1,49 @@
-import BadgeStuff from "@/components/BadgeStuff";
-import { LabelValueItem } from "@/components/LabelValueItem";
-import { Spacer } from "@/shared/components/Spacer";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
+import { useKyc } from "@/features/kyc/hooks/useKyc";
 import { formatCurrency } from "@/helpers/functions";
-import { useKyc } from "@/hooks/useKyc";
+import BadgeStuff from "@/shared/components/BadgeStuff";
+import { LabelValueItem } from "@/shared/components/LabelValueItem";
+import { Spacer } from "@/shared/components/Spacer";
+import useFiat from "@/shared/hooks/useFiat";
 import { vs } from "@/utils/responsive";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import React from "react";
 import { View } from "react-native";
 
-const Approved = () => {
+export const Approved = () => {
   const { limits } = useKyc();
+  const { symbol, convertFromUSD } = useFiat();
 
   const config = [
     {
       label: "Deposit per transaction",
-      value: "$" + formatCurrency(limits?.depositPerTransactionUsd ?? NaN),
+      value:
+        symbol +
+        formatCurrency(convertFromUSD(limits?.depositPerTransactionUsd ?? NaN)),
     },
     {
       label: "Trade per transaction",
-      value: "$" + formatCurrency(limits?.tradePerTransactionUsd ?? NaN),
+      value:
+        symbol +
+        formatCurrency(convertFromUSD(limits?.tradePerTransactionUsd ?? NaN)),
     },
     {
       label: "Withdrawal transaction",
-      value: "$" + formatCurrency(limits?.withdrawalPerTransactionUsd ?? NaN),
+      value:
+        symbol +
+        formatCurrency(
+          convertFromUSD(limits?.withdrawalPerTransactionUsd ?? NaN),
+        ),
     },
     {
       label: "Daily withdrawal",
-      value: "$" + formatCurrency(limits?.dailyWithdrawalUsd ?? NaN),
+      value:
+        symbol +
+        formatCurrency(convertFromUSD(limits?.dailyWithdrawalUsd ?? NaN)),
     },
   ];
+
   return (
     <View>
       <Spacer size={12} />

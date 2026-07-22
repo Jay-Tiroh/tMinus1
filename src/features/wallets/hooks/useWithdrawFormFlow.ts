@@ -1,7 +1,7 @@
 import { useAllAssets } from "@/features/markets";
 import useWallet from "@/features/wallets/hooks/useWallet";
 import { setWithdrawalDraft } from "@/features/wallets/storage/walletsSlice";
-import { useGoToRoute } from "@/hooks/useGoToRoute";
+import { useGoToRoute } from "@/shared/hooks/useGoToRoute";
 import { useAppDispatch } from "@/store/hooks";
 import { useCallback, useMemo, useState } from "react";
 

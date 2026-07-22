@@ -4,8 +4,8 @@ import {
   KYCUploadInstructionResponse,
   SubmitKYCRequest,
   SubmitKYCResponse,
-} from "@/types/kyc";
-import { baseApi } from "./baseApi";
+} from "@/features/kyc/types/kyc.types";
+import { baseApi } from "@/store/services/baseApi";
 
 export const kycApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({

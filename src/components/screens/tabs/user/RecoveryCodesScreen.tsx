@@ -7,7 +7,7 @@ import {
   showErrorToast,
   showInfoToast,
   showSuccessToast,
-} from "@/hooks/showToast";
+} from "@/shared/hooks/showToast";
 import React, { useEffect, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 

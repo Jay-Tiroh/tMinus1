@@ -4,7 +4,7 @@ import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
 import { useAssetRoute } from "@/features/trades/hooks/useAssetRoute";
 import { formatAmount, timeAgo } from "@/helpers/functions";
-import { showErrorToast, showSuccessToast } from "@/hooks/showToast";
+import { showErrorToast, showSuccessToast } from "@/shared/hooks/showToast";
 import ErrorState from "@/shared//components/ErrorComponent";
 import Loader from "@/shared/components/Loader";
 import Template from "@/shared/components/Template";

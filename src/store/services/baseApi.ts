@@ -9,12 +9,12 @@ import type {
 } from "@reduxjs/toolkit/query";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Mutex } from "async-mutex";
-import { showErrorToast } from "@/hooks/showToast";
+import { showErrorToast } from "@/shared/hooks/showToast";
 import { getErrorMessage } from "@/utils/errors";
 
 // Create a new mutex to prevent multiple simultaneous refresh calls
 const mutex = new Mutex();
-const BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL
+const BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL;
 // 1. Define your standard base query
 const baseQuery = fetchBaseQuery({
   baseUrl: BASE_URL,
@@ -40,7 +40,6 @@ const baseQueryWithReauth: BaseQueryFn<
   let result = await baseQuery(args, api, extraOptions);
 
   // If the token is expired (401 Unauthorized)
-
 
   if (result.error && result.error.status === 401) {
     if (!mutex.isLocked()) {
@@ -80,8 +79,10 @@ const baseQueryWithReauth: BaseQueryFn<
             } catch (persistError) {
               showErrorToast({
                 title: "Session Error",
-                message:
-                  getErrorMessage(persistError,"Failed to persist session data. Please log in again."),
+                message: getErrorMessage(
+                  persistError,
+                  "Failed to persist session data. Please log in again.",
+                ),
               });
               await clearTokens();
               api.dispatch(clearCredentials());

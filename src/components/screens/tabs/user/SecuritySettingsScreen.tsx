@@ -2,7 +2,7 @@ import { Spacer } from "@/shared/components/Spacer";
 import Template from "@/shared/components/Template";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
-import { useGoToRoute } from "@/hooks/useGoToRoute";
+import { useGoToRoute } from "@/shared/hooks/useGoToRoute";
 import useOtherSettings from "@/hooks/useOtherSettings";
 import { useStatusQuery } from "@/store/services/2faApi";
 import { useGetDevicesQuery } from "@/store/services/devicesApi";

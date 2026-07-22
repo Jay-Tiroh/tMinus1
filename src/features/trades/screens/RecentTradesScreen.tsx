@@ -1,7 +1,7 @@
 import { GeneralStyles } from "@/constants/themes";
 import { useGetTradesQuery } from "@/features/markets/api/marketsApi";
 import { useAssetRoute } from "@/features/trades/hooks/useAssetRoute";
-import useFiat from "@/hooks/useFiat";
+import useFiat from "@/shared/hooks/useFiat";
 import { useSafeBottom } from "@/hooks/useSafeBottom";
 import { Spacer } from "@/shared/components/Spacer";
 import TextBlock from "@/shared/components/TextBlock";

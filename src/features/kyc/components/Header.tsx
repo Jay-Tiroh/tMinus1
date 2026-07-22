@@ -1,15 +1,15 @@
+import { Colors } from "@/constants/Colors";
+import { GeneralStyles } from "@/constants/themes";
 import { Spacer } from "@/shared/components/Spacer";
 import TextBlock from "@/shared/components/TextBlock";
 import { ThemedText } from "@/shared/components/ThemedText";
-import { Colors } from "@/constants/Colors";
-import { GeneralStyles } from "@/constants/themes";
 import { ms, s, vs } from "@/utils/responsive";
 import Entypo from "@expo/vector-icons/Entypo";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { LayoutChangeEvent, Pressable, View } from "react-native";
 
-type HeaderProps = {
+export type HeaderProps = {
   title?: string;
   body?: string;
   stage?: number;
@@ -32,7 +32,7 @@ const Stages = [
   },
 ];
 
-const Header = ({
+export const Header = ({
   title = "Verify to unlock limits",
   body = "Complete identity verification from inside the app before high-value trading or withdrawals.",
   stage = 0,

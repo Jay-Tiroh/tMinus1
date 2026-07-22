@@ -7,7 +7,7 @@ import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
 import { useTransactionById } from "@/features/wallets/hooks/useTransactionById";
 import { formatAmount } from "@/helpers/functions";
-import { useGoToRoute } from "@/hooks/useGoToRoute";
+import { useGoToRoute } from "@/shared/hooks/useGoToRoute";
 import { useLocalSearchParams } from "expo-router";
 import React, { useMemo } from "react";
 import { View } from "react-native";

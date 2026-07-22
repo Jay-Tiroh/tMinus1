@@ -2,7 +2,7 @@ import { Colors } from "@/constants/Colors";
 import Chart from "@/features/markets/components/LineChart";
 import { formatCurrency } from "@/helpers/functions";
 import { useAssetChart } from "@/hooks/useAssetChart";
-import useFiat from "@/hooks/useFiat";
+import useFiat from "@/shared/hooks/useFiat";
 import ChangeText from "@/shared/components/ChangeText";
 import { CryptoIcon } from "@/shared/components/CryptoIcon";
 import { ThemedText } from "@/shared/components/ThemedText";

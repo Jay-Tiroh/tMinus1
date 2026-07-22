@@ -7,7 +7,7 @@ import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
 import { Asset } from "@/features/markets/types/assets";
 import { formatAmount } from "@/helpers/functions";
-import { useExitOnDoubleBack } from "@/hooks/useExitOnDoubleBack";
+import { useExitOnDoubleBack } from "@/shared/hooks/useExitOnDoubleBack";
 import useProfile from "@/hooks/useProfile";
 import { useTransactions } from "@/hooks/useTransactions";
 import { useTrendingAssets } from "@/hooks/useTrendingAssets";

@@ -1,11 +1,11 @@
-import Approved from "@/components/kyc/step3/Approved";
-import Failed from "@/components/kyc/step3/Failed";
-import InProgress from "@/components/kyc/step3/InProgress";
-import Template from "@/components/kyc/Template";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
-import { useGoToRoute } from "@/hooks/useGoToRoute";
-import { useKyc } from "@/hooks/useKyc";
+import Approved from "@/features/kyc/components/Approved";
+import Failed from "@/features/kyc/components/Failed";
+import InProgress from "@/features/kyc/components/InProgress";
+import Template from "@/features/kyc/components/Template";
+import { useGoToRoute } from "@/shared/hooks/useGoToRoute";
+import { useKyc } from "@/features/kyc/hooks/useKyc";
 import { ms } from "@/utils/responsive";
 import React, { useEffect } from "react";
 import { StyleSheet } from "react-native";

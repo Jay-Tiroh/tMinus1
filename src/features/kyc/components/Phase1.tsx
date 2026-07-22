@@ -1,20 +1,20 @@
-import { ThemedText } from "@/shared/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
 import { formatExtensionsForDisplay } from "@/helpers/functions";
-import { showErrorToast } from "@/hooks/showToast";
 
+import { KycFilesState, setKycFile } from "@/features/kyc/store/kycSlice";
+import { getDocumentByType } from "@/features/kyc/utils/kyc.constants";
+import { ThemedText } from "@/shared/components/ThemedText";
+import { showErrorToast } from "@/shared/hooks/showToast";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { KycFilesState, setKycFile } from "@/store/slices/kycSlice";
-import { getDocumentByType, KycFileAsset } from "@/types/kyc";
 import { getErrorMessage } from "@/utils/errors";
 import { ms, s, vs } from "@/utils/responsive";
-import Feather from "@expo/vector-icons/Feather";
 import Fontisto from "@expo/vector-icons/Fontisto";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import * as DocumentPicker from "expo-document-picker";
 import React, { useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
+import { UploadCTA } from "./UploadCTA";
 
 export type UploadOption = {
   label: keyof KycFilesState;
@@ -99,17 +99,15 @@ const UploadOptions = ({
               alignItems: "center",
             }}
           >
-            {
-              <item.icon.type
-                name={item.icon.name}
-                color={
-                  selectedOption === item.label
-                    ? Colors.backgroundInk
-                    : item.icon.color
-                }
-                size={item.icon.size}
-              />
-            }
+            <item.icon.type
+              name={item.icon.name}
+              color={
+                selectedOption === item.label
+                  ? Colors.backgroundInk
+                  : item.icon.color
+              }
+              size={item.icon.size}
+            />
           </View>
           <ThemedText
             color={
@@ -127,72 +125,11 @@ const UploadOptions = ({
   );
 };
 
-export const UploadCTA = ({
-  title,
-  onPress,
-  file,
-}: {
-  title: string;
-  onPress: () => void;
-  file?: KycFileAsset;
-}) => {
-  return (
-    <Pressable
-      onPress={onPress}
-      style={[
-        GeneralStyles.box,
-        {
-          justifyContent: "center",
-          alignItems: "center",
-          minHeight: vs(142),
-          width: "100%",
-          maxWidth: s(342),
-          gap: vs(16),
-          borderColor: file ? Colors.primaryClean : "transparent",
-          borderWidth: file ? 1 : 0,
-        },
-      ]}
-    >
-      <View
-        style={{
-          width: s(50),
-          height: vs(50),
-          borderRadius: ms(25),
-          backgroundColor: file ? Colors.surfaceGreenDeep : Colors.surfaceNavy,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Feather
-          name={file ? "file-text" : "upload"}
-          size={24}
-          color={file ? Colors.primaryClean : Colors.softGray}
-        />
-      </View>
-      <ThemedText
-        color={Colors.snowGray}
-        weight="bold"
-        size={13}
-        style={{ textAlign: "center", paddingHorizontal: s(16) }}
-        numberOfLines={1}
-      >
-        {file ? file.name : title}
-      </ThemedText>
-      {file && (
-        <ThemedText color={Colors.textMidGray} size={11}>
-          Tap to replace
-        </ThemedText>
-      )}
-    </Pressable>
-  );
-};
-
-const Phase1 = () => {
+export const Phase1 = () => {
   const dispatch = useAppDispatch();
   const [selectedOption, setSelectedOption] =
     useState<keyof KycFilesState>("document_front");
 
-  // Read data directly from Redux
   const docType = useAppSelector((state) => state.kyc.documentType);
   const selectedFiles = useAppSelector((state) => state.kyc.selectedFiles);
 
@@ -210,18 +147,17 @@ const Phase1 = () => {
       });
 
       if (!result.canceled && result.assets && result.assets.length > 0) {
-        // Small delay to let the app fully resume before dispatching
         await new Promise((resolve) => setTimeout(resolve, 300));
 
         const asset = result.assets[0];
 
         dispatch(
           setKycFile({
-            key: selectedOption, // Use the dynamically selected option (front/back)
+            key: selectedOption,
             file: {
               uri: asset.uri,
-              name: asset.name, // Use the actual file name
-              mimeType: asset.mimeType ?? "application/octet-stream", // Fallback if undefined
+              name: asset.name,
+              mimeType: asset.mimeType ?? "application/octet-stream",
               size: asset.size ?? 0,
             },
           }),
@@ -229,11 +165,15 @@ const Phase1 = () => {
       }
     } catch (error) {
       showErrorToast({
-        title:"Document Upload Failed",
-        message: getErrorMessage(error, "An error occurred while uploading the document. Please try again."),
-      })
+        title: "Document Upload Failed",
+        message: getErrorMessage(
+          error,
+          "An error occurred while uploading the document. Please try again.",
+        ),
+      });
     }
   };
+
   return (
     <View style={styles.container}>
       <UploadOptions

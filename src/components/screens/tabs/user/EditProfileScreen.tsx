@@ -6,7 +6,7 @@ import { ThemedTextInput } from "@/components/user/ThemedTextInput";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import useMisc from "@/constants/misc";
-import { showErrorToast, showSuccessToast } from "@/hooks/showToast";
+import { showErrorToast, showSuccessToast } from "@/shared/hooks/showToast";
 import { EditProfileFormData, editProfileSchema } from "@/schemas/authSchemas";
 import { useUpdateProfileMutation } from "@/store/services/profileApi";
 import { UpdateProfileRequest } from "@/types/profile";

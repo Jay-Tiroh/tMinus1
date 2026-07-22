@@ -1,8 +1,8 @@
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
 import { ConfigType } from "@/features/trades/screens/QuoteScreen";
-import { showErrorToast } from "@/hooks/showToast";
-import { useGoToRoute } from "@/hooks/useGoToRoute";
+import { showErrorToast } from "@/shared/hooks/showToast";
+import { useGoToRoute } from "@/shared/hooks/useGoToRoute";
 import Template from "@/shared/components/Template";
 import { useGetPriceAlertsQuery } from "@/store/services/priceAlertsApi";
 import {

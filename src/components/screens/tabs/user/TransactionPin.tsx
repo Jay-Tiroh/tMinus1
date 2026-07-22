@@ -3,7 +3,7 @@ import { ThemedText } from "@/shared/components/ThemedText";
 import Template from "@/shared/components/Template";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
-import { showErrorToast, showSuccessToast } from "@/hooks/showToast"; // Adjust path to where your toast functions live
+import { showErrorToast, showSuccessToast } from "@/shared/hooks/showToast"; // Adjust path to where your toast functions live
 import { useUpdatePinMutation } from "@/store/services/profileApi"; // Adjust path as needed
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";

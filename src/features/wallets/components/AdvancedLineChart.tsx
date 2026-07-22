@@ -5,7 +5,7 @@ import { ThemedText } from "@/shared/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { PortfolioChartPoint } from "@/features/wallets/types/wallets";
 import { formatCurrency } from "@/helpers/functions";
-import useFiat from "@/hooks/useFiat";
+import useFiat from "@/shared/hooks/useFiat";
 import React, { useMemo, useState } from "react";
 import { LayoutChangeEvent, Pressable, StyleSheet, View } from "react-native";
 import { PORTFOLIO_TIME_OPTIONS } from "../constants/wallets.constants";
