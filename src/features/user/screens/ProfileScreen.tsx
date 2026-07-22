@@ -1,20 +1,21 @@
-import ErrorState from "@/components/ErrorComponent";
 import LogOutBtn from "@/components/LogOutBtn";
 import { ModalSelector } from "@/components/OptionPicker";
-import { Spacer } from "@/shared/components/Spacer";
-import { ThemedText } from "@/shared/components/ThemedText";
-import Template from "@/shared/components/Template";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
 import { useNotificationsQuery } from "@/features/notifications/api/notificationsApi";
+import { useGetPriceAlertsQuery } from "@/features/user/api/priceAlertsApi";
+import useOtherSettings from "@/features/user/hooks/useOtherSettings";
+import useProfile from "@/features/user/hooks/useProfile";
+import { FIAT_CURRENCIES, FiatCurrency } from "@/features/user/types/profile";
+import ErrorState from "@/shared/components/ErrorComponent";
+import { Spacer } from "@/shared/components/Spacer";
+import Template from "@/shared/components/Template";
+import { ThemedText } from "@/shared/components/ThemedText";
 import { useBackToHome } from "@/shared/hooks/useBackToHome";
-import useOtherSettings from "@/hooks/useOtherSettings";
-import useProfile from "@/hooks/useProfile";
-import { useGetPriceAlertsQuery } from "@/store/services/priceAlertsApi";
-import { FIAT_CURRENCIES, FiatCurrency } from "@/types/profile";
 import { Href, useRouter } from "expo-router";
 import React from "react";
-import { Image, Pressable, View } from "react-native";
+import { Image, View } from "react-native";
+import { ListItem } from "../components/ListItem";
 
 const ProfileScreen = () => {
   useBackToHome();
@@ -127,7 +128,6 @@ const ProfileScreen = () => {
       refetch={handleRefetch}
     >
       <View style={GeneralStyles.wrapper}>
-        {/* User Header */}
         <View style={{ flexDirection: "row", alignItems: "center", gap: 16 }}>
           <View
             style={{
@@ -165,7 +165,7 @@ const ProfileScreen = () => {
             </ThemedText>
             <View
               style={{
-                backgroundColor: Colors.surfaceNavy, // Adjust to your dark green tint
+                backgroundColor: Colors.surfaceNavy,
                 paddingVertical: 4,
                 paddingHorizontal: 12,
                 borderRadius: 12,
@@ -196,7 +196,6 @@ const ProfileScreen = () => {
 
         <Spacer size={40} />
 
-        {/* Menu Items */}
         {isError ? (
           <ErrorState onRetry={handleRefetch} />
         ) : (
@@ -236,67 +235,5 @@ const ProfileScreen = () => {
     </Template>
   );
 };
-
-// Reusable List Item Component for these screens
-export const ListItem = ({
-  title,
-  subtitle,
-  trailingText,
-  trailingTextColor,
-  iconColor,
-  onPress,
-  onLongPress,
-}: {
-  title: string;
-  subtitle: string;
-  trailingText?: string;
-  trailingTextColor?: string;
-  iconColor: string;
-  onPress?: () => void;
-  onLongPress?: () => void;
-}) => (
-  <Pressable
-    onPress={onPress}
-    onLongPress={onLongPress}
-    style={[
-      GeneralStyles.box,
-      {
-        padding: 16,
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        flex: 1,
-      },
-    ]}
-  >
-    <View style={{ flexDirection: "row", alignItems: "center", gap: 16 }}>
-      <View
-        style={{
-          width: 24,
-          height: 24,
-          borderRadius: 12,
-          backgroundColor: iconColor,
-        }}
-      />
-      <View style={{ gap: 4 }}>
-        <ThemedText size={16} weight="bold" color={Colors.white}>
-          {title}
-        </ThemedText>
-        <ThemedText size={12} color={Colors.textMidGray}>
-          {subtitle}
-        </ThemedText>
-      </View>
-    </View>
-    {trailingText && (
-      <ThemedText
-        size={14}
-        weight="bold"
-        color={trailingTextColor ?? Colors.primaryClean}
-      >
-        {trailingText}
-      </ThemedText>
-    )}
-  </Pressable>
-);
 
 export default ProfileScreen;

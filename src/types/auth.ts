@@ -1,6 +1,6 @@
 // ── Validation ─────────────────────────────────────────────────────────────
 
-import { User } from "@/types/profile";
+import { User } from "@/features/user/types/profile";
 
 export interface ValidateSignupRequest {
   email?: string;
@@ -122,8 +122,6 @@ export interface LogoutResponse {
 export interface RefreshRequestBody {
   refreshToken: string;
 }
-
-
 
 export interface RefreshResponse {
   data: AuthResponseData;

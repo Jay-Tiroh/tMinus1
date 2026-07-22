@@ -3,8 +3,8 @@ import {
   DevicesResponse,
   RegisterDeviceRequest,
   RegisterDeviceResponse,
-} from "@/types/devices";
-import { baseApi } from "./baseApi";
+} from "@/features/user/types/devices";
+import { baseApi } from "@/store/services/baseApi";
 
 const devicesApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({

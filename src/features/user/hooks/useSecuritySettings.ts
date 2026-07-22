@@ -1,21 +1,17 @@
-import { Spacer } from "@/shared/components/Spacer";
-import Template from "@/shared/components/Template";
 import { Colors } from "@/constants/Colors";
-import { GeneralStyles } from "@/constants/themes";
+import { useStatusQuery } from "@/features/user/api/2faApi";
+import { useGetDevicesQuery } from "@/features/user/api/devicesApi";
+import useOtherSettings from "@/features/user/hooks/useOtherSettings";
 import { useGoToRoute } from "@/shared/hooks/useGoToRoute";
-import useOtherSettings from "@/hooks/useOtherSettings";
-import { useStatusQuery } from "@/store/services/2faApi";
-import { useGetDevicesQuery } from "@/store/services/devicesApi";
 import React from "react";
-import { View } from "react-native";
-import { ListItem } from "./ProfileScreen"; // Assuming exported from above
 
-const SecuritySettingsScreen = () => {
+export const useSecuritySettings = () => {
   const setPin = useGoToRoute("/user/transaction-pin");
   const setup2fa = useGoToRoute("/user/two-factor/setup");
   const disable2fa = useGoToRoute("/user/two-factor/disable");
   const seeRecoveryCodes = useGoToRoute("/user/two-factor/recovery-codes");
   const seeDevices = useGoToRoute("/user/devices");
+
   const { data: devices } = useGetDevicesQuery();
   const activeDevice = React.useMemo(() => {
     if (!devices?.data?.length) return undefined;
@@ -26,6 +22,7 @@ const SecuritySettingsScreen = () => {
     const mostRecentId = sorted[0].id;
     return devices?.data.find((device) => device.id === mostRecentId);
   }, [devices]);
+
   const devicePlatform =
     activeDevice?.platform === "android" ? "Android" : "iOS";
   const deviceCount = devices?.data?.length ?? 0;
@@ -37,12 +34,13 @@ const SecuritySettingsScreen = () => {
   } = useOtherSettings();
   const { data: twoFactorStatusData, refetch: refetchStatus } =
     useStatusQuery();
+
   const twoFactorEnabled = twoFactorStatusData?.twoFactorEnabled ?? false;
   const recoveryCodesRemaining = twoFactorStatusData?.recoveryCodesRemaining;
   const twoFactorStatus = twoFactorEnabled ? "On" : "Off";
-
   const biometricStatus = settings?.biometricEnabled ? "On" : "Off";
   const twoFactorAction = twoFactorEnabled ? disable2fa : setup2fa;
+
   const securityItems = [
     {
       title: "Transaction PIN",
@@ -66,14 +64,14 @@ const SecuritySettingsScreen = () => {
       status:
         recoveryCodesRemaining && recoveryCodesRemaining <= 0
           ? "Regenerate"
-          : ``,
+          : "",
       color: Colors.primaryClean,
       onPress: seeRecoveryCodes,
       trailingTextColor: Colors.primaryClean,
     },
     {
       title: "Registered devices",
-      subtitle: devicePlatform + " • push enabled",
+      subtitle: `${devicePlatform} • push enabled`,
       status: `${deviceCount}`,
       color: Colors.primaryClean,
       onPress: seeDevices,
@@ -95,35 +93,9 @@ const SecuritySettingsScreen = () => {
     refetchSettings();
     refetchStatus();
   };
-  return (
-    <Template
-      textBlockProps={{
-        title: "Security",
-        body: "Protect account access and sensitive actions.",
-      }}
-      ctaProps={undefined}
-      topSpacerSize={32}
-      refetch={handleRefresh}
-    >
-      <View style={GeneralStyles.wrapper}>
-        <View style={{ gap: 12 }}>
-          {securityItems.map((item, index) => (
-            <ListItem
-              key={index}
-              title={item.title}
-              subtitle={item.subtitle}
-              trailingText={item.status}
-              iconColor={item.color}
-              onPress={item.onPress}
-              trailingTextColor={item.color}
-            />
-          ))}
-        </View>
 
-        <Spacer size={32} />
-      </View>
-    </Template>
-  );
+  return {
+    securityItems,
+    handleRefresh,
+  };
 };
-
-export default SecuritySettingsScreen;

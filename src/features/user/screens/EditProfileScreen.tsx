@@ -1,15 +1,14 @@
-import { Spacer } from "@/shared/components/Spacer";
-import { ThemedButton } from "@/shared/components/ThemedButton";
-import { ThemedText } from "@/shared/components/ThemedText";
-import Template from "@/shared/components/Template";
-import { ThemedTextInput } from "@/components/user/ThemedTextInput";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import useMisc from "@/constants/misc";
+import { useUpdateProfileMutation } from "@/features/user/api/profileApi";
+import { ThemedTextInput } from "@/features/user/components/ThemedTextInput";
+import { UpdateProfileRequest } from "@/features/user/types/profile";
+import { Spacer } from "@/shared/components/Spacer";
+import Template from "@/shared/components/Template";
+import { ThemedButton } from "@/shared/components/ThemedButton";
+import { ThemedText } from "@/shared/components/ThemedText";
 import { showErrorToast, showSuccessToast } from "@/shared/hooks/showToast";
-import { EditProfileFormData, editProfileSchema } from "@/schemas/authSchemas";
-import { useUpdateProfileMutation } from "@/store/services/profileApi";
-import { UpdateProfileRequest } from "@/types/profile";
 import { getErrorMessage } from "@/utils/errors";
 import { logger } from "@/utils/logger";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
@@ -18,6 +17,10 @@ import { useRouter } from "expo-router";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
+import {
+  EditProfileFormData,
+  editProfileSchema,
+} from "../validation/profile.schema";
 
 const EditProfileScreen = () => {
   const { profileData } = useMisc();
@@ -34,7 +37,6 @@ const EditProfileScreen = () => {
     },
   });
 
-  // Keep form in sync if displayName updates externally
   useEffect(() => {
     if (displayName) {
       reset({ fullName: displayName });
@@ -42,12 +44,9 @@ const EditProfileScreen = () => {
   }, [displayName, reset]);
 
   const [updateProfile, { isLoading }] = useUpdateProfileMutation();
-
   const router = useRouter();
-  const onSubmit = async (data: EditProfileFormData) => {
-    // Avoid unnecessary API calls if the name hasn't changed
-    // if (data.fullName.trim() === displayName) return;
 
+  const onSubmit = async (data: EditProfileFormData) => {
     const payload: UpdateProfileRequest = {
       fullName: data.fullName.trim(),
       avatarUrl: data.avatarUrl?.trim() ? data.avatarUrl?.trim() : url,
@@ -71,7 +70,6 @@ const EditProfileScreen = () => {
     }
   };
 
-  // Config-driven locked fields
   const lockedFields = [
     {
       id: "email",
@@ -96,7 +94,6 @@ const EditProfileScreen = () => {
       ctaProps={undefined}
     >
       <View style={[styles.container, { paddingHorizontal: 24 }]}>
-        {/* Editable Fields Container */}
         <View style={styles.fieldsContainer}>
           <View style={styles.inputBox}>
             <ThemedText size={12} color={Colors.textMidGray}>
@@ -124,7 +121,6 @@ const EditProfileScreen = () => {
 
         <Spacer size={24} />
 
-        {/* Locked Fields Container */}
         <View style={styles.fieldsContainer}>
           {lockedFields.map((field) => (
             <View key={field.id} style={styles.lockedBox}>
@@ -147,7 +143,6 @@ const EditProfileScreen = () => {
 
         <Spacer size={42} />
 
-        {/* Form Actions */}
         <View style={styles.ctaRow}>
           <ThemedButton
             title="Cancel"

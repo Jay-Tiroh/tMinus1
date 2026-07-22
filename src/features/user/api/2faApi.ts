@@ -14,9 +14,9 @@ import {
   TwoFactorStatusResponseData,
   Verify2FARequest,
   Verify2FAResponse,
-} from "@/types/2fa";
+} from "@/features/user/types/2fa";
 import { AuthResponseData } from "@/types/auth";
-import { baseApi } from "./baseApi";
+import { baseApi } from "../../../store/services/baseApi";
 
 export const twoFactorApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({

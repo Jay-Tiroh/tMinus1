@@ -1,4 +1,4 @@
-import DevicesScreen from "@/components/screens/tabs/user/DevicesScreen";
+import DevicesScreen from "@/features/user/screens/DevicesScreen";
 
 export default function Devices() {
   return <DevicesScreen />;

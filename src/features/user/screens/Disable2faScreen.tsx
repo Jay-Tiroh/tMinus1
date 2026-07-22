@@ -1,19 +1,21 @@
 import { ThemedInput } from "@/components/auth/ThemedTextInput";
+import { Colors } from "@/constants/Colors";
+import { GeneralStyles } from "@/constants/themes";
+import { useDisable2FAMutation } from "@/features/user/api/2faApi";
 import { Spacer } from "@/shared/components/Spacer";
+import Template from "@/shared/components/Template";
 import TextBlock from "@/shared/components/TextBlock";
 import { ThemedButton } from "@/shared/components/ThemedButton";
 import { ThemedText } from "@/shared/components/ThemedText";
-import Template from "@/shared/components/Template";
-import { Colors } from "@/constants/Colors";
-import { GeneralStyles } from "@/constants/themes";
 import { showErrorToast, showSuccessToast } from "@/shared/hooks/showToast";
-import { useDisable2FAMutation } from "@/store/services/2faApi";
+import { getErrorMessage } from "@/utils/errors";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { OtpInput, OtpInputRef } from "react-native-otp-entry";
+import { passwordValidationSchema } from "../validation/2fa.schema";
 
 const OTP_LENGTH = 6;
 const RECOVERY_CODE_LENGTH = 10;
@@ -32,16 +34,9 @@ const Disable2FAScreen = () => {
   const [disable2FA, { isLoading }] = useDisable2FAMutation();
 
   const validatePassword = (value: string) => {
-    if (value.length < 8) {
-      setPasswordError("Password must be at least 8 characters");
-      return false;
-    }
-    if (!/[0-9]/.test(value)) {
-      setPasswordError("Password must contain at least one number");
-      return false;
-    }
-    if (!/[^a-zA-Z0-9]/.test(value)) {
-      setPasswordError("Password must contain at least one symbol");
+    const result = passwordValidationSchema.safeParse(value);
+    if (!result.success) {
+      setPasswordError(getErrorMessage(result.error));
       return false;
     }
     setPasswordError("");
@@ -128,7 +123,6 @@ const Disable2FAScreen = () => {
       ctaFooter={<CtaFooter />}
     >
       <View style={GeneralStyles.wrapper}>
-        {/* Warning Banner */}
         <View style={styles.warningBox}>
           <View style={styles.warningIcon}>
             <FontAwesome5 name="exclamation" size={24} color={Colors.loss} />
@@ -151,7 +145,6 @@ const Disable2FAScreen = () => {
 
         <Spacer size={24} />
 
-        {/* Password Input */}
         <View style={{ width: "100%" }}>
           <ThemedInput
             icon={
@@ -201,7 +194,7 @@ const Disable2FAScreen = () => {
 
           <Spacer size={16} />
         </Pressable>
-        {/* Auth Code Input */}
+
         {isRecoveryMode ? (
           <ThemedInput
             icon={
@@ -258,7 +251,6 @@ const Disable2FAScreen = () => {
 
         <Spacer size={32} />
 
-        {/* Confirmation Text */}
         <View style={styles.confirmationBox}>
           <TextBlock
             title="Are you sure?"

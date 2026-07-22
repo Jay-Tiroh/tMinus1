@@ -1,42 +1,20 @@
-import { Spacer } from "@/shared/components/Spacer";
-import { ThemedText } from "@/shared/components/ThemedText";
-import Template from "@/shared/components/Template";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
-import { showErrorToast, showSuccessToast } from "@/shared/hooks/showToast"; // Adjust path to where your toast functions live
-import { useUpdatePinMutation } from "@/store/services/profileApi"; // Adjust path as needed
+import { useUpdatePinMutation } from "@/features/user/api/profileApi";
+import { Spacer } from "@/shared/components/Spacer";
+import Template from "@/shared/components/Template";
+import { ThemedText } from "@/shared/components/ThemedText";
+import { showErrorToast, showSuccessToast } from "@/shared/hooks/showToast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { StyleSheet, TextInput, View } from "react-native";
-import { z } from "zod";
-
-// 1. Define the validation schema
-const pinSchema = z
-  .object({
-    currentPin: z
-      .string()
-      .length(4, "PIN must be exactly 4 digits")
-      .regex(/^\d+$/, "PIN must contain only numbers"),
-    newPin: z
-      .string()
-      .length(4, "PIN must be exactly 4 digits")
-      .regex(/^\d+$/, "PIN must contain only numbers"),
-    confirmPin: z.string().length(4, "PIN must be exactly 4 digits"),
-  })
-  .refine((data) => data.newPin === data.confirmPin, {
-    message: "New PINs do not match",
-    path: ["confirmPin"],
-  });
-
-type PinFormValues = z.infer<typeof pinSchema>;
+import { PinFormValues, pinSchema } from "../validation/transactionPin.schema";
 
 const TransactionPINScreen = () => {
-  // 2. Initialize the API mutation
   const [updatePin, { isLoading }] = useUpdatePinMutation();
 
-  // 3. Initialize React Hook Form
   const {
     control,
     handleSubmit,
@@ -51,7 +29,6 @@ const TransactionPINScreen = () => {
     },
   });
 
-  // 4. Handle form submission
   const router = useRouter();
   const onSubmit = async (data: PinFormValues) => {
     try {
@@ -64,8 +41,8 @@ const TransactionPINScreen = () => {
         title: "PIN Updated",
         message: "Your transaction PIN has been successfully updated.",
       });
-      reset(); // Clear the form on success
-      router.back(); // Navigate back to the previous screen
+      reset();
+      router.back();
     } catch (err: any) {
       showErrorToast({
         title: "Update Failed",
@@ -87,13 +64,11 @@ const TransactionPINScreen = () => {
         variant: "primary",
         onPress: handleSubmit(onSubmit),
         disabled: isLoading,
-        // isLoading: isLoading, // Assumes your CTA supports an loading spinner state
       }}
       topSpacerSize={32}
     >
       <View style={GeneralStyles.wrapper}>
         <View style={{ gap: 16 }}>
-          {/* Current PIN Field */}
           <Controller
             control={control}
             name="currentPin"
@@ -124,7 +99,6 @@ const TransactionPINScreen = () => {
             )}
           />
 
-          {/* New PIN Field */}
           <Controller
             control={control}
             name="newPin"
@@ -155,7 +129,6 @@ const TransactionPINScreen = () => {
             )}
           />
 
-          {/* Confirm PIN Field */}
           <Controller
             control={control}
             name="confirmPin"
@@ -189,7 +162,6 @@ const TransactionPINScreen = () => {
 
         <Spacer size={32} />
 
-        {/* Info Box */}
         <View style={[GeneralStyles.box, { padding: 20, gap: 8 }]}>
           <ThemedText size={16} weight="bold" color={Colors.white}>
             PIN rules

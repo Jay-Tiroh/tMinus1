@@ -1,102 +1,34 @@
-import { Spacer } from "@/shared/components/Spacer";
-import { ThemedText } from "@/shared/components/ThemedText";
-import Template from "@/shared/components/Template";
+import { ThemedInput } from "@/components/auth/ThemedTextInput";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
-import {
-  showErrorToast,
-  showInfoToast,
-  showSuccessToast,
-} from "@/shared/hooks/showToast";
-import React, { useEffect, useRef, useState } from "react";
-import { StyleSheet, View } from "react-native";
-
-import { ThemedInput } from "@/components/auth/ThemedTextInput";
-import BadgeStuff from "@/components/BadgeStuff";
+import BadgeStuff from "@/shared/components/BadgeStuff";
+import { Spacer } from "@/shared/components/Spacer";
+import Template from "@/shared/components/Template";
 import TextBlock from "@/shared/components/TextBlock";
 import { ThemedButton } from "@/shared/components/ThemedButton";
-import { useRegenerateRecoveryCodesMutation } from "@/store/services/2faApi";
+import { ThemedText } from "@/shared/components/ThemedText";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import Octicons from "@expo/vector-icons/Octicons";
-import * as Clipboard from "expo-clipboard";
-import { OtpInput, OtpInputRef } from "react-native-otp-entry";
-import { consumePendingRecoveryCodes } from "@/utils/recoveryCodesTransfer";
+import React from "react";
+import { StyleSheet, View } from "react-native";
+import { OtpInput } from "react-native-otp-entry";
+import { useRecoveryCodes } from "../hooks/useRecoveryCodes";
 
 const RecoveryCodesScreen = () => {
-  const [codes, setCodes] = useState<string[] | undefined>(undefined);
-
-  useEffect(() => {
-    const retrieved = consumePendingRecoveryCodes();
-    if (retrieved) {
-      setCodes(retrieved);
-    }
-  }, []);
-
-  const handleCopy = async () => {
-    if (codes) {
-      await Clipboard.setStringAsync(codes.join("\n"));
-      showInfoToast({ title: "Recovery codes copied to clipboard!" });
-    }
-  };
-
-  const [password, setPassword] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [authCode, setAuthCode] = useState("");
-
-  const otpRef = useRef<OtpInputRef>(null);
-
-  const [regenerateCodes, { isLoading }] = useRegenerateRecoveryCodesMutation();
-
-  const validatePassword = (value: string) => {
-    if (value.length < 8) {
-      setPasswordError("Password must be at least 8 characters");
-      return false;
-    }
-    if (!/[0-9]/.test(value)) {
-      setPasswordError("Password must contain at least one number");
-      return false;
-    }
-    if (!/[^a-zA-Z0-9]/.test(value)) {
-      setPasswordError("Password must contain at least one symbol");
-      return false;
-    }
-    setPasswordError("");
-    return true;
-  };
-
-  const handlePasswordChange = (text: string) => {
-    setPassword(text);
-    if (passwordError) validatePassword(text);
-  };
-
-  const handleRegenerate = async () => {
-    if (!validatePassword(password)) return;
-
-    try {
-      const payload = {
-        password,
-        code: authCode,
-      };
-
-      const result = await regenerateCodes(payload).unwrap();
-      const newCodes = result?.recoveryCodes;
-      setCodes(newCodes);
-      showSuccessToast({
-        title: "Recovery codes regenerated",
-        message: "Your recovery codes have been regenerated.",
-      });
-    } catch (error: any) {
-      showErrorToast({
-        title: "Error",
-        message: error?.data?.message ?? "Please try again",
-      });
-    }
-  };
-
-  const isOtpReady = authCode.length === 6;
-
-  const canSubmit = password.length >= 8 && isOtpReady;
+  const {
+    codes,
+    password,
+    passwordError,
+    setAuthCode,
+    otpRef,
+    isLoading,
+    canSubmit,
+    handleCopy,
+    handlePasswordChange,
+    validatePassword,
+    handleRegenerate,
+  } = useRecoveryCodes();
 
   const CopyFooter = () => (
     <View style={{ width: "100%", gap: 24 }}>
@@ -110,7 +42,6 @@ const RecoveryCodesScreen = () => {
         }
       />
       <Spacer size={16} />
-      {/* Info Box */}
       <View
         style={[
           GeneralStyles.box,
@@ -131,6 +62,7 @@ const RecoveryCodesScreen = () => {
       </View>
     </View>
   );
+
   const RegenerateFooter = () => (
     <View style={{ width: "100%" }}>
       <ThemedButton
@@ -217,7 +149,7 @@ const RecoveryCodesScreen = () => {
           </View>
 
           <Spacer size={24} />
-          {/* Password Input */}
+
           <View style={{ width: "100%" }}>
             <ThemedInput
               icon={
@@ -247,8 +179,6 @@ const RecoveryCodesScreen = () => {
           </View>
 
           <Spacer size={16} />
-
-          {/* Auth Code Input */}
 
           <View style={{ width: "100%" }}>
             <OtpInput
@@ -285,25 +215,6 @@ const RecoveryCodesScreen = () => {
 export default RecoveryCodesScreen;
 
 const styles = StyleSheet.create({
-  warningBox: {
-    ...GeneralStyles.box,
-    flexDirection: "row",
-    padding: 16,
-    gap: 16,
-    alignItems: "center",
-  },
-  warningIcon: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: Colors.warningBrown,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  confirmationBox: {
-    ...GeneralStyles.box,
-    padding: 20,
-  },
   otpContainer: {
     flexDirection: "row",
     justifyContent: "space-between",

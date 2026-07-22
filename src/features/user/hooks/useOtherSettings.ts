@@ -1,11 +1,14 @@
-import { showErrorToast, showSuccessToast } from "@/shared/hooks/showToast";
-import { useAppDispatch } from "@/store/hooks";
 import {
   useSettingsQuery,
   useUpdateSettingsMutation,
-} from "@/store/services/profileApi";
+} from "@/features/user/api/profileApi";
+import {
+  FiatCurrency,
+  UpdateSettingsRequest,
+} from "@/features/user/types/profile";
+import { showErrorToast, showSuccessToast } from "@/shared/hooks/showToast";
+import { useAppDispatch } from "@/store/hooks";
 import { updateUserSettings } from "@/store/slices/authSlice";
-import { FiatCurrency, UpdateSettingsRequest } from "@/types/profile";
 import { getErrorMessage } from "@/utils/errors";
 import { logger } from "@/utils/logger";
 
@@ -19,7 +22,7 @@ export default function useOtherSettings() {
     isLoading: fetchingSettings,
     isSuccess: fetched,
     isError: fetchFailed,
-    refetch: refetch,
+    refetch,
   } = useSettingsQuery();
   const dispatch = useAppDispatch();
 
@@ -38,8 +41,10 @@ export default function useOtherSettings() {
     } catch (error) {
       showErrorToast({
         title: "Action Failed!",
-        message:
-          getErrorMessage(error,"Could not toggle biometric setting. Please check your network connection."),
+        message: getErrorMessage(
+          error,
+          "Could not toggle biometric setting. Please check your network connection.",
+        ),
       });
       logger.log(error);
     }
@@ -47,7 +52,7 @@ export default function useOtherSettings() {
 
   const changeFiatCurrency = async (newCurrency: FiatCurrency) => {
     const prevCurrency = settings?.fiatCurrency;
-    if (prevCurrency === newCurrency) return; // No change needed
+    if (prevCurrency === newCurrency) return;
     const update: UpdateSettingsRequest = {
       fiatCurrency: newCurrency,
     };
@@ -60,8 +65,10 @@ export default function useOtherSettings() {
     } catch (error) {
       showErrorToast({
         title: "Action Failed!",
-        message:
-          getErrorMessage(error, "Could not change fiat currency. Please check your network connection."),
+        message: getErrorMessage(
+          error,
+          "Could not change fiat currency. Please check your network connection.",
+        ),
       });
 
       logger.log(error);

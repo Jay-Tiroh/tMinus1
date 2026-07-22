@@ -1,22 +1,11 @@
 import Copy from "@/assets/icons/wallets/qr/copy.svg";
-import { Spacer } from "@/shared/components/Spacer";
-import { ThemedText } from "@/shared/components/ThemedText";
-import Template from "@/shared/components/Template";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
-import { showErrorToast, showSuccessToast } from "@/shared/hooks/showToast";
-import {
-  useEnable2FAMutation,
-  useSetup2FAMutation,
-} from "@/store/services/2faApi";
-import { Setup2FAResponseData } from "@/types/2fa";
-import { getErrorMessage } from "@/utils/errors";
-import { logger } from "@/utils/logger";
-import { setPendingRecoveryCodes } from "@/utils/recoveryCodesTransfer";
-import * as Clipboard from "expo-clipboard";
-import { useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
+import { Spacer } from "@/shared/components/Spacer";
+import Template from "@/shared/components/Template";
+import { ThemedText } from "@/shared/components/ThemedText";
+import React from "react";
 import {
   ActivityIndicator,
   StyleSheet,
@@ -25,61 +14,20 @@ import {
   View,
 } from "react-native";
 import QRCode from "react-native-qrcode-svg";
+import { useSetup2fa } from "../hooks/useSetup2fa";
 
 const Setup2FAScreen = () => {
-  const [authCode, setAuthCode] = useState("");
-  const [setupResponse, setSetupResponse] =
-    useState<Setup2FAResponseData | null>(null);
+  const {
+    authCode,
+    setAuthCode,
+    setupResponse,
+    settingUp,
+    setupFailed,
+    enabling,
+    handleCopyKey,
+    handleEnable2FA,
+  } = useSetup2fa();
 
-  const [setup, { isLoading: settingUp, isError: setupFailed }] =
-    useSetup2FAMutation();
-  const [enable, { isLoading: enabling }] = useEnable2FAMutation();
-
-  const router = useRouter();
-
-  useEffect(() => {
-    const runSetup = async () => {
-      try {
-        const response: Setup2FAResponseData = await setup().unwrap();
-        setSetupResponse(response);
-      } catch (error) {
-        logger.error("2FA setup failed:", error);
-        showErrorToast({
-          title: "Failed to initialize 2FA.",
-          message: getErrorMessage(
-            error,
-            "We couldn't initialize 2FA right now. Please try again.",
-          ),
-        });
-      }
-    };
-
-    runSetup();
-  }, [setup]);
-
-  const handleCopyKey = async () => {
-    if (setupResponse?.secret) {
-      await Clipboard.setStringAsync(setupResponse.secret);
-      showSuccessToast({ title: "Secret key copied to clipboard!" });
-    } else {
-      showErrorToast({ title: "No key available to copy." });
-    }
-  };
-
-  const handleEnable2FA = async () => {
-    try {
-      const result = await enable({ code: authCode }).unwrap();
-      showSuccessToast({ title: "2FA enabled successfully!" });
-      const codes = result?.recoveryCodes;
-      setPendingRecoveryCodes(codes);
-      router.replace("/user/two-factor/recovery-codes");
-    } catch (error) {
-      showErrorToast({
-        title: "Invalid code.",
-        message: getErrorMessage(error, "Please check the code and try again."),
-      });
-    }
-  };
   return (
     <Template
       textBlockProps={{
@@ -95,7 +43,6 @@ const Setup2FAScreen = () => {
       topSpacerSize={32}
     >
       <View style={GeneralStyles.wrapper}>
-        {/* QR Code Card */}
         <View style={styles.qrCard}>
           {settingUp || !setupResponse?.otpauthUri ? (
             <ActivityIndicator size="large" color={Colors.primaryClean} />
@@ -121,7 +68,6 @@ const Setup2FAScreen = () => {
 
         <Spacer size={32} />
 
-        {/* Manual Key */}
         <ThemedText size={14} color={Colors.textMidGray}>
           Manual key
         </ThemedText>
@@ -137,7 +83,6 @@ const Setup2FAScreen = () => {
 
         <Spacer size={16} />
 
-        {/* Auth Code Input */}
         <View style={styles.inputBox}>
           <ThemedText size={16} color={Colors.primaryClean} weight="bold">
             #
@@ -169,7 +114,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     width: "100%",
     maxWidth: 280,
-    minHeight: 248, // prevents layout shift between spinner and QR
+    minHeight: 248,
   },
   inputBox: {
     ...GeneralStyles.box,

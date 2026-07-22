@@ -2,14 +2,7 @@ import { SelectorOption } from "@/components/OptionPicker";
 import { RequireAtLeastOne } from "@/types/utility";
 
 export type FiatCurrency =
-  | "USD"
-  | "NGN"
-  | "EUR"
-  | "GBP"
-  | "CAD"
-  | "AUD"
-  | "JPY"
-  | "CHF";
+  "USD" | "NGN" | "EUR" | "GBP" | "CAD" | "AUD" | "JPY" | "CHF";
 
 export const FIAT_CURRENCIES: SelectorOption<FiatCurrency>[] = [
   {
@@ -40,13 +33,13 @@ export const FIAT_CURRENCIES: SelectorOption<FiatCurrency>[] = [
     label: "CAD",
     value: "CAD",
     description: "Canadian Dollar",
-    symbol: "$", // or "C$"
+    symbol: "$",
   },
   {
     label: "AUD",
     value: "AUD",
     description: "Australian Dollar",
-    symbol: "$", // or "A$"
+    symbol: "$",
   },
   {
     label: "JPY",
@@ -61,6 +54,7 @@ export const FIAT_CURRENCIES: SelectorOption<FiatCurrency>[] = [
     symbol: "Fr.",
   },
 ];
+
 export interface UserSettings {
   language: string;
   fiatCurrency: FiatCurrency;
@@ -123,7 +117,7 @@ export interface UpdateSettingsRequestData {
   priceAlerts: boolean;
   pushNotifications: boolean;
   biometricEnabled: boolean;
-  fiatCurrency: string;
+  fiatCurrency: FiatCurrency;
   language: string;
 }
 export type UpdateSettingsRequest =
@@ -138,7 +132,6 @@ export interface SettingsResponse {
   meta: SettingsMeta;
 }
 
-// New PIN Types
 export interface UpdatePinRequest {
   currentPin: string;
   newPin: string;
@@ -148,28 +141,6 @@ export interface UpdatePinResponse {
   data: {
     updated: boolean;
   };
-  meta?: {
-    requestId: string;
-  };
-}
-
-// New Device Types
-export interface RegisterDeviceRequest {
-  expoPushToken: string;
-  platform: string;
-}
-
-export interface Device {
-  id: string;
-  userId: string;
-  expoPushToken: string;
-  platform: string;
-  createdAt: string;
-  lastSeenAt: string;
-}
-
-export interface RegisterDeviceResponse {
-  data: Device;
   meta?: {
     requestId: string;
   };

@@ -1,5 +1,5 @@
 // store/slices/authSlice.ts
-import { User } from "@/types/profile";
+import { User } from "@/features/user/types/profile";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface AuthState {

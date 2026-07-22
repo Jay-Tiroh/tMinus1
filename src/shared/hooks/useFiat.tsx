@@ -1,6 +1,6 @@
 import { SelectorOption } from "@/components/OptionPicker";
-import useProfile from "@/hooks/useProfile";
-import { FIAT_CURRENCIES, FiatCurrency } from "@/types/profile";
+import useProfile from "@/features/user/hooks/useProfile";
+import { FIAT_CURRENCIES, FiatCurrency } from "@/features/user/types/profile";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 // Fallback estimates in case fetch fails

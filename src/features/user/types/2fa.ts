@@ -1,6 +1,5 @@
 import { AuthResponseData } from "@/types/auth";
 
-// ── Setup 2FA ──────────────────────────────────────────────────────────────
 export interface Setup2FAResponseData {
   secret: string;
   otpauthUri: string;
@@ -14,7 +13,6 @@ export interface Setup2FAResponse {
   };
 }
 
-// ── Enable 2FA ─────────────────────────────────────────────────────────────
 export interface Enable2FARequest {
   code: string;
 }
@@ -29,7 +27,6 @@ export interface Enable2FAResponse {
   data: Enable2FAResponseData;
 }
 
-// ── Verify 2FA ─────────────────────────────────────────────────────────────
 export interface Verify2FARequest {
   challengeId: string;
   code?: string;
@@ -40,7 +37,6 @@ export interface Verify2FAResponse {
   data: AuthResponseData;
 }
 
-// ── Regenerate Recovery Codes ──────────────────────────────────────────────
 export interface RegenerateRecoveryCodesRequest {
   password: string;
   code: string;
@@ -55,7 +51,6 @@ export interface RegenerateRecoveryCodesResponse {
   data: RegenerateRecoveryCodesResponseData;
 }
 
-// ── Disable 2FA ────────────────────────────────────────────────────────────
 export interface Disable2FARequest {
   password: string;
   code?: string;
@@ -71,7 +66,6 @@ export interface Disable2FAResponse {
   data: Disable2FAResponseData;
 }
 
-// Status
 export interface TwoFactorStatusResponseData {
   twoFactorEnabled: boolean;
   twoFactorSetupStarted: boolean;

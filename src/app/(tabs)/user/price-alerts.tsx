@@ -1,4 +1,4 @@
-import PriceAlertsScreen from "@/components/screens/tabs/user/PriceAlertsScreen";
+import PriceAlertsScreen from "@/features/user/screens/PriceAlertsScreen";
 import React from "react";
 
 const PriceAlert = () => {

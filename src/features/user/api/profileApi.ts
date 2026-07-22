@@ -6,8 +6,8 @@ import {
   UpdateProfileRequest,
   UpdateSettingsRequest,
   UserSettings,
-} from "@/types/profile";
-import { baseApi } from "./baseApi";
+} from "@/features/user/types/profile";
+import { baseApi } from "@/store/services/baseApi";
 
 const profileApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({

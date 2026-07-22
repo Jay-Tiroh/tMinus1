@@ -1,4 +1,7 @@
-import { useProfileQuery, useSettingsQuery } from "@/store/services/profileApi";
+import {
+  useProfileQuery,
+  useSettingsQuery,
+} from "@/features/user/api/profileApi";
 import { useCallback } from "react";
 
 export default function useProfile(pollIntervalMs?: number) {
@@ -32,19 +35,17 @@ export default function useProfile(pollIntervalMs?: number) {
 
   const user = profileResponse?.data;
 
-  // Destructure for ease of access in components
   const verification = user?.verification;
   const kycStatus = user?.kycStatus;
   const watchlist = user?.watchlist;
   const twoFactorEnabled = user?.twoFactorEnabled ?? false;
 
-  // Prefer the direct settings query, fallback to the settings object inside the profile payload
   const settings = explicitSettings ?? user?.settings;
 
   const isInWatchlist = useCallback(
     (symbol: string) => {
       if (!symbol) return false;
-      return watchlist.includes(symbol.toUpperCase());
+      return watchlist?.includes(symbol.toUpperCase()) ?? false;
     },
     [watchlist],
   );
@@ -54,7 +55,6 @@ export default function useProfile(pollIntervalMs?: number) {
     refetchSettings();
   }, [refetchProfile, refetchSettings]);
 
-  // Aggregate states
   const isLoading = isProfileLoading || isSettingsLoading;
   const isFetching = isProfileFetching || isSettingsFetching;
   const isError = isProfileError || isSettingsError;

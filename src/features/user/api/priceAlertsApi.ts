@@ -5,8 +5,8 @@ import {
   PriceAlertsResponse,
   UpdatePriceAlertRequest,
   UpdatePriceAlertResponse,
-} from "@/types/priceAlerts";
-import { baseApi } from "./baseApi";
+} from "@/features/user/types/priceAlerts";
+import { baseApi } from "@/store/services/baseApi";
 
 const priceAlertsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({

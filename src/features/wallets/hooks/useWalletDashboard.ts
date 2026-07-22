@@ -1,7 +1,7 @@
 import useWallet from "@/features/wallets/hooks/useWallet";
 import { useAllAssets } from "@/features/markets";
 import useFiat from "@/shared/hooks/useFiat";
-import useProfile from "@/hooks/useProfile";
+import useProfile from "@/features/user/hooks/useProfile";
 import { useCallback, useMemo } from "react";
 
 export const useWalletDashboard = () => {
