@@ -6,7 +6,7 @@ import InProgress from "@/features/kyc/components/InProgress";
 import Template from "@/features/kyc/components/Template";
 import { useGoToRoute } from "@/shared/hooks/useGoToRoute";
 import { useKyc } from "@/features/kyc/hooks/useKyc";
-import { ms } from "@/utils/responsive";
+import { ms } from "@/shared/utils/responsive";
 import React, { useEffect } from "react";
 import { StyleSheet } from "react-native";
 

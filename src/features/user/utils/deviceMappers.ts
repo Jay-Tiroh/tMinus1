@@ -1,4 +1,4 @@
-import { timeAgo } from "@/helpers/functions";
+import { timeAgo } from "@/shared/utils/timeAgo";
 import { Device } from "../types/devices";
 
 export type DisplayDevice = Device & {

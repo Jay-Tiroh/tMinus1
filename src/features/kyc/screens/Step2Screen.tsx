@@ -8,9 +8,9 @@ import { showErrorToast } from "@/shared/hooks/showToast";
 import { useGoToRoute } from "@/shared/hooks/useGoToRoute";
 
 import { selectKycFiles, setKycFile } from "@/features/kyc/store/kycSlice";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { logger } from "@/utils/logger";
-import { ms, vs } from "@/utils/responsive";
+import { useAppDispatch, useAppSelector } from "@/core/store/hooks";
+import { logger } from "@/shared/utils/logger";
+import { ms, vs } from "@/shared/utils/responsive";
 import * as ImagePicker from "expo-image-picker";
 import React, { useState } from "react";
 import { ActivityIndicator, View } from "react-native";

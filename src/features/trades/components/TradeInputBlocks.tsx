@@ -4,7 +4,7 @@ import { GeneralStyles } from "@/constants/themes";
 import { CryptoIcon } from "@/shared/components/CryptoIcon";
 import TextBlock from "@/shared/components/TextBlock";
 import { ThemedText } from "@/shared/components/ThemedText";
-import { ms, s, vs } from "@/utils/responsive";
+import { ms, s, vs } from "@/shared/utils/responsive";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import React from "react";
 import { TextInput, TouchableOpacity, View } from "react-native";

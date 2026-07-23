@@ -1,9 +1,9 @@
 import { Colors } from "@/constants/Colors";
-import { formatPhoneInternational } from "@/helpers/functions";
 import { Spacer } from "@/shared/components/Spacer";
 import { ThemedButton } from "@/shared/components/ThemedButton";
 import { ThemedText } from "@/shared/components/ThemedText";
-import { ms, vs } from "@/utils/responsive";
+import { formatPhoneInternational } from "@/shared/utils/formatPhoneNumber";
+import { ms, vs } from "@/shared/utils/responsive";
 import Feather from "@expo/vector-icons/Feather";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import React from "react";

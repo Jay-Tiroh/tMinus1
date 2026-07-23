@@ -2,7 +2,7 @@ import { ThemedButton } from "@/shared/components/ThemedButton";
 import { ThemedText } from "@/shared/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
-import { ms, s, vs } from "@/utils/responsive";
+import { ms, s, vs } from "@/shared/utils/responsive";
 import {
   ActivityIndicator,
   Modal,

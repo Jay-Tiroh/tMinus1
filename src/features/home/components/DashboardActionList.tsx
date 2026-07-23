@@ -1,6 +1,6 @@
 import { Colors } from "@/constants/Colors";
 import { CryptoAssetItem } from "@/features/wallets";
-import { ms, s, vs } from "@/utils/responsive";
+import { ms, s, vs } from "@/shared/utils/responsive";
 import { useRouter } from "expo-router";
 import React from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";

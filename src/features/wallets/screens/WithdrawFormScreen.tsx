@@ -1,7 +1,7 @@
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
-import { formatAmount } from "@/helpers/functions";
+import { formatAmount } from "@/shared/utils/formatCurrency";
 import { AssetPickerModal } from "@/shared/components/AssetPicker";
 import { Spacer } from "@/shared/components/Spacer";
 import Template from "@/shared/components/Template";

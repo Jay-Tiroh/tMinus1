@@ -1,6 +1,6 @@
-import { ThemedInput } from "@/components/auth/ThemedTextInput";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
+import { ThemedInput } from "@/features/auth/components/ThemedTextInput";
 import BadgeStuff from "@/shared/components/BadgeStuff";
 import { Spacer } from "@/shared/components/Spacer";
 import Template from "@/shared/components/Template";

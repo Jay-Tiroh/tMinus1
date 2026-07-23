@@ -1,3 +1,4 @@
+import { useAppDispatch } from "@/core/store/hooks";
 import { useAllAssets } from "@/features/markets";
 import { useInternalTransferMutation } from "@/features/wallets/api/walletsApi";
 import useWallet from "@/features/wallets/hooks/useWallet";
@@ -6,8 +7,7 @@ import {
   setLastTransfer,
 } from "@/features/wallets/storage/walletsSlice";
 import { showErrorToast, showInfoToast } from "@/shared/hooks/showToast";
-import { useAppDispatch } from "@/store/hooks";
-import { logger } from "@/utils/logger";
+import { logger } from "@/shared/utils/logger";
 import { useMemo, useState } from "react";
 import { TRANSFER_NETWORK_FEE_RATE } from "../constants/wallets.constants";
 

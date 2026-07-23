@@ -1,3 +1,4 @@
+import { useAppDispatch, useAppSelector } from "@/core/store/hooks";
 import { useRequestWithdrawalMutation } from "@/features/wallets/api/walletsApi";
 import {
   clearWithdrawalDraft,
@@ -5,8 +6,7 @@ import {
 } from "@/features/wallets/storage/walletsSlice";
 import { showErrorToast } from "@/shared/hooks/showToast";
 import { useGoToRoute } from "@/shared/hooks/useGoToRoute";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { logger } from "@/utils/logger";
+import { logger } from "@/shared/utils/logger";
 import { useRouter } from "expo-router";
 
 export const useWithdrawConfirmationFlow = () => {

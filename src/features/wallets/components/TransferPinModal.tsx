@@ -1,9 +1,9 @@
-import { Spacer } from "@/shared/components/Spacer";
-import { ThemedText } from "@/shared/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
-import { formatAmount } from "@/helpers/functions";
+import { Spacer } from "@/shared/components/Spacer";
+import { ThemedText } from "@/shared/components/ThemedText";
+import { formatAmount } from "@/shared/utils/formatCurrency";
 import React from "react";
 import { Modal, StyleSheet, TouchableOpacity, View } from "react-native";
 import { OtpInput } from "react-native-otp-entry";

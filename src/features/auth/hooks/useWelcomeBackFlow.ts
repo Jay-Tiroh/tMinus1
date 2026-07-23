@@ -1,6 +1,6 @@
 import { showErrorToast, showSuccessToast } from "@/shared/hooks/showToast";
-import { useAppDispatch } from "@/store/hooks";
-import { saveToken } from "@/utils/secureStore";
+import { useAppDispatch } from "@/core/store/hooks";
+import { saveToken } from "@/shared/utils/secureStore";
 import { useRouter } from "expo-router";
 import { useLoginMutation } from "../api/authApi";
 import { setCredentials, unlockSession } from "../storage/authSlice";

@@ -7,10 +7,10 @@ import {
   UpdateSettingsRequest,
 } from "@/features/user/types/profile";
 import { showErrorToast, showSuccessToast } from "@/shared/hooks/showToast";
-import { useAppDispatch } from "@/store/hooks";
+import { useAppDispatch } from "@/core/store/hooks";
 import { updateUserSettings } from "@/features/auth/storage/authSlice";
-import { getErrorMessage } from "@/utils/errors";
-import { logger } from "@/utils/logger";
+import { getErrorMessage } from "@/shared/utils/errors";
+import { logger } from "@/shared/utils/logger";
 
 export default function useOtherSettings() {
   const [

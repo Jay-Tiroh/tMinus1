@@ -1,10 +1,10 @@
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
-import { formatPhoneInternational } from "@/helpers/functions";
 import { Spacer } from "@/shared/components/Spacer";
 import { ThemedButton } from "@/shared/components/ThemedButton";
 import { ThemedText } from "@/shared/components/ThemedText";
-import { vs } from "@/utils/responsive";
+import { formatPhoneInternational } from "@/shared/utils/formatPhoneNumber";
+import { vs } from "@/shared/utils/responsive";
 import Feather from "@expo/vector-icons/Feather";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { ActivityIndicator, StyleSheet, View } from "react-native";

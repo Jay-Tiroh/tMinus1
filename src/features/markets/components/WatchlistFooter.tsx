@@ -2,7 +2,7 @@ import { GeneralStyles } from "@/constants/themes";
 import { Spacer } from "@/shared/components/Spacer";
 import TextBlock from "@/shared/components/TextBlock";
 import { ThemedButton } from "@/shared/components/ThemedButton";
-import { ms, vs } from "@/utils/responsive";
+import { ms, vs } from "@/shared/utils/responsive";
 import { useRouter } from "expo-router";
 import React from "react";
 import { View } from "react-native";

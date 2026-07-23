@@ -5,11 +5,11 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
 import CoinList from "@/features/markets/components/CoinList";
-import { useSafeBottom } from "@/hooks/useSafeBottom";
 import { useTrendingAssets } from "@/hooks/useTrendingAssets";
 import { Spacer } from "@/shared/components/Spacer";
 import TextBlock from "@/shared/components/TextBlock";
-import { vs } from "@/utils/responsive";
+import { useSafeBottom } from "@/shared/hooks/useSafeBottom";
+import { vs } from "@/shared/utils/responsive";
 import { TopGainer } from "../components/TopGainer";
 
 export const TrendingScreen = () => {

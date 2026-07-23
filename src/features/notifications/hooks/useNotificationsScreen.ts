@@ -4,7 +4,7 @@ import {
   useNotificationsQuery,
 } from "@/features/notifications/api/notificationsApi";
 import { Notification } from "@/features/notifications/types/notification";
-import { logger } from "@/utils/logger";
+import { logger } from "@/shared/utils/logger";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 export const useNotificationsScreen = () => {

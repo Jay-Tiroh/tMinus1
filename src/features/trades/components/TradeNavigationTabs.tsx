@@ -1,7 +1,7 @@
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { ThemedButton } from "@/shared/components/ThemedButton";
-import { ms, s, vs } from "@/utils/responsive";
+import { ms, s, vs } from "@/shared/utils/responsive";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 

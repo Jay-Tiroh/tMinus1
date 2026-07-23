@@ -9,7 +9,7 @@ import {
   clearLastTransfer,
   clearLastWithdrawal,
 } from "@/features/wallets/storage/walletsSlice";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/core/store/hooks";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React from "react";

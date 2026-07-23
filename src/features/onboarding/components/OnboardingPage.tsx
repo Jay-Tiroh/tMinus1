@@ -2,7 +2,7 @@ import { Colors } from "@/constants/Colors";
 import { Spacing } from "@/constants/Spacing";
 import { Spacer } from "@/shared/components/Spacer";
 import { ThemedText } from "@/shared/components/ThemedText";
-import { ms, s, vs } from "@/utils/responsive";
+import { ms, s, vs } from "@/shared/utils/responsive";
 import React from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
 import type { OnboardingPageConfig } from "../types/onboarding.types";

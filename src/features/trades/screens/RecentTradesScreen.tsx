@@ -1,11 +1,11 @@
 import { GeneralStyles } from "@/constants/themes";
 import { useGetTradesQuery } from "@/features/markets/api/marketsApi";
 import { useAssetRoute } from "@/features/trades/hooks/useAssetRoute";
-import useFiat from "@/shared/hooks/useFiat";
-import { useSafeBottom } from "@/hooks/useSafeBottom";
 import { Spacer } from "@/shared/components/Spacer";
 import TextBlock from "@/shared/components/TextBlock";
-import { vs } from "@/utils/responsive";
+import useFiat from "@/shared/hooks/useFiat";
+import { useSafeBottom } from "@/shared/hooks/useSafeBottom";
+import { vs } from "@/shared/utils/responsive";
 import { useLocalSearchParams } from "expo-router";
 import React, { useCallback } from "react";
 import { FlatList, ImageBackground, View } from "react-native";

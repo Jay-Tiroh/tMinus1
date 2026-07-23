@@ -1,7 +1,7 @@
 // providers/InactivityLockProvider.tsx
-import { useAppDispatch } from "@/store/hooks";
+import { useAppDispatch } from "@/core/store/hooks";
 import { lockSession } from "@/features/auth/storage/authSlice";
-import { saveToken } from "@/utils/secureStore";
+import { saveToken } from "@/shared/utils/secureStore";
 import { useRouter } from "expo-router";
 import React, { useCallback, useEffect, useRef } from "react";
 import {

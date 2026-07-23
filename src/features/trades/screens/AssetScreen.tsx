@@ -16,13 +16,10 @@ import Add from "@/assets/icons/markets/add-circle.svg";
 
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
-import { useWatchlist } from "@/features/markets";
+import { useAssetChart, useWatchlist } from "@/features/markets";
 import CandlestickComponent from "@/features/trades/components/CandlestickComponent";
 import { useAssetRoute } from "@/features/trades/hooks/useAssetRoute";
 import useProfile from "@/features/user/hooks/useProfile";
-import { formatCompactNumber, formatCurrency } from "@/helpers/functions";
-import { useAssetChart } from "@/hooks/useAssetChart";
-import { useSafeBottom } from "@/hooks/useSafeBottom";
 import { Spacer } from "@/shared/components/Spacer";
 import TextBlock from "@/shared/components/TextBlock";
 import { ThemedButton } from "@/shared/components/ThemedButton";
@@ -30,8 +27,13 @@ import { ThemedText } from "@/shared/components/ThemedText";
 import { showErrorToast, showSuccessToast } from "@/shared/hooks/showToast";
 import { useBackToHome } from "@/shared/hooks/useBackToHome";
 import useFiat from "@/shared/hooks/useFiat";
-import { getErrorMessage } from "@/utils/errors";
-import { ms, s, vs } from "@/utils/responsive";
+import { useSafeBottom } from "@/shared/hooks/useSafeBottom";
+import { getErrorMessage } from "@/shared/utils/errors";
+import {
+  formatCompactNumber,
+  formatCurrency,
+} from "@/shared/utils/formatCurrency";
+import { ms, s, vs } from "@/shared/utils/responsive";
 
 import ChangeText from "@/shared/components/ChangeText";
 import { CryptoIcon } from "@/shared/components/CryptoIcon";

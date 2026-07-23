@@ -2,7 +2,7 @@ import { useAllAssets } from "@/features/markets";
 import useWallet from "@/features/wallets/hooks/useWallet";
 import { setWithdrawalDraft } from "@/features/wallets/storage/walletsSlice";
 import { useGoToRoute } from "@/shared/hooks/useGoToRoute";
-import { useAppDispatch } from "@/store/hooks";
+import { useAppDispatch } from "@/core/store/hooks";
 import { useCallback, useMemo, useState } from "react";
 
 export const useWithdrawFormFlow = () => {

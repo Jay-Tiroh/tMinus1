@@ -8,7 +8,7 @@ import TextBlock from "@/shared/components/TextBlock";
 import { ThemedButton } from "@/shared/components/ThemedButton";
 import { ThemedText } from "@/shared/components/ThemedText";
 import { showErrorToast, showSuccessToast } from "@/shared/hooks/showToast";
-import { getErrorMessage } from "@/utils/errors";
+import { getErrorMessage } from "@/shared/utils/errors";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useRouter } from "expo-router";

@@ -2,7 +2,7 @@ import { Colors } from "@/constants/Colors";
 import { Spacer } from "@/shared/components/Spacer";
 import { ThemedButton } from "@/shared/components/ThemedButton";
 import { ThemedView } from "@/shared/components/ThemedView";
-import { s } from "@/utils/responsive";
+import { s } from "@/shared/utils/responsive";
 import { useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
 import {

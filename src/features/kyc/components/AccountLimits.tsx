@@ -5,7 +5,7 @@ import { Spacer } from "@/shared/components/Spacer";
 import TextBlock from "@/shared/components/TextBlock";
 import { ThemedText } from "@/shared/components/ThemedText";
 import { useGoToRoute } from "@/shared/hooks/useGoToRoute";
-import { ms, s, vs } from "@/utils/responsive";
+import { ms, s, vs } from "@/shared/utils/responsive";
 import React from "react";
 import { View } from "react-native";
 import { Template } from "./Template";

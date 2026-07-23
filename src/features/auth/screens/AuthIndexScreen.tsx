@@ -7,7 +7,7 @@ import SignUpForm from "../components/SignUpForm";
 import { Colors } from "@/constants/Colors";
 import { Spacing } from "@/constants/Spacing";
 import { ThemedView } from "@/shared/components/ThemedView";
-import { ms, s, vs } from "@/utils/responsive";
+import { ms, s, vs } from "@/shared/utils/responsive";
 import React, { useRef, useState } from "react";
 import {
   Dimensions,

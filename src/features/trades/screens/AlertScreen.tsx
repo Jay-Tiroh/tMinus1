@@ -10,7 +10,7 @@ import {
   PriceAlert,
   UpdatedPriceAlert,
 } from "@/types/priceAlerts";
-import { ms } from "@/utils/responsive";
+import { ms } from "@/shared/utils/responsive";
 import { useFocusEffect, useLocalSearchParams } from "expo-router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { View } from "react-native";

@@ -1,4 +1,4 @@
-import { useAssetChart } from "@/hooks/useAssetChart";
+import { useAssetChart } from "@/features/markets";
 
 export const useTradeCalculations = (
   buyOutputSymbol: string,

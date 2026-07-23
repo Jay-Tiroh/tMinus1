@@ -1,7 +1,7 @@
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
-import { formatAmount } from "@/helpers/functions";
+import { formatAmount } from "@/shared/utils/formatCurrency";
 import { useGoToRoute } from "@/shared/hooks/useGoToRoute";
 import { AssetPickerModal } from "@/shared/components/AssetPicker";
 import { CryptoIcon } from "@/shared/components/CryptoIcon";
@@ -9,7 +9,7 @@ import { LabelValueItem } from "@/shared/components/LabelValueItem";
 import { Spacer } from "@/shared/components/Spacer";
 import Template from "@/shared/components/Template";
 import { ThemedText } from "@/shared/components/ThemedText";
-import { useAppSelector } from "@/store/hooks";
+import { useAppSelector } from "@/core/store/hooks";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import React from "react";
 import { StyleSheet, TextInput, TouchableOpacity, View } from "react-native";

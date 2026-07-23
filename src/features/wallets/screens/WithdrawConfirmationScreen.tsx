@@ -1,11 +1,11 @@
 import { LabelValueItem } from "@/components/LabelValueItem";
-import { Spacer } from "@/shared/components/Spacer";
-import { ThemedButton } from "@/shared/components/ThemedButton";
-import { ThemedText } from "@/shared/components/ThemedText";
-import Template from "@/shared/components/Template";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
-import { formatAmount } from "@/helpers/functions";
+import { Spacer } from "@/shared/components/Spacer";
+import Template from "@/shared/components/Template";
+import { ThemedButton } from "@/shared/components/ThemedButton";
+import { ThemedText } from "@/shared/components/ThemedText";
+import { formatAmount } from "@/shared/utils/formatCurrency";
 import React from "react";
 import { ActivityIndicator, View } from "react-native";
 import { useWithdrawConfirmationFlow } from "../hooks/useWithdrawConfirmationFlow";

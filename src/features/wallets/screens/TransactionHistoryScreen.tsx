@@ -3,12 +3,13 @@ import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
 import { useTransactions } from "@/features/wallets/hooks/useTransactions";
-import { formatAmount, timeAgo } from "@/helpers/functions";
-import { useSafeBottom } from "@/hooks/useSafeBottom";
 import Loader from "@/shared/components/Loader";
 import { Spacer } from "@/shared/components/Spacer";
 import TextBlock from "@/shared/components/TextBlock";
 import { ThemedButton } from "@/shared/components/ThemedButton";
+import { useSafeBottom } from "@/shared/hooks/useSafeBottom";
+import { formatAmount } from "@/shared/utils/formatCurrency";
+import { timeAgo } from "@/shared/utils/timeAgo";
 import { useRouter } from "expo-router";
 import React, { useCallback, useState } from "react";
 import {

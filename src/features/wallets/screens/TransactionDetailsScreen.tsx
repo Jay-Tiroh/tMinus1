@@ -1,13 +1,13 @@
 import { LabelValueItem } from "@/components/LabelValueItem";
-import { Spacer } from "@/shared/components/Spacer";
-import { ThemedText } from "@/shared/components/ThemedText";
-import Template from "@/shared/components/Template";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
 import { useTransactionById } from "@/features/wallets/hooks/useTransactionById";
-import { formatAmount } from "@/helpers/functions";
+import { Spacer } from "@/shared/components/Spacer";
+import Template from "@/shared/components/Template";
+import { ThemedText } from "@/shared/components/ThemedText";
 import { useGoToRoute } from "@/shared/hooks/useGoToRoute";
+import { formatAmount } from "@/shared/utils/formatCurrency";
 import { useLocalSearchParams } from "expo-router";
 import React, { useMemo } from "react";
 import { View } from "react-native";

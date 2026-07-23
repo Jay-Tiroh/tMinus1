@@ -1,8 +1,8 @@
 // hooks/usePushRegistration.ts
 import { notificationsApi } from "@/features/notifications/api/notificationsApi";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/core/store/hooks";
 import { useRegisterDeviceMutation } from "@/store/services/devicesApi";
-import { logger } from "@/utils/logger";
+import { logger } from "@/shared/utils/logger";
 import Constants from "expo-constants";
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";

@@ -1,7 +1,7 @@
 import { useTrendingAssets, useWatchlist } from "@/features/markets";
 import useProfile from "@/features/user/hooks/useProfile";
 import { useTransactions } from "@/features/wallets";
-import { formatAmount } from "@/helpers/functions";
+import { formatAmount } from "@/shared/utils/formatCurrency";
 import { Href } from "expo-router";
 import { useCallback, useMemo } from "react";
 

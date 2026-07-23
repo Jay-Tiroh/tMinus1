@@ -1,4 +1,4 @@
-import { s, vs } from "@/utils/responsive";
+import { s, vs } from "@/shared/utils/responsive";
 
 export const Spacing = {
   xs: s(4),

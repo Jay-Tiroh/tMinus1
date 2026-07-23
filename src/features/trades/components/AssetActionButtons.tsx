@@ -1,7 +1,7 @@
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
 import { ThemedText } from "@/shared/components/ThemedText";
-import { ms, s, vs } from "@/utils/responsive";
+import { ms, s, vs } from "@/shared/utils/responsive";
 import React from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 

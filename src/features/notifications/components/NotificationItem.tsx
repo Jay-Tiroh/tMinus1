@@ -1,8 +1,8 @@
-import { ThemedText } from "@/shared/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
 import { Notification } from "@/features/notifications/types/notification";
-import { timeAgo } from "@/helpers/functions";
+import { ThemedText } from "@/shared/components/ThemedText";
+import { timeAgo } from "@/shared/utils/timeAgo";
 import React from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 

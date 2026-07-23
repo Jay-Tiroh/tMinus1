@@ -7,7 +7,7 @@ import { ThemedButton } from "@/shared/components/ThemedButton";
 import { ThemedText } from "@/shared/components/ThemedText";
 import { useLocalSearchParams } from "expo-router";
 
-import { ms, s, vs } from "@/utils/responsive";
+import { ms, s, vs } from "@/shared/utils/responsive";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import React, { useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";

@@ -20,7 +20,7 @@ import {
   WithdrawalRequest,
   WithdrawalResponse,
 } from "@/features/wallets/types/wallets";
-import { baseApi } from "../../../store/services/baseApi";
+import { baseApi } from "../../../core/store/services/baseApi";
 
 const walletsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({

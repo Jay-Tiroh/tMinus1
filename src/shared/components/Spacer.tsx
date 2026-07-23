@@ -1,4 +1,4 @@
-import { s, vs } from "@/utils/responsive";
+import { s, vs } from "@/shared/utils/responsive";
 import React from "react";
 import { View, ViewStyle } from "react-native";
 

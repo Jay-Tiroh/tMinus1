@@ -38,3 +38,6 @@ export type {
   Trade,
   TrendingMeta,
 } from "./types/assets";
+
+// 5. Components
+export { default as Chart } from "./components/LineChart";

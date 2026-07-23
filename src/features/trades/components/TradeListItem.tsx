@@ -1,8 +1,8 @@
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
-import { formatAmount } from "@/helpers/functions";
 import { ThemedText } from "@/shared/components/ThemedText";
-import { s, vs } from "@/utils/responsive";
+import { formatAmount } from "@/shared/utils/formatCurrency";
+import { s, vs } from "@/shared/utils/responsive";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 

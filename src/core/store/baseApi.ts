@@ -3,7 +3,7 @@ import {
   clearCredentials,
   setCredentials,
 } from "@/features/auth/storage/authSlice";
-import { saveToken, clearTokens } from "@/utils/secureStore";
+import { saveToken, clearTokens } from "@/shared/utils/secureStore";
 import type { RefreshResponse } from "@/features/auth/types/auth";
 import type {
   BaseQueryFn,
@@ -13,7 +13,7 @@ import type {
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Mutex } from "async-mutex";
 import { showErrorToast } from "@/shared/hooks/showToast";
-import { getErrorMessage } from "@/utils/errors";
+import { getErrorMessage } from "@/shared/utils/errors";
 
 // Create a new mutex to prevent multiple simultaneous refresh calls
 const mutex = new Mutex();

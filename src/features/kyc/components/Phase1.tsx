@@ -1,14 +1,14 @@
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
-import { formatExtensionsForDisplay } from "@/helpers/functions";
 
+import { useAppDispatch, useAppSelector } from "@/core/store/hooks";
 import { KycFilesState, setKycFile } from "@/features/kyc/store/kycSlice";
+import { formatExtensionsForDisplay } from "@/features/kyc/utils/formatExtensionsForDisplay";
 import { getDocumentByType } from "@/features/kyc/utils/kyc.constants";
 import { ThemedText } from "@/shared/components/ThemedText";
 import { showErrorToast } from "@/shared/hooks/showToast";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { getErrorMessage } from "@/utils/errors";
-import { ms, s, vs } from "@/utils/responsive";
+import { getErrorMessage } from "@/shared/utils/errors";
+import { ms, s, vs } from "@/shared/utils/responsive";
 import Fontisto from "@expo/vector-icons/Fontisto";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import * as DocumentPicker from "expo-document-picker";

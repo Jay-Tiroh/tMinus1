@@ -1,11 +1,11 @@
-import { Spacer } from "@/shared/components/Spacer";
-import TextBlock from "@/shared/components/TextBlock";
-import { ThemedButton } from "@/shared/components/ThemedButton";
 import CryptoAssetItem from "@/components/wallets/CryptoAssetItem";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
-import { formatAmount } from "@/helpers/functions";
-import { useSafeBottom } from "@/hooks/useSafeBottom";
+import { Spacer } from "@/shared/components/Spacer";
+import TextBlock from "@/shared/components/TextBlock";
+import { ThemedButton } from "@/shared/components/ThemedButton";
+import { useSafeBottom } from "@/shared/hooks/useSafeBottom";
+import { formatAmount } from "@/shared/utils/formatCurrency";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {

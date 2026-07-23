@@ -5,7 +5,7 @@ import {
   showInfoToast,
   showSuccessToast,
 } from "@/shared/hooks/showToast";
-import { getErrorMessage } from "@/utils/errors";
+import { getErrorMessage } from "@/shared/utils/errors";
 import * as Clipboard from "expo-clipboard";
 import { useEffect, useRef, useState } from "react";
 import { OtpInputRef } from "react-native-otp-entry";

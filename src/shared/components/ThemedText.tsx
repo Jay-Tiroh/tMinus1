@@ -1,6 +1,6 @@
 import { Colors } from "@/constants/Colors";
 import { FontKey, Fonts } from "@/constants/Fonts";
-import { ms } from "@/utils/responsive";
+import { ms } from "@/shared/utils/responsive";
 import React from "react";
 import { StyleProp, Text, TextProps, TextStyle } from "react-native";
 

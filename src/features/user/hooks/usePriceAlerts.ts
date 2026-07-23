@@ -7,7 +7,7 @@ import {
 import { showErrorToast, showSuccessToast } from "@/shared/hooks/showToast";
 
 import { RTKErrorResponse } from "@/types/utility";
-import { getErrorMessage } from "@/utils/errors";
+import { getErrorMessage } from "@/shared/utils/errors";
 import { useState } from "react";
 
 export const usePriceAlerts = () => {

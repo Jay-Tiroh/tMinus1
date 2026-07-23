@@ -1,5 +1,5 @@
 import { useRequestOTPMutation } from "@/features/auth/api/authApi";
-import { logger } from "@/utils/logger";
+import { logger } from "@/shared/utils/logger";
 import { useEffect, useRef, useState } from "react";
 
 export const useRequestOtp = () => {

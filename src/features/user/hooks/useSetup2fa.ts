@@ -5,8 +5,8 @@ import {
 import { Setup2FAResponseData } from "@/features/user/types/2fa";
 import { setPendingRecoveryCodes } from "@/features/user/utils/recoveryCodesTransfer";
 import { showErrorToast, showSuccessToast } from "@/shared/hooks/showToast";
-import { getErrorMessage } from "@/utils/errors";
-import { logger } from "@/utils/logger";
+import { getErrorMessage } from "@/shared/utils/errors";
+import { logger } from "@/shared/utils/logger";
 import * as Clipboard from "expo-clipboard";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";

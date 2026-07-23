@@ -2,7 +2,7 @@ import { GeneralStyles } from "@/constants/themes";
 import { Spacer } from "@/shared/components/Spacer";
 import { ThemedButton } from "@/shared/components/ThemedButton";
 import { useSafeBottom } from "@/shared/hooks/useSafeBottom";
-import { vs } from "@/utils/responsive";
+import { vs } from "@/shared/utils/responsive";
 import React from "react";
 import { ImageBackground, ScrollView, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";

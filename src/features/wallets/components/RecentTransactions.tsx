@@ -1,10 +1,12 @@
+import { Colors } from "@/constants/Colors";
+import CryptoAssetItem from "@/features/wallets/components/CryptoAssetItem";
+import { useTransactions } from "@/features/wallets/hooks/useTransactions";
+import { Transaction } from "@/features/wallets/types/wallets";
 import { Spacer } from "@/shared/components/Spacer";
 import { ThemedText } from "@/shared/components/ThemedText";
-import CryptoAssetItem from "@/components/wallets/CryptoAssetItem";
-import { Colors } from "@/constants/Colors";
-import { useTransactions } from "@/features/wallets/hooks/useTransactions";
-import { formatAmount, timeAgo } from "@/helpers/functions";
 import { useGoToRoute } from "@/shared/hooks/useGoToRoute";
+import { formatAmount } from "@/shared/utils/formatCurrency";
+import { timeAgo } from "@/shared/utils/timeAgo";
 import React, { useMemo } from "react";
 import { Pressable, View } from "react-native";
 
@@ -12,7 +14,7 @@ export const RecentTransactions = () => {
   const { transactions } = useTransactions();
   const toHistory = useGoToRoute("/wallets/transaction-history");
 
-  const displayedTransactions = useMemo(() => {
+  const displayedTransactions: Transaction[] = useMemo(() => {
     return transactions.slice(0, 5);
   }, [transactions]);
 

@@ -1,5 +1,3 @@
-import LogOutBtn from "@/components/LogOutBtn";
-import { ModalSelector } from "@/components/OptionPicker";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
 import { useNotificationsQuery } from "@/features/notifications/api/notificationsApi";
@@ -8,6 +6,8 @@ import useOtherSettings from "@/features/user/hooks/useOtherSettings";
 import useProfile from "@/features/user/hooks/useProfile";
 import { FIAT_CURRENCIES, FiatCurrency } from "@/features/user/types/profile";
 import ErrorState from "@/shared/components/ErrorComponent";
+import LogOutBtn from "@/shared/components/LogOutBtn";
+import { ModalSelector } from "@/shared/components/OptionPicker";
 import { Spacer } from "@/shared/components/Spacer";
 import Template from "@/shared/components/Template";
 import { ThemedText } from "@/shared/components/ThemedText";

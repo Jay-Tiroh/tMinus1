@@ -1,5 +1,6 @@
 import { Colors } from "@/constants/Colors";
-import { formatAmount, timeAgo } from "@/helpers/functions";
+import { formatAmount } from "@/shared/utils/formatCurrency";
+import { timeAgo } from "@/shared/utils/timeAgo";
 import { Transaction } from "../types/wallets"; // Adjust type import based on your codebase
 
 export type SuccessScreenType = "deposit" | "withdrawal" | "transfer";

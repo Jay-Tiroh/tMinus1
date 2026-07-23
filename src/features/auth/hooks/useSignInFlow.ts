@@ -3,11 +3,11 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Control, FieldValues, useForm } from "react-hook-form";
 
+import { useAppDispatch } from "@/core/store/hooks";
 import { showErrorToast, showSuccessToast } from "@/shared/hooks/showToast";
-import { useAppDispatch } from "@/store/hooks";
-import { getErrorMessage } from "@/utils/errors";
-import { logger } from "@/utils/logger";
-import { saveToken } from "@/utils/secureStore";
+import { getErrorMessage } from "@/shared/utils/errors";
+import { logger } from "@/shared/utils/logger";
+import { saveToken } from "@/shared/utils/secureStore";
 import { useLoginMutation } from "../api/authApi";
 import { setCredentials } from "../storage/authSlice";
 import { LoginRequest } from "../types/auth";

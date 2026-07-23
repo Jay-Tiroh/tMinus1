@@ -4,7 +4,7 @@ import Approved from "@/features/kyc/components/Approved";
 import Failed from "@/features/kyc/components/Failed";
 import InProgress from "@/features/kyc/components/InProgress";
 import Template from "@/features/kyc/components/Template";
-import { ms } from "@/utils/responsive";
+import { ms } from "@/shared/utils/responsive";
 import React from "react";
 import { StyleSheet } from "react-native";
 import { useKycStatus } from "../hooks/useKycStatus";

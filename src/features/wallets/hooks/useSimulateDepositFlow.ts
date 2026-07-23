@@ -1,8 +1,8 @@
 import { useSimulateDepositMutation } from "@/features/wallets/api/walletsApi";
 import { setLastDeposit } from "@/features/wallets/storage/walletsSlice";
 import { showErrorToast } from "@/shared/hooks/showToast";
-import { useAppDispatch } from "@/store/hooks";
-import { getErrorMessage } from "@/utils/errors";
+import { useAppDispatch } from "@/core/store/hooks";
+import { getErrorMessage } from "@/shared/utils/errors";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
 import { useForm } from "react-hook-form";

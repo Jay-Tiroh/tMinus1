@@ -1,6 +1,6 @@
 import { Colors } from "@/constants/Colors";
 import { Spacing } from "@/constants/Spacing";
-import { ms, s } from "@/utils/responsive";
+import { ms, s } from "@/shared/utils/responsive";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 

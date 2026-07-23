@@ -1,6 +1,7 @@
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
-import { formatAmount, timeAgo } from "@/helpers/functions";
+import { formatAmount } from "@/shared/utils/formatCurrency";
+import { timeAgo } from "@/shared/utils/timeAgo";
 import Feather from "@expo/vector-icons/Feather";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import React, { useEffect } from "react";

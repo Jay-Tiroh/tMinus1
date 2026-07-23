@@ -11,7 +11,7 @@ import BadgeStuff from "@/shared/components/BadgeStuff";
 import { LabelValueItem } from "@/shared/components/LabelValueItem";
 import { Spacer } from "@/shared/components/Spacer";
 import { ThemedText } from "@/shared/components/ThemedText";
-import { ms, s, vs } from "@/utils/responsive";
+import { ms, s, vs } from "@/shared/utils/responsive";
 
 export const ExecuteConfirm = ({
   quote,

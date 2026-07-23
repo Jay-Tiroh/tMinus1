@@ -2,7 +2,7 @@ import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
 import { KycFileAsset } from "@/features/kyc/types/kyc.types";
 import { ThemedText } from "@/shared/components/ThemedText";
-import { ms, s, vs } from "@/utils/responsive";
+import { ms, s, vs } from "@/shared/utils/responsive";
 import Feather from "@expo/vector-icons/Feather";
 import React from "react";
 import { Pressable, View } from "react-native";

@@ -1,4 +1,4 @@
-import { useProfileQuery } from "@/store/services/profileApi";
+import { useProfileQuery } from "@/features/user";
 
 type DetailsType = {
   name: string;

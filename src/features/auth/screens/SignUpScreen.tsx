@@ -1,6 +1,6 @@
 import { Spacing } from "@/constants/Spacing";
 import { ThemedView } from "@/shared/components/ThemedView";
-import { vs } from "@/utils/responsive";
+import { vs } from "@/shared/utils/responsive";
 import React from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";

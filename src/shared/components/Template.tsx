@@ -1,9 +1,9 @@
+import { Colors } from "@/constants/Colors";
+import { GeneralStyles } from "@/constants/themes";
 import { Spacer } from "@/shared/components/Spacer";
 import TextBlock, { TextBlockProps } from "@/shared/components/TextBlock";
 import { ThemedButton } from "@/shared/components/ThemedButton";
-import { Colors } from "@/constants/Colors";
-import { GeneralStyles } from "@/constants/themes";
-import { useSafeBottom } from "@/hooks/useSafeBottom";
+import { useSafeBottom } from "@/shared/hooks/useSafeBottom";
 import React, { useCallback, useState } from "react";
 import {
   ImageBackground,

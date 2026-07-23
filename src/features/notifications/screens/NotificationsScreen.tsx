@@ -1,6 +1,6 @@
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
-import { useSafeBottom } from "@/hooks/useSafeBottom";
+import { useSafeBottom } from "@/shared/hooks/useSafeBottom";
 import React from "react";
 import { FlatList, ImageBackground, RefreshControl } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";

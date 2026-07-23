@@ -1,11 +1,11 @@
 import { Colors } from "@/constants/Colors";
+import { useAssetChart } from "@/features/markets";
 import Chart from "@/features/markets/components/LineChart";
-import { formatCurrency } from "@/helpers/functions";
-import { useAssetChart } from "@/hooks/useAssetChart";
-import useFiat from "@/shared/hooks/useFiat";
 import ChangeText from "@/shared/components/ChangeText";
 import { CryptoIcon } from "@/shared/components/CryptoIcon";
 import { ThemedText } from "@/shared/components/ThemedText";
+import useFiat from "@/shared/hooks/useFiat";
+import { formatCurrency } from "@/shared/utils/formatCurrency";
 import { Href, useRouter } from "expo-router";
 import React, { useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";

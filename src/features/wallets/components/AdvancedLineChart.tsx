@@ -1,11 +1,12 @@
-import ChangeText from "@/components/ChangeText";
-import Chart from "@/components/LineChart";
+import { Colors } from "@/constants/Colors";
+import { Chart } from "@/features/markets";
+import { PortfolioChartPoint } from "@/features/wallets/types/wallets";
+import ChangeText from "@/shared/components/ChangeText";
 import TextBlock from "@/shared/components/TextBlock";
 import { ThemedText } from "@/shared/components/ThemedText";
-import { Colors } from "@/constants/Colors";
-import { PortfolioChartPoint } from "@/features/wallets/types/wallets";
-import { formatCurrency } from "@/helpers/functions";
 import useFiat from "@/shared/hooks/useFiat";
+
+import { formatCurrency } from "@/shared/utils/formatCurrency";
 import React, { useMemo, useState } from "react";
 import { LayoutChangeEvent, Pressable, StyleSheet, View } from "react-native";
 import { PORTFOLIO_TIME_OPTIONS } from "../constants/wallets.constants";

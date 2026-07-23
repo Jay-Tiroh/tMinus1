@@ -1,7 +1,7 @@
+import { useAppDispatch } from "@/core/store/hooks";
 import { useVerify2FAMutation } from "@/features/user";
 import { showErrorToast, showSuccessToast } from "@/shared/hooks/showToast";
-import { useAppDispatch } from "@/store/hooks";
-import { saveToken } from "@/utils/secureStore";
+import { saveToken } from "@/shared/utils/secureStore";
 import { useRouter } from "expo-router";
 import { RefObject } from "react";
 import { OtpInputRef } from "react-native-otp-entry";

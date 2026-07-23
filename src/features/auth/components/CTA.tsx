@@ -2,7 +2,7 @@ import Facebook from "@/assets/icons/facebook.svg";
 import Google from "@/assets/icons/google.svg";
 import { Colors } from "@/constants/Colors";
 import { ThemedButton } from "@/shared/components/ThemedButton";
-import { ms, s, vs } from "@/utils/responsive";
+import { ms, s, vs } from "@/shared/utils/responsive";
 import React from "react";
 import {
   ActivityIndicator,

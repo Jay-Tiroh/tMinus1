@@ -5,7 +5,7 @@ import { Spacer } from "@/shared/components/Spacer";
 import { ThemedButton } from "@/shared/components/ThemedButton";
 import { ThemedText } from "@/shared/components/ThemedText";
 import { ThemedView } from "@/shared/components/ThemedView";
-import { s, vs } from "@/utils/responsive";
+import { s, vs } from "@/shared/utils/responsive";
 import { useRouter } from "expo-router";
 import { ImageBackground, StyleSheet, View } from "react-native";
 

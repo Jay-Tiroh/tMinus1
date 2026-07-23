@@ -11,10 +11,10 @@ import {
 } from "@/features/trades/storage/tradesSlice";
 import { CreateQuoteRequest } from "@/features/trades/types/trades.types";
 import { showErrorToast } from "@/shared/hooks/showToast";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/core/store/hooks";
 
-import { getErrorMessage } from "@/utils/errors";
-import { logger } from "@/utils/logger";
+import { getErrorMessage } from "@/shared/utils/errors";
+import { logger } from "@/shared/utils/logger";
 import { useCallback, useEffect } from "react";
 
 export default function useTrade(pollIntervalMs = 5000) {

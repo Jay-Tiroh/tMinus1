@@ -64,3 +64,9 @@ export type {
   VerifyOTPResponse,
   VerifyOTPResponseData,
 } from "./types/auth";
+
+// ==========================================
+// COMPONENTS
+// ==========================================
+export { ThemedInput } from "./components/ThemedTextInput";
+// ==========================================

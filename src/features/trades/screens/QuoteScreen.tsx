@@ -5,7 +5,7 @@ import { useAssetRoute } from "@/features/trades/hooks/useAssetRoute";
 import useTrade from "@/hooks/useTrade";
 import Template from "@/shared/components/Template";
 import { ButtonVariant } from "@/shared/components/ThemedButton";
-import { ms } from "@/utils/responsive";
+import { ms } from "@/shared/utils/responsive";
 import React from "react";
 import { ActivityIndicator, TextStyle, View, ViewStyle } from "react-native";
 

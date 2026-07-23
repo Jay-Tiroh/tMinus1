@@ -1,8 +1,8 @@
 import { showErrorToast, showSuccessToast } from "@/shared/hooks/showToast";
 import { useGoToRoute } from "@/shared/hooks/useGoToRoute";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { getErrorMessage } from "@/utils/errors";
-import { logger } from "@/utils/logger";
+import { useAppDispatch, useAppSelector } from "@/core/store/hooks";
+import { getErrorMessage } from "@/shared/utils/errors";
+import { logger } from "@/shared/utils/logger";
 import {
   useGetKYCUploadInstructionsMutation,
   useSubmitKYCMutation,
