@@ -2,6 +2,7 @@ import { Colors } from "@/constants/Colors";
 import { Spacer } from "@/shared/components/Spacer";
 import { ThemedButton } from "@/shared/components/ThemedButton";
 import { ThemedView } from "@/shared/components/ThemedView";
+import { useExitOnDoubleBack } from "@/shared/hooks/useExitOnDoubleBack";
 import { s } from "@/shared/utils/responsive";
 import { useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
@@ -22,6 +23,7 @@ import { onboardingStorage } from "../storage/onboarding.storage";
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 export const OnboardingScreen = () => {
+  useExitOnDoubleBack();
   const navigation = useRouter();
   const scrollRef = useRef<ScrollView>(null);
   const [activeIndex, setActiveIndex] = useState(0);

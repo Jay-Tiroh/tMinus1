@@ -8,6 +8,7 @@ import Template from "@/shared/components/Template";
 import { ThemedButton } from "@/shared/components/ThemedButton";
 import { ThemedText } from "@/shared/components/ThemedText";
 import { useBiometrics } from "@/shared/hooks/useBiometrics";
+import { useExitOnDoubleBack } from "@/shared/hooks/useExitOnDoubleBack";
 import { ms, s, vs } from "@/shared/utils/responsive";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useRouter } from "expo-router";
@@ -20,8 +21,8 @@ import {
   View,
 } from "react-native";
 import { useWelcomeBackFlow } from "../hooks/useWelcomeBackFlow";
-
 const WelcomeBackScreen = () => {
+  useExitOnDoubleBack();
   const [password, setPassword] = useState("");
   const [isHidden, setIsHidden] = useState(true);
   const [passwordError, setPasswordError] = useState("");

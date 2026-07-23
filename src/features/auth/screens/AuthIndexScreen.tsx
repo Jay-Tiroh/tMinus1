@@ -7,6 +7,7 @@ import SignUpForm from "../components/SignUpForm";
 import { Colors } from "@/constants/Colors";
 import { Spacing } from "@/constants/Spacing";
 import { ThemedView } from "@/shared/components/ThemedView";
+import { useExitOnDoubleBack } from "@/shared/hooks/useExitOnDoubleBack";
 import { ms, s, vs } from "@/shared/utils/responsive";
 import React, { useRef, useState } from "react";
 import {
@@ -53,6 +54,7 @@ const AuthIndexScreen = () => {
     },
   };
 
+  useExitOnDoubleBack();
   return (
     <ImageBackground
       source={require("@/assets/images/new-bg.png")}

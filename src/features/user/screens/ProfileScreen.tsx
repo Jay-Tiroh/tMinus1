@@ -1,16 +1,19 @@
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
-import LogOutBtn from "@/features/auth";
+import { LogOutBtn } from "@/features/auth";
 import { useNotificationsQuery } from "@/features/notifications";
 import ErrorState from "@/shared/components/ErrorComponent";
 import { ModalSelector } from "@/shared/components/OptionPicker";
 import { Spacer } from "@/shared/components/Spacer";
 import Template from "@/shared/components/Template";
 import { ThemedText } from "@/shared/components/ThemedText";
+import { showInfoToast } from "@/shared/hooks/showToast";
 import { useBackToHome } from "@/shared/hooks/useBackToHome";
+import { applyUpdate, checkForUpdate } from "@/shared/hooks/useUpdates";
 import { Href, useRouter } from "expo-router";
+import * as Updates from "expo-updates";
 import React from "react";
-import { Image, View } from "react-native";
+import { Alert, Image, View } from "react-native";
 import { useGetPriceAlertsQuery } from "../api/priceAlertsApi";
 import { ListItem } from "../components/ListItem";
 import useOtherSettings from "../hooks/useOtherSettings";
@@ -55,6 +58,7 @@ const ProfileScreen = () => {
   const [selectedCurrency, setSelectedCurrency] = React.useState<FiatCurrency>(
     settings?.fiatCurrency ?? "USD",
   );
+  const [isCheckingUpdate, setIsCheckingUpdate] = React.useState(false);
 
   const handleRefetch = () => {
     refetchNotifs();
@@ -71,6 +75,32 @@ const ProfileScreen = () => {
   const currentFiat = FIAT_CURRENCIES.find(
     (currency) => currency.value === selectedCurrency,
   );
+
+  const handleCheckForUpdate = async () => {
+    setIsCheckingUpdate(true);
+    try {
+      const update = await checkForUpdate();
+
+      if (!update) {
+        showInfoToast({
+          title: "You're up to date",
+          message: "No new updates are available right now.",
+        });
+        return;
+      }
+
+      Alert.alert(
+        "Update available",
+        "A new version of tMinus1 is ready to install. Restart now to apply it?",
+        [
+          { text: "Later", style: "cancel" },
+          { text: "Restart", onPress: applyUpdate },
+        ],
+      );
+    } finally {
+      setIsCheckingUpdate(false);
+    }
+  };
 
   const menuItems = [
     {
@@ -117,6 +147,14 @@ const ProfileScreen = () => {
       onPress: () => {
         router.replace(route[4]);
       },
+    },
+    {
+      title: "Check for updates",
+      subtitle: isCheckingUpdate
+        ? "Checking..."
+        : `Version ${Updates.runtimeVersion ?? "1.0.0"}`,
+      trailing: isCheckingUpdate ? "..." : "Check",
+      onPress: handleCheckForUpdate,
     },
   ];
 
