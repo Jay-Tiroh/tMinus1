@@ -1,4 +1,4 @@
-import RecentTradesScreen from "@/components/screens/tabs/trades/RecentTradesScreen";
+import { RecentTradesScreen } from "@/features/trades";
 import React from "react";
 
 const RecentTrades = () => {

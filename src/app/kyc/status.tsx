@@ -1,6 +1,6 @@
-import KycStatus from "@/components/screens/kyc/Status";
+import { KycStatusScreen } from "@/features/kyc";
 
 const Status = () => {
-  return <KycStatus />;
+  return <KycStatusScreen />;
 };
 export default Status;

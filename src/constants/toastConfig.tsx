@@ -1,4 +1,4 @@
-import { ThemedText } from "@/components/ThemedText";
+import { ThemedText } from "@/shared/components/ThemedText";
 import { Colors } from "@/constants/Colors";
 import { Spacing } from "@/constants/Spacing";
 import AntDesign from "@expo/vector-icons/AntDesign";

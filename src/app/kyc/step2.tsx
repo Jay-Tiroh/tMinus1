@@ -1,8 +1,7 @@
-import Step2 from "@/components/screens/kyc/Step2";
-import React from "react";
+import { Step2Screen } from "@/features/kyc";
 
 const StepTwo = () => {
-  return <Step2 />;
+  return <Step2Screen />;
 };
 
 export default StepTwo;

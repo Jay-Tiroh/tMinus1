@@ -1,4 +1,4 @@
-import RecoveryCodesScreen from "@/components/screens/tabs/user/RecoveryCodesScreen";
+import { RecoveryCodesScreen } from '@/features/user';
 import React from "react";
 
 const RecoveryCodes = () => {

@@ -1,4 +1,4 @@
-import OrderBookScreen from "@/components/screens/tabs/trades/OrderBookScreen";
+import { OrderBookScreen } from "@/features/trades";
 import React from "react";
 
 const OrderBook = () => {

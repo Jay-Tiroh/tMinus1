@@ -1,13 +1,16 @@
-import { CustomSplash } from "@/components/CustomSplash";
-import { InactivityLockProvider } from "@/components/InactivityLockProvider";
 import { Colors } from "@/constants/Colors";
 import { toastConfig } from "@/constants/toastConfig";
-import { usePushRegistration } from "@/hooks/usePushRegistration";
-import { store } from "@/store";
-import { authApi } from "@/store/services/authApi";
-import { clearCredentials, setCredentials } from "@/store/slices/authSlice";
-import { logger } from "@/utils/logger";
-import { clearTokens, getToken, saveToken } from "@/utils/secureStore";
+import { store } from "@/core/store";
+import {
+  authApi,
+  clearCredentials,
+  InactivityLockProvider,
+  setCredentials,
+} from "@/features/auth";
+import { usePushRegistration } from "@/features/notifications";
+import { CustomSplash } from "@/shared/components/CustomSplash";
+import { logger } from "@/shared/utils/logger";
+import { clearTokens, getToken, saveToken } from "@/shared/utils/secureStore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFonts } from "expo-font";
 import { Stack, useRouter } from "expo-router";

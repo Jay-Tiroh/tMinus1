@@ -1,5 +1,4 @@
-import TransactionPINScreen from "@/components/screens/tabs/user/TransactionPin";
-import React from "react";
+import { TransactionPINScreen } from "@/features/user";
 
 const TransactionPin = () => {
   return <TransactionPINScreen />;

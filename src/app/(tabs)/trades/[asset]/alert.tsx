@@ -1,4 +1,4 @@
-import AlertScreen from "@/components/screens/tabs/trades/AlertScreen";
+import { AlertScreen } from "@/features/trades";
 import React from "react";
 
 const Alert = () => {

@@ -1,4 +1,4 @@
-import TransactionDetailsScreen from "@/components/screens/tabs/wallets/TransactionDetailsScreen";
+import { TransactionDetailsScreen } from '@/features/wallets';
 
 export default function TransactionDetails() {
   return <TransactionDetailsScreen />;

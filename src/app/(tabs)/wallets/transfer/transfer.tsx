@@ -1,4 +1,4 @@
-import TransferScreen from "@/components/screens/tabs/wallets/TransferScreen";
+import { TransferScreen } from '@/features/wallets';
 
 export default function Transfer() {
   return <TransferScreen />;
