@@ -1,4 +1,4 @@
-import SuccessScreen from "@/features/wallets/screens/SuccessScreen";
+import { SuccessScreen } from '@/features/wallets';
 
 export default function Success() {
   return <SuccessScreen />;

@@ -1,4 +1,4 @@
-import SignUpScreen from "@/components/screens/auth/SignUpScreen";
+import { SignUpScreen } from "@/features/auth";
 
 const SignUp = () => {
   return <SignUpScreen />;

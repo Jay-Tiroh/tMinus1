@@ -1,9 +1,9 @@
-import { showErrorToast, showSuccessToast } from "@/shared/hooks/showToast";
 import { useAppDispatch } from "@/core/store/hooks";
+import { showErrorToast, showSuccessToast } from "@/shared/hooks/showToast";
 import { saveToken } from "@/shared/utils/secureStore";
 import { useRouter } from "expo-router";
 import { useLoginMutation } from "../api/authApi";
-import { setCredentials, unlockSession } from "../storage/authSlice";
+import { setCredentials, unlockSession } from "../store/authSlice";
 
 const isTwoFactorResponse = (
   data: unknown,

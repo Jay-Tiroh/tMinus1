@@ -4,7 +4,8 @@ import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
 import { formatAmount } from "@/shared/utils/formatCurrency";
 import { showErrorToast } from "@/shared/hooks/showToast";
-import useFiat from "@/shared/hooks/useFiat";
+import { useFiat } from "@/features/user";
+
 import { useGoToRoute } from "@/shared/hooks/useGoToRoute";
 import useWallet from "@/features/wallets/hooks/useWallet";
 import { ms, s, vs } from "@/shared/utils/responsive";

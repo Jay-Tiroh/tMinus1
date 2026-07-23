@@ -1,4 +1,4 @@
-import { baseApi } from "@/core/store/services/baseApi";
+import { baseApi } from "@/core/store/baseApi";
 import {
   LoginRequest,
   LoginResponse,

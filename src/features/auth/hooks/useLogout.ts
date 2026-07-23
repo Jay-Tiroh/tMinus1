@@ -1,11 +1,10 @@
-import { useLogoutMutation } from "@/features/auth/api/authApi";
-import { clearCredentials } from "@/features/auth/storage/authSlice";
-import { showSuccessToast } from "@/shared/hooks/showToast";
-import { baseApi } from "@/core/store/services/baseApi";
+import { baseApi } from "@/core/store/baseApi";
+import { clearCredentials, useLogoutMutation } from "@/features/auth";
 import {
   useDeleteDeviceMutation,
   useLazyGetDevicesQuery,
-} from "@/store/services/devicesApi";
+} from "@/features/user";
+import { showSuccessToast } from "@/shared/hooks/showToast";
 import { clearTokens, saveToken } from "@/shared/utils/secureStore";
 import { useRouter } from "expo-router";
 import { useDispatch } from "react-redux";

@@ -1,3 +1,5 @@
+import "./bootstrapAuthBridge"; // side-effect: registers the auth bridge on module load
+
 // ==========================================
 // SCREENS
 // ==========================================
@@ -23,7 +25,7 @@ export {
   useValidateSignupMutation,
   useVerifyOTPMutation,
 } from "./api/authApi";
-
+export { useLogout } from "./hooks/useLogout";
 // ==========================================
 // STORAGE & AUTH STATE
 // ==========================================
@@ -34,7 +36,7 @@ export {
   setCredentials,
   unlockSession,
   updateUserSettings,
-} from "./storage/authSlice";
+} from "./store/authSlice";
 
 // ==========================================
 // TYPES
@@ -68,5 +70,8 @@ export type {
 // ==========================================
 // COMPONENTS
 // ==========================================
+export { InactivityLockProvider } from "./components/InactivityLockProvider";
 export { ThemedInput } from "./components/ThemedTextInput";
+
+export { default as LogOutBtn } from "./components/LogOutBtn";
 // ==========================================

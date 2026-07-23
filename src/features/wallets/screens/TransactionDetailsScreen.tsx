@@ -1,8 +1,7 @@
-import { LabelValueItem } from "@/components/LabelValueItem";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
-import { useTransactionById } from "@/features/wallets/hooks/useTransactionById";
+import { LabelValueItem } from "@/shared/components/LabelValueItem";
 import { Spacer } from "@/shared/components/Spacer";
 import Template from "@/shared/components/Template";
 import { ThemedText } from "@/shared/components/ThemedText";
@@ -12,6 +11,7 @@ import { useLocalSearchParams } from "expo-router";
 import React, { useMemo } from "react";
 import { View } from "react-native";
 import { TRANSACTION_STATUS_COLORS } from "../constants/wallets.constants";
+import { useTransactionById } from "../hooks/useTransactionById";
 import { mapTransactionToLedgerItems } from "../utils/transaction.mappers";
 
 export const TransactionDetailsScreen = () => {

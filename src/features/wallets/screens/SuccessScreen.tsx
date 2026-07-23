@@ -1,15 +1,15 @@
-import BadgeStuff from "@/components/BadgeStuff";
-import { LabelValueItem } from "@/components/LabelValueItem";
-import { Spacer } from "@/shared/components/Spacer";
-import Template from "@/shared/components/Template";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
+import { useAppDispatch, useAppSelector } from "@/core/store/hooks";
 import {
   clearLastDeposit,
   clearLastTransfer,
   clearLastWithdrawal,
-} from "@/features/wallets/storage/walletsSlice";
-import { useAppDispatch, useAppSelector } from "@/core/store/hooks";
+} from "@/features/wallets/store/walletsSlice";
+import BadgeStuff from "@/shared/components/BadgeStuff";
+import { LabelValueItem } from "@/shared/components/LabelValueItem";
+import { Spacer } from "@/shared/components/Spacer";
+import Template from "@/shared/components/Template";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React from "react";

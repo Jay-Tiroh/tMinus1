@@ -1,12 +1,12 @@
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
-import Approved from "@/features/kyc/components/Approved";
-import Failed from "@/features/kyc/components/Failed";
-import InProgress from "@/features/kyc/components/InProgress";
-import Template from "@/features/kyc/components/Template";
 import { ms } from "@/shared/utils/responsive";
 import React from "react";
 import { StyleSheet } from "react-native";
+import { Approved } from "../components/Approved";
+import { Failed } from "../components/Failed";
+import { InProgress } from "../components/InProgress";
+import { Template } from "../components/Template";
 import { useKycStatus } from "../hooks/useKycStatus";
 
 export const KycStatusScreen = () => {

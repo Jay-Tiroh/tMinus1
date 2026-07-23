@@ -1,7 +1,7 @@
-import { CryptoIcon } from "@/components/CryptoIcon";
-import TextBlock from "@/shared/components/TextBlock";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
+import { CryptoIcon } from "@/shared/components/CryptoIcon";
+import TextBlock from "@/shared/components/TextBlock";
 import { ms, s, vs } from "@/shared/utils/responsive";
 import React from "react";
 import { StyleSheet, View } from "react-native";
@@ -52,7 +52,7 @@ export default function CryptoAssetItem({
       </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   card: {

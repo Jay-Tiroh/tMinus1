@@ -1,13 +1,13 @@
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
+import { useAppSelector } from "@/core/store/hooks";
+import { useLogout } from "@/features/auth";
 import { Spacer } from "@/shared/components/Spacer";
 import Template from "@/shared/components/Template";
 import { ThemedButton } from "@/shared/components/ThemedButton";
 import { ThemedText } from "@/shared/components/ThemedText";
 import { useBiometrics } from "@/shared/hooks/useBiometrics";
-import { useLogout } from "@/shared/hooks/useLogout";
-import { useAppSelector } from "@/core/store/hooks";
 import { ms, s, vs } from "@/shared/utils/responsive";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useRouter } from "expo-router";

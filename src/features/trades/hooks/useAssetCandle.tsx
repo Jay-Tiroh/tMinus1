@@ -1,5 +1,4 @@
-import { useGetCandlesQuery } from "@/features/markets/api/marketsApi";
-import { Candle } from "@/features/markets/types/assets";
+import { Candle, useGetCandlesQuery } from "@/features/markets";
 
 interface UseAssetCandleReturn {
   candles: Candle[];

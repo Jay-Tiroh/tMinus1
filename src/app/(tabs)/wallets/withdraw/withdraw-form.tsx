@@ -1,4 +1,4 @@
-import WithdrawFormScreen from "@/features/wallets/screens/WithdrawFormScreen";
+import { WithdrawFormScreen } from '@/features/wallets';
 
 export default function WithdrawForm() {
   return <WithdrawFormScreen />;

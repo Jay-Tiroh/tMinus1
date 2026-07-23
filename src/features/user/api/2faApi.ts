@@ -1,4 +1,5 @@
-import { AuthResponseData } from "@/features/auth/types/auth";
+import { baseApi } from "@/core/store/baseApi";
+import { AuthResponseData } from "@/features/auth";
 import {
   Disable2FARequest,
   Disable2FAResponse,
@@ -15,8 +16,7 @@ import {
   TwoFactorStatusResponseData,
   Verify2FARequest,
   Verify2FAResponse,
-} from "@/features/user/types/2fa";
-import { baseApi } from "../../../core/store/services/baseApi";
+} from "../types/2fa";
 
 export const twoFactorApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({

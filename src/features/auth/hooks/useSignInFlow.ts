@@ -9,7 +9,7 @@ import { getErrorMessage } from "@/shared/utils/errors";
 import { logger } from "@/shared/utils/logger";
 import { saveToken } from "@/shared/utils/secureStore";
 import { useLoginMutation } from "../api/authApi";
-import { setCredentials } from "../storage/authSlice";
+import { setCredentials } from "../store/authSlice";
 import { LoginRequest } from "../types/auth";
 import {
   EmailPasswordFormData,

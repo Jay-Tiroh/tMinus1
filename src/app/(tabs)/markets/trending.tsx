@@ -1,4 +1,4 @@
-import TrendingScreen from "@/components/screens/tabs/markets/TrendingScreen";
+import { TrendingScreen } from "@/features/markets";
 
 const Trending = () => {
   return <TrendingScreen />;

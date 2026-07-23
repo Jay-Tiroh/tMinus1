@@ -1,6 +1,6 @@
-import { CryptoIcon } from "@/components/CryptoIcon";
 import { Colors } from "@/constants/Colors";
 import { useAllAssets } from "@/features/markets";
+import { CryptoIcon } from "@/shared/components/CryptoIcon";
 import { ThemedText } from "@/shared/components/ThemedText";
 import React, { useEffect, useMemo, useState } from "react";
 import {

@@ -1,8 +1,8 @@
-import useWallet from "@/features/wallets/hooks/useWallet";
 import { useAllAssets } from "@/features/markets";
-import useFiat from "@/shared/hooks/useFiat";
-import useProfile from "@/features/user/hooks/useProfile";
+import useProfile, { useFiat } from "@/features/user";
+
 import { useCallback, useMemo } from "react";
+import useWallet from "../hooks/useWallet";
 
 export const useWalletDashboard = () => {
   const { kycStatus, refetch: kycRefetch } = useProfile();

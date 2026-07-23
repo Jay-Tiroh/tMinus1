@@ -1,8 +1,8 @@
-import BadgeStuff from "@/components/BadgeStuff";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
-import useProfile from "@/features/user/hooks/useProfile";
+import { useProfile } from "@/features/user";
+import BadgeStuff from "@/shared/components/BadgeStuff";
 import { Spacer } from "@/shared/components/Spacer";
 import TextBlock from "@/shared/components/TextBlock";
 import { ThemedButton } from "@/shared/components/ThemedButton";

@@ -1,4 +1,4 @@
-import VerifyScreen from "@/components/screens/auth/VerifyScreen";
+import { VerifyScreen } from "@/features/auth";
 
 export default function Verify() {
   return <VerifyScreen />;

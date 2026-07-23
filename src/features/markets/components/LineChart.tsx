@@ -1,5 +1,5 @@
 import { Colors } from "@/constants/Colors";
-import { ChartData } from "@/features/markets/types/assets";
+import { ChartData } from "@/features/markets";
 import { useMemo } from "react";
 import { Defs, LinearGradient, Path, Stop, Svg } from "react-native-svg";
 

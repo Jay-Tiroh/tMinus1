@@ -1,6 +1,6 @@
-import { LabelValueItem } from "@/components/LabelValueItem";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
+import { LabelValueItem } from "@/shared/components/LabelValueItem";
 import { Spacer } from "@/shared/components/Spacer";
 import Template from "@/shared/components/Template";
 import { ThemedButton } from "@/shared/components/ThemedButton";

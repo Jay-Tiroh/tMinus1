@@ -1,4 +1,4 @@
-import TransactionHistoryScreen from "@/features/wallets/screens/TransactionHistoryScreen";
+import { TransactionHistoryScreen } from '@/features/wallets';
 
 export default function TransactionHistory() {
   return <TransactionHistoryScreen />;

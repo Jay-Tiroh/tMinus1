@@ -1,10 +1,11 @@
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
 import { useKyc } from "@/features/kyc/hooks/useKyc";
+import { useFiat } from "@/features/user";
 import BadgeStuff from "@/shared/components/BadgeStuff";
 import { LabelValueItem } from "@/shared/components/LabelValueItem";
 import { Spacer } from "@/shared/components/Spacer";
-import useFiat from "@/shared/hooks/useFiat";
+
 import { formatCurrency } from "@/shared/utils/formatCurrency";
 import { vs } from "@/shared/utils/responsive";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";

@@ -2,14 +2,11 @@ import Back from "@/assets/icons/back.svg";
 import Bell from "@/assets/icons/bell.svg";
 import Candle from "@/assets/icons/candle.svg";
 import DollarCircle from "@/assets/icons/dollar-circle.svg";
-import Menu from "@/assets/icons/menu.svg";
 import Scanner from "@/assets/icons/scanner.svg";
 import Star from "@/assets/icons/star.svg";
-import { ThemedText } from "@/shared/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
 import { Colors } from "@/constants/Colors";
-import { useAppDispatch } from "@/core/store/hooks";
-import { toggleMenu } from "@/core/store/slices/MenuSlice";
+import { ThemedText } from "@/shared/components/ThemedText";
+import { ThemedView } from "@/shared/components/ThemedView";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Href, useRouter } from "expo-router";
 import React from "react";
@@ -38,10 +35,6 @@ const ThemedHeader = ({
     router.back();
   };
 
-  const dispatch = useAppDispatch();
-  const handleToggleMenu = () => {
-    dispatch(toggleMenu());
-  };
   return (
     <ThemedView
       safe
@@ -91,8 +84,6 @@ const ThemedHeader = ({
         <NormalRight />
       ) : headerRight === "trade" ? (
         <TradeRight />
-      ) : headerRight === "menu" ? (
-        <Menu width={15} height={15} onPress={handleToggleMenu} hitSlop={20} />
       ) : null}
     </ThemedView>
   );

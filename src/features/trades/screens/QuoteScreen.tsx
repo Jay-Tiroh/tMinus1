@@ -2,12 +2,12 @@ import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
 import { useAssetRoute } from "@/features/trades/hooks/useAssetRoute";
-import useTrade from "@/hooks/useTrade";
 import Template from "@/shared/components/Template";
 import { ButtonVariant } from "@/shared/components/ThemedButton";
 import { ms } from "@/shared/utils/responsive";
 import React from "react";
 import { ActivityIndicator, TextStyle, View, ViewStyle } from "react-native";
+import useTrade from "../hooks/useTrade";
 
 // Import new boundary dependencies
 import { QuoteExpired, QuotePreview } from "../components/QuoteBlocks";

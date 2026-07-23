@@ -1,12 +1,12 @@
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
-import Template from "@/features/kyc/components/Template";
+import { useAppSelector } from "@/core/store/hooks";
+import { Template } from "@/features/kyc/components/Template";
 import { selectKycFiles } from "@/features/kyc/store/kycSlice";
 import { LabelValueItem } from "@/shared/components/LabelValueItem";
 import { Spacer } from "@/shared/components/Spacer";
 import TextBlock from "@/shared/components/TextBlock";
-import { useAppSelector } from "@/core/store/hooks";
 import { ms, s, vs } from "@/shared/utils/responsive";
 import React from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";

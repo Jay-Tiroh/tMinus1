@@ -1,16 +1,15 @@
-import { Asset, AssetPickerModal } from "@/shared/components/AssetPicker";
+import { Asset, AssetPickerModal, useAssetChart } from "@/features/markets";
 
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
-import { TradeType } from "@/features/trades";
-import { BuildActionConfig } from "@/features/trades/constants/action.config";
-import { useAssetRoute } from "@/features/trades/hooks/useAssetRoute";
-import useWallet from "@/features/wallets/hooks/useWallet";
+import { useWallet } from "@/features/wallets";
 import { showErrorToast, showWarningToast } from "@/shared/hooks/showToast";
 import { formatAmount } from "@/shared/utils/formatCurrency";
+import { BuildActionConfig } from "../constants/action.config";
+import { useAssetRoute } from "../hooks/useAssetRoute";
 
-import { useKyc } from "@/features/kyc/hooks/useKyc";
+import { useKyc } from "@/features/kyc";
 import { Spacer } from "@/shared/components/Spacer";
 import TextBlock from "@/shared/components/TextBlock";
 import { ThemedButton } from "@/shared/components/ThemedButton";
@@ -36,15 +35,14 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-// Import new boundary dependencies
-import { useAssetChart } from "@/features/markets";
-import useTrade from "@/features/trades/hooks/useTrade";
 import { LabelValueItem } from "@/shared/components/LabelValueItem";
 import {
   StaticAmountBlock,
   TextInputBlock,
 } from "../components/TradeInputBlocks";
+import useTrade from "../hooks/useTrade";
 import { useTradeCalculations } from "../hooks/useTradeCalculations";
+import { TradeType } from "../types/trades.types";
 
 const TAB_INDEX = { Buy: 0, Sell: 1, Swap: 2 };
 const { width: SCREEN_WIDTH } = Dimensions.get("window");

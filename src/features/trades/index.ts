@@ -8,6 +8,7 @@ export { QuoteScreen } from "./screens/QuoteScreen";
 export { RecentTradesScreen } from "./screens/RecentTradesScreen";
 
 // Hooks
+export { useAssetRoute } from "./hooks/useAssetRoute";
 export { useQuoteTimer } from "./hooks/useQuoteTimer";
 export { useTradeCalculations } from "./hooks/useTradeCalculations";
 
@@ -39,3 +40,5 @@ export type {
   Wallet,
   WalletBalance,
 } from "./types/trades.types";
+
+export { default as tradesReducer } from "./store/tradesSlice";

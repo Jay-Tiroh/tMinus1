@@ -1,4 +1,4 @@
-import SuccessScreen from "@/components/screens/auth/SuccessScreen";
+import { SuccessScreen } from "@/features/auth";
 
 export default function Success() {
   return <SuccessScreen />;

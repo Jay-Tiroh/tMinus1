@@ -1,7 +1,5 @@
-import AccountLimits from "@/features/kyc/components/AccountLimits";
-import IndexPage from "@/features/kyc/components/IndexPage";
+import { AccountLimits, IndexPage, KycStatusScreen } from "@/features/kyc";
 import { useKyc } from "@/features/kyc/hooks/useKyc";
-import KycStatusScreen from "@/features/kyc/screens/KycStatusScreen";
 import React, { useState } from "react";
 
 export const KycHomeScreen = () => {

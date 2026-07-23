@@ -1,4 +1,4 @@
-import { KycHomeScreen } from "@/features/kyc/screens/KycHomeScreen";
+import { KycHomeScreen } from '@/features/kyc';
 import React from "react";
 
 const Index = () => {

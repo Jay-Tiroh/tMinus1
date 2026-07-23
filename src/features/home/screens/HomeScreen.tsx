@@ -1,6 +1,6 @@
 import { GeneralStyles } from "@/constants/themes";
+import { KycLocked } from "@/features/kyc";
 import { BalanceComponent } from "@/features/wallets";
-import KycLocked from "@/shared/components/KycLocked";
 import { Spacer } from "@/shared/components/Spacer";
 import Template from "@/shared/components/Template";
 import { ThemedButton } from "@/shared/components/ThemedButton";

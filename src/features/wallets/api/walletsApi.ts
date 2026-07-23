@@ -1,3 +1,4 @@
+import { baseApi } from "@/core/store/baseApi";
 import {
   DepositAddress,
   DepositAddressesResponse,
@@ -20,7 +21,6 @@ import {
   WithdrawalRequest,
   WithdrawalResponse,
 } from "@/features/wallets/types/wallets";
-import { baseApi } from "../../../core/store/services/baseApi";
 
 const walletsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({

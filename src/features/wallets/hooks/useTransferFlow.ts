@@ -5,7 +5,7 @@ import useWallet from "@/features/wallets/hooks/useWallet";
 import {
   addRecentContact,
   setLastTransfer,
-} from "@/features/wallets/storage/walletsSlice";
+} from "@/features/wallets/store/walletsSlice";
 import { showErrorToast, showInfoToast } from "@/shared/hooks/showToast";
 import { logger } from "@/shared/utils/logger";
 import { useMemo, useState } from "react";

@@ -1,4 +1,4 @@
-import Disable2FAScreen from "@/components/screens/tabs/user/Disable2faScreen";
+import { Disable2FAScreen } from "@/features/user";
 
 export default function Disable2fa() {
   return <Disable2FAScreen />;

@@ -1,16 +1,17 @@
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
-import { useGetOrderBookQuery } from "@/features/markets/api/marketsApi";
-import { useAssetRoute } from "@/features/trades/hooks/useAssetRoute";
-import { formatAmount } from "@/shared/utils/formatCurrency";
-import useFiat from "@/shared/hooks/useFiat";
+import { useGetOrderBookQuery } from "@/features/markets";
+import { useFiat } from "@/features/user";
 import { Spacer } from "@/shared/components/Spacer";
 import Template from "@/shared/components/Template";
 import { ThemedText } from "@/shared/components/ThemedText";
+
+import { formatAmount } from "@/shared/utils/formatCurrency";
 import { vs } from "@/shared/utils/responsive";
 import { useLocalSearchParams } from "expo-router";
 import React from "react";
 import { StyleSheet, View } from "react-native";
+import { useAssetRoute } from "../hooks/useAssetRoute";
 
 import { TradeNavigationTabs } from "../components/TradeNavigationTabs";
 

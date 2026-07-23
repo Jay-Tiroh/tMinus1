@@ -1,4 +1,4 @@
-import WelcomeBackScreen from "@/components/screens/auth/WelcomeBackScreen";
+import { WelcomeBackScreen } from "@/features/auth";
 
 export default function WelcomeBack() {
   return <WelcomeBackScreen />;

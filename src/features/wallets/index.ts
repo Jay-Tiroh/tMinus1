@@ -34,3 +34,5 @@ export type {
   WalletVerification,
   Withdrawal,
 } from "./types/wallets"; // Assuming your types file is saved here
+
+export { default as walletsReducer } from "./store/walletsSlice";

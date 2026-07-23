@@ -1,4 +1,4 @@
-import { Asset } from "@/features/markets/types/assets";
+import { Asset } from "@/features/markets";
 import { memo, useCallback } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import { CoinCard } from "./CoinCard";

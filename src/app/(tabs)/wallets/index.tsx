@@ -1,4 +1,4 @@
-import WalletsScreen from "@/features/wallets/screens/WalletsScreen";
+import { WalletsScreen } from '@/features/wallets';
 
 export default function Wallets() {
   return <WalletsScreen />;

@@ -1,14 +1,14 @@
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
-import Phase1 from "@/features/kyc/components/Phase1";
-import Phase2 from "@/features/kyc/components/Phase2";
-import Template from "@/features/kyc/components/Template";
+import { Phase1 } from "@/features/kyc/components/Phase1";
+import { Phase2 } from "@/features/kyc/components/Phase2";
+import { Template } from "@/features/kyc/components/Template";
 import { showErrorToast } from "@/shared/hooks/showToast";
 import { useGoToRoute } from "@/shared/hooks/useGoToRoute";
 
-import { selectKycFiles, setKycFile } from "@/features/kyc/store/kycSlice";
 import { useAppDispatch, useAppSelector } from "@/core/store/hooks";
+import { selectKycFiles, setKycFile } from "@/features/kyc/store/kycSlice";
 import { logger } from "@/shared/utils/logger";
 import { ms, vs } from "@/shared/utils/responsive";
 import * as ImagePicker from "expo-image-picker";

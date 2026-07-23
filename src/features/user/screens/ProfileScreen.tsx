@@ -1,12 +1,8 @@
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
-import { useNotificationsQuery } from "@/features/notifications/api/notificationsApi";
-import { useGetPriceAlertsQuery } from "@/features/user/api/priceAlertsApi";
-import useOtherSettings from "@/features/user/hooks/useOtherSettings";
-import useProfile from "@/features/user/hooks/useProfile";
-import { FIAT_CURRENCIES, FiatCurrency } from "@/features/user/types/profile";
+import LogOutBtn from "@/features/auth";
+import { useNotificationsQuery } from "@/features/notifications";
 import ErrorState from "@/shared/components/ErrorComponent";
-import LogOutBtn from "@/shared/components/LogOutBtn";
 import { ModalSelector } from "@/shared/components/OptionPicker";
 import { Spacer } from "@/shared/components/Spacer";
 import Template from "@/shared/components/Template";
@@ -15,7 +11,11 @@ import { useBackToHome } from "@/shared/hooks/useBackToHome";
 import { Href, useRouter } from "expo-router";
 import React from "react";
 import { Image, View } from "react-native";
+import { useGetPriceAlertsQuery } from "../api/priceAlertsApi";
 import { ListItem } from "../components/ListItem";
+import useOtherSettings from "../hooks/useOtherSettings";
+import useProfile from "../hooks/useProfile";
+import { FIAT_CURRENCIES, FiatCurrency } from "../types/profile";
 
 const ProfileScreen = () => {
   useBackToHome();

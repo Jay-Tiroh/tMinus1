@@ -1,5 +1,4 @@
-import { SelectorOption } from "@/components/OptionPicker";
-import { RequireAtLeastOne } from "@/types/utility";
+import { SelectorOption } from "@/shared/components/OptionPicker";
 
 export type FiatCurrency =
   "USD" | "NGN" | "EUR" | "GBP" | "CAD" | "AUD" | "JPY" | "CHF";
@@ -110,7 +109,7 @@ export interface ProfileUpdateRequestData {
   phone: string;
   avatarUrl: string;
 }
-export type UpdateProfileRequest = RequireAtLeastOne<ProfileUpdateRequestData>;
+export type UpdateProfileRequest = Partial<ProfileUpdateRequestData>;
 
 export interface UpdateSettingsRequestData {
   theme: string;
@@ -120,8 +119,7 @@ export interface UpdateSettingsRequestData {
   fiatCurrency: FiatCurrency;
   language: string;
 }
-export type UpdateSettingsRequest =
-  RequireAtLeastOne<UpdateSettingsRequestData>;
+export type UpdateSettingsRequest = Partial<UpdateSettingsRequestData>;
 
 export interface SettingsMeta {
   requestId: string;

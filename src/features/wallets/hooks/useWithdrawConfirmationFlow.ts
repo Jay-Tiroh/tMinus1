@@ -3,7 +3,7 @@ import { useRequestWithdrawalMutation } from "@/features/wallets/api/walletsApi"
 import {
   clearWithdrawalDraft,
   setLastWithdrawal,
-} from "@/features/wallets/storage/walletsSlice";
+} from "@/features/wallets/store/walletsSlice";
 import { showErrorToast } from "@/shared/hooks/showToast";
 import { useGoToRoute } from "@/shared/hooks/useGoToRoute";
 import { logger } from "@/shared/utils/logger";

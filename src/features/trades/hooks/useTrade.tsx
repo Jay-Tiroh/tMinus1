@@ -1,17 +1,17 @@
+import { useAppDispatch, useAppSelector } from "@/core/store/hooks";
+import { showErrorToast } from "@/shared/hooks/showToast";
 import {
   useCreateQuoteMutation,
   useExecuteQuoteMutation,
   useGetQuoteQuery,
-} from "@/features/trades/api/tradesApi";
+} from "../api/tradesApi";
 import {
   clearTrade,
   setActiveQuote,
   setLastQuoteRequest,
   setLastTransaction,
-} from "@/features/trades/storage/tradesSlice";
-import { CreateQuoteRequest } from "@/features/trades/types/trades.types";
-import { showErrorToast } from "@/shared/hooks/showToast";
-import { useAppDispatch, useAppSelector } from "@/core/store/hooks";
+} from "../store/tradesSlice";
+import { CreateQuoteRequest } from "../types/trades.types";
 
 import { getErrorMessage } from "@/shared/utils/errors";
 import { logger } from "@/shared/utils/logger";

@@ -1,8 +1,8 @@
+import { baseApi } from "@/core/store/baseApi";
 import {
   WatchlistAssetsResponse,
   WatchlistSymbolsResponse,
 } from "@/features/markets/types/watchlist";
-import { baseApi } from "@/core/store/services/baseApi";
 
 export const watchlistApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({

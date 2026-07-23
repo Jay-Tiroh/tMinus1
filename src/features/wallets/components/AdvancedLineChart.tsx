@@ -1,10 +1,10 @@
 import { Colors } from "@/constants/Colors";
 import { Chart } from "@/features/markets";
+import { useFiat } from "@/features/user";
 import { PortfolioChartPoint } from "@/features/wallets/types/wallets";
 import ChangeText from "@/shared/components/ChangeText";
 import TextBlock from "@/shared/components/TextBlock";
 import { ThemedText } from "@/shared/components/ThemedText";
-import useFiat from "@/shared/hooks/useFiat";
 
 import { formatCurrency } from "@/shared/utils/formatCurrency";
 import React, { useMemo, useState } from "react";

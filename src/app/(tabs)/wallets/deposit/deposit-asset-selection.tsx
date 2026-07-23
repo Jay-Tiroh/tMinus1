@@ -1,4 +1,4 @@
-import DepositAssetSelectionScreen from "@/components/screens/tabs/wallets/DepositAssetSelectionScreen";
+import { DepositAssetSelectionScreen } from "@/features/wallets";
 
 export default function DepositAssetSelection() {
   return <DepositAssetSelectionScreen />;

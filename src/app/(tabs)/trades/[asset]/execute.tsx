@@ -1,4 +1,4 @@
-import ExecuteScreen from "@/features/trades/screens/ExecuteScreen";
+import { ExecuteScreen } from "@/features/trades";
 
 export default function Execute() {
   return <ExecuteScreen />;

@@ -1,7 +1,7 @@
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { TABS, TabBarColors, TabBarStyle } from "@/constants/TabsConfig";
-import { usePushRegistration } from "@/shared/hooks/usePushRegistration";
+import { usePushRegistration } from "@/features/notifications";
 import { Tabs } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SvgProps } from "react-native-svg";

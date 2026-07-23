@@ -1,7 +1,7 @@
-import { useSimulateDepositMutation } from "@/features/wallets/api/walletsApi";
-import { setLastDeposit } from "@/features/wallets/storage/walletsSlice";
-import { showErrorToast } from "@/shared/hooks/showToast";
 import { useAppDispatch } from "@/core/store/hooks";
+import { useSimulateDepositMutation } from "@/features/wallets/api/walletsApi";
+import { setLastDeposit } from "@/features/wallets/store/walletsSlice";
+import { showErrorToast } from "@/shared/hooks/showToast";
 import { getErrorMessage } from "@/shared/utils/errors";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";

@@ -1,6 +1,6 @@
 import { Colors } from "@/constants/Colors";
 import { CoinList } from "@/features/home/components/CoinList";
-import { Asset } from "@/features/markets/types/assets";
+import { Asset } from "@/features/markets";
 import { ThemedText } from "@/shared/components/ThemedText";
 import React from "react";
 

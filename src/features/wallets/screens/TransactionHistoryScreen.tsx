@@ -1,7 +1,7 @@
-import CryptoAssetItem from "@/components/wallets/CryptoAssetItem";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
+import CryptoAssetItem from "@/features/wallets/components/CryptoAssetItem";
 import { useTransactions } from "@/features/wallets/hooks/useTransactions";
 import Loader from "@/shared/components/Loader";
 import { Spacer } from "@/shared/components/Spacer";

@@ -1,12 +1,12 @@
 // api/tradesApi.ts
 
+import { baseApi } from "@/core/store/baseApi";
 import {
   CreateQuoteRequest,
   ExecuteQuoteRequest,
   ExecuteQuoteResponse,
   QuoteResponse,
 } from "@/features/trades";
-import { baseApi } from "@/core/store/services/baseApi";
 
 const tradesApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({

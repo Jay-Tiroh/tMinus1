@@ -1,20 +1,20 @@
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
-import { ConfigType } from "@/features/trades/screens/QuoteScreen";
-import { showErrorToast } from "@/shared/hooks/showToast";
-import { useGoToRoute } from "@/shared/hooks/useGoToRoute";
-import Template from "@/shared/components/Template";
-import { useGetPriceAlertsQuery } from "@/store/services/priceAlertsApi";
 import {
   CreatedPriceAlert,
   PriceAlert,
   UpdatedPriceAlert,
-} from "@/types/priceAlerts";
+  useGetPriceAlertsQuery,
+} from "@/features/user";
+import Template from "@/shared/components/Template";
+import { showErrorToast } from "@/shared/hooks/showToast";
+import { useGoToRoute } from "@/shared/hooks/useGoToRoute";
 import { ms } from "@/shared/utils/responsive";
 import { useFocusEffect, useLocalSearchParams } from "expo-router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { View } from "react-native";
 
+import { ConfigType } from "@/features/trades/screens/QuoteScreen";
 import {
   AlertAction,
   AlertSuccess,

@@ -1,8 +1,8 @@
 import {
+  useProfileQuery,
   UserVerification,
   VerificationLimits,
-} from "@/features/user/types/profile";
-import { useProfileQuery } from "@/store/services/profileApi";
+} from "@/features/user";
 
 interface UseKycReturn {
   verification: UserVerification | undefined;

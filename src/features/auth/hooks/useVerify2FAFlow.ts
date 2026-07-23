@@ -5,7 +5,7 @@ import { saveToken } from "@/shared/utils/secureStore";
 import { useRouter } from "expo-router";
 import { RefObject } from "react";
 import { OtpInputRef } from "react-native-otp-entry";
-import { setCredentials } from "../storage/authSlice";
+import { setCredentials } from "../store/authSlice";
 
 export const useVerify2FAFlow = () => {
   const router = useRouter();

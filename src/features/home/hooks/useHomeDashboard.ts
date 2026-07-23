@@ -1,5 +1,5 @@
 import { useTrendingAssets, useWatchlist } from "@/features/markets";
-import useProfile from "@/features/user/hooks/useProfile";
+import { useProfile } from "@/features/user";
 import { useTransactions } from "@/features/wallets";
 import { formatAmount } from "@/shared/utils/formatCurrency";
 import { Href } from "expo-router";

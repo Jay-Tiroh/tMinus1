@@ -40,4 +40,5 @@ export type {
 } from "./types/assets";
 
 // 5. Components
+export { AssetPickerModal } from "./components/AssetPicker";
 export { default as Chart } from "./components/LineChart";

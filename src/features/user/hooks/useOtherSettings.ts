@@ -1,16 +1,10 @@
-import {
-  useSettingsQuery,
-  useUpdateSettingsMutation,
-} from "@/features/user/api/profileApi";
-import {
-  FiatCurrency,
-  UpdateSettingsRequest,
-} from "@/features/user/types/profile";
-import { showErrorToast, showSuccessToast } from "@/shared/hooks/showToast";
 import { useAppDispatch } from "@/core/store/hooks";
-import { updateUserSettings } from "@/features/auth/storage/authSlice";
+import { updateUserSettings } from "@/features/auth";
+import { showErrorToast, showSuccessToast } from "@/shared/hooks/showToast";
 import { getErrorMessage } from "@/shared/utils/errors";
 import { logger } from "@/shared/utils/logger";
+import { useSettingsQuery, useUpdateSettingsMutation } from "../api/profileApi";
+import { FiatCurrency, UpdateSettingsRequest } from "../types/profile";
 
 export default function useOtherSettings() {
   const [

@@ -1,7 +1,7 @@
-import { ButtonVariant } from "@/shared/components/ThemedButton";
 import { Colors } from "@/constants/Colors";
+import { useFiat } from "@/features/user";
+import { ButtonVariant } from "@/shared/components/ThemedButton";
 import { formatAmount } from "@/shared/utils/formatCurrency";
-import useFiat from "@/shared/hooks/useFiat";
 
 // ─── Utility Types ─────────────────────────────────────────────────────────────
 type Action = "Buy" | "Sell" | "Swap";

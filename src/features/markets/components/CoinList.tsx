@@ -1,9 +1,8 @@
 import { Colors } from "@/constants/Colors";
+import { Asset, useWatchlist } from "@/features/markets";
 import RemoveFromWatchlistModal from "@/features/markets/components/Modal";
-import { Asset } from "@/features/markets/types/assets";
-import { showErrorToast, showSuccessToast } from "@/shared/hooks/showToast";
-import { useWatchlist } from "@/features/markets";
 import Loader from "@/shared/components/Loader";
+import { showErrorToast, showSuccessToast } from "@/shared/hooks/showToast";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useCallback, useEffect, useState } from "react";
 import {

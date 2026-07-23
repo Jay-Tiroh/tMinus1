@@ -1,3 +1,4 @@
+import { baseApi } from "@/core/store/baseApi";
 import {
   Asset,
   AssetDetailsEnvelope,
@@ -17,7 +18,6 @@ import {
   TrendingResponse,
 } from "@/features/markets/types/assets";
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
-import { baseApi } from "../../../core/store/services/baseApi";
 
 const marketsApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({

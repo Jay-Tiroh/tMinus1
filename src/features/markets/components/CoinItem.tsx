@@ -4,7 +4,8 @@ import Chart from "@/features/markets/components/LineChart";
 import ChangeText from "@/shared/components/ChangeText";
 import { CryptoIcon } from "@/shared/components/CryptoIcon";
 import { ThemedText } from "@/shared/components/ThemedText";
-import useFiat from "@/shared/hooks/useFiat";
+import { useFiat } from "@/features/user";
+
 import { formatCurrency } from "@/shared/utils/formatCurrency";
 import { Href, useRouter } from "expo-router";
 import React, { useState } from "react";

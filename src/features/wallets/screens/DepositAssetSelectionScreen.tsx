@@ -1,6 +1,6 @@
-import CryptoAssetItem from "@/components/wallets/CryptoAssetItem";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
+import CryptoAssetItem from "@/features/wallets/components/CryptoAssetItem";
 import { Spacer } from "@/shared/components/Spacer";
 import TextBlock from "@/shared/components/TextBlock";
 import { ThemedButton } from "@/shared/components/ThemedButton";

@@ -17,16 +17,14 @@ import Add from "@/assets/icons/markets/add-circle.svg";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
 import { useAssetChart, useWatchlist } from "@/features/markets";
-import CandlestickComponent from "@/features/trades/components/CandlestickComponent";
-import { useAssetRoute } from "@/features/trades/hooks/useAssetRoute";
-import useProfile from "@/features/user/hooks/useProfile";
+import { useFiat, useProfile } from "@/features/user";
 import { Spacer } from "@/shared/components/Spacer";
 import TextBlock from "@/shared/components/TextBlock";
 import { ThemedButton } from "@/shared/components/ThemedButton";
 import { ThemedText } from "@/shared/components/ThemedText";
 import { showErrorToast, showSuccessToast } from "@/shared/hooks/showToast";
 import { useBackToHome } from "@/shared/hooks/useBackToHome";
-import useFiat from "@/shared/hooks/useFiat";
+
 import { useSafeBottom } from "@/shared/hooks/useSafeBottom";
 import { getErrorMessage } from "@/shared/utils/errors";
 import {
@@ -34,10 +32,12 @@ import {
   formatCurrency,
 } from "@/shared/utils/formatCurrency";
 import { ms, s, vs } from "@/shared/utils/responsive";
+import CandlestickComponent from "../components/CandlestickComponent";
+import { useAssetRoute } from "../hooks/useAssetRoute";
 
+import { KycLocked } from "@/features/kyc";
 import ChangeText from "@/shared/components/ChangeText";
 import { CryptoIcon } from "@/shared/components/CryptoIcon";
-import KycLocked from "@/shared/components/KycLocked";
 import { AssetActionButtons } from "../components/AssetActionButtons";
 import { AssetStatsGrid } from "../components/AssetStatsGrid";
 

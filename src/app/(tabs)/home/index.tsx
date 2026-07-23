@@ -1,4 +1,4 @@
-import HomeScreen from "@/components/screens/tabs/home/HomeScreen";
+import { HomeScreen } from "@/features/home";
 
 const Home = () => {
   return <HomeScreen />;

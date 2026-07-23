@@ -1,14 +1,14 @@
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
-import Approved from "@/features/kyc/components/Approved";
-import Failed from "@/features/kyc/components/Failed";
-import InProgress from "@/features/kyc/components/InProgress";
-import Template from "@/features/kyc/components/Template";
-import { useGoToRoute } from "@/shared/hooks/useGoToRoute";
 import { useKyc } from "@/features/kyc/hooks/useKyc";
+import { useGoToRoute } from "@/shared/hooks/useGoToRoute";
 import { ms } from "@/shared/utils/responsive";
 import React, { useEffect } from "react";
 import { StyleSheet } from "react-native";
+import { Approved } from "../components/Approved";
+import { Failed } from "../components/Failed";
+import { InProgress } from "../components/InProgress";
+import { Template } from "../components/Template";
 
 const Config = [
   {

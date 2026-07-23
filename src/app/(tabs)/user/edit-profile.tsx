@@ -1,4 +1,4 @@
-import EditProfileScreen from "@/features/user/screens/EditProfileScreen";
+import { EditProfileScreen } from '@/features/user';
 
 export default function EditProfile() {
   return <EditProfileScreen />;

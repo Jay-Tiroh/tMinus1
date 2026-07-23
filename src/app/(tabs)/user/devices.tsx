@@ -1,4 +1,4 @@
-import DevicesScreen from "@/features/user/screens/DevicesScreen";
+import { DevicesScreen } from '@/features/user';
 
 export default function Devices() {
   return <DevicesScreen />;

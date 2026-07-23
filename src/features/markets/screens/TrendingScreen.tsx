@@ -4,13 +4,13 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
-import CoinList from "@/features/markets/components/CoinList";
-import { useTrendingAssets } from "@/hooks/useTrendingAssets";
 import { Spacer } from "@/shared/components/Spacer";
 import TextBlock from "@/shared/components/TextBlock";
 import { useSafeBottom } from "@/shared/hooks/useSafeBottom";
 import { vs } from "@/shared/utils/responsive";
+import { CoinList } from "../components/CoinList";
 import { TopGainer } from "../components/TopGainer";
+import { useTrendingAssets } from "../hooks/useTrendingAssets";
 
 export const TrendingScreen = () => {
   const bottomPadding = useSafeBottom();

@@ -1,4 +1,4 @@
-import WatchlistScreen from "@/components/screens/tabs/markets/WatchlistScreen";
+import { WatchlistScreen } from "@/features/markets";
 
 const Watchlist = () => {
   return <WatchlistScreen />;

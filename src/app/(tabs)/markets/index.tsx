@@ -1,4 +1,4 @@
-import MarketsScreen from "@/features/markets/screens/MarketsScreen";
+import { MarketsScreen } from '@/features/markets';
 
 const Markets = () => {
   return <MarketsScreen />;

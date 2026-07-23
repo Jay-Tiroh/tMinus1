@@ -1,11 +1,12 @@
 import { Colors } from "@/constants/Colors";
+import { Asset, FeaturedMeta } from "@/features/markets";
 import Chart from "@/features/markets/components/LineChart";
-import { Asset, FeaturedMeta } from "@/features/markets/types/assets";
+import { useFiat } from "@/features/user";
 import { Spacer } from "@/shared/components/Spacer";
 import TextBlock from "@/shared/components/TextBlock";
 import { ThemedButton } from "@/shared/components/ThemedButton";
 import { ThemedText } from "@/shared/components/ThemedText";
-import useFiat from "@/shared/hooks/useFiat";
+
 import { formatAmount } from "@/shared/utils/formatCurrency";
 import { ms, s, vs } from "@/shared/utils/responsive";
 import { Href, useRouter } from "expo-router";

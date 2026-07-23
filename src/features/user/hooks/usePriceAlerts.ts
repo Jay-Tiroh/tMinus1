@@ -1,12 +1,11 @@
-import { useAssetRoute } from "@/features/trades/hooks/useAssetRoute";
+import { useAssetRoute } from "@/features/trades";
+import { showErrorToast, showSuccessToast } from "@/shared/hooks/showToast";
 import {
   useDeletePriceAlertMutation,
   useGetPriceAlertsQuery,
   useUpdatePriceAlertMutation,
-} from "@/features/user/api/priceAlertsApi";
-import { showErrorToast, showSuccessToast } from "@/shared/hooks/showToast";
+} from "../api/priceAlertsApi";
 
-import { RTKErrorResponse } from "@/types/utility";
 import { getErrorMessage } from "@/shared/utils/errors";
 import { useState } from "react";
 
@@ -32,10 +31,9 @@ export const usePriceAlerts = () => {
       await deletePriceAlert(alertId).unwrap();
       setModalVisible(false);
     } catch (error: unknown) {
-      const err = error as RTKErrorResponse;
       showErrorToast({
         title: "Error",
-        message: err?.data?.message ?? "Failed to delete alert.",
+        message: getErrorMessage(error) ?? "Failed to delete alert.",
       });
     }
   };

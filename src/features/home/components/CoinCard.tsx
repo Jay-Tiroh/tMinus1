@@ -1,10 +1,9 @@
 import { Colors } from "@/constants/Colors";
-import { useAssetChart } from "@/features/markets";
-import Chart from "@/features/markets/components/LineChart";
-import { Asset } from "@/features/markets/types/assets";
+import { Asset, Chart, useAssetChart } from "@/features/markets";
+import { useFiat } from "@/features/user";
 import { CryptoIcon } from "@/shared/components/CryptoIcon";
 import { ThemedText } from "@/shared/components/ThemedText";
-import useFiat from "@/shared/hooks/useFiat";
+
 import { formatCurrency } from "@/shared/utils/formatCurrency";
 import { ms, s, vs } from "@/shared/utils/responsive";
 import { memo, useState } from "react";

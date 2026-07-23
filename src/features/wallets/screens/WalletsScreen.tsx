@@ -1,8 +1,8 @@
 import { GeneralStyles } from "@/constants/themes";
+import { KycLocked } from "@/features/kyc";
 import ActionTabs from "@/features/wallets/components/ActionTabs";
 import Balance from "@/features/wallets/components/Balance";
 import CryptoAssetItem from "@/features/wallets/components/CryptoAssetItem";
-import KycLocked from "@/shared/components/KycLocked";
 import { Spacer } from "@/shared/components/Spacer";
 import Template from "@/shared/components/Template";
 import { useBackToHome } from "@/shared/hooks/useBackToHome";

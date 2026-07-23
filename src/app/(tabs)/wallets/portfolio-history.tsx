@@ -1,4 +1,4 @@
-import PortfolioHistoryScreen from "@/features/wallets/screens/PortfolioHistoryScreen";
+import { PortfolioHistoryScreen } from '@/features/wallets';
 
 export default function PortfolioHistory() {
   return <PortfolioHistoryScreen />;

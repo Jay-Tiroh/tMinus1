@@ -1,29 +1,26 @@
-import ModalSelector from "@/components/ModalSelector";
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
-import Template from "@/features/kyc/components/Template";
-import { setStep1Data } from "@/features/kyc/store/kycSlice";
-import {
-  KycStep1FormValues,
-  kycStep1Schema,
-} from "@/features/kyc/validation/kycSchemas";
+import { useAppDispatch } from "@/core/store/hooks";
+import ModalSelector from "@/shared/components/ModalSelector";
 import { Spacer } from "@/shared/components/Spacer";
 import TextBlock from "@/shared/components/TextBlock";
 import { ThemedText } from "@/shared/components/ThemedText";
 import { useGoToRoute } from "@/shared/hooks/useGoToRoute";
-import { useAppDispatch } from "@/core/store/hooks";
 import { ms, s, vs } from "@/shared/utils/responsive";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Pressable, StyleSheet, TextInput, View } from "react-native";
+import { Template } from "../components/Template";
+import { setStep1Data } from "../store/kycSlice";
 import { KycDocumentType } from "../types/kyc.types";
 import {
   getDocumentByLabel,
   KYC_DOCUMENT_LABELS,
 } from "../utils/kyc.constants";
+import { KycStep1FormValues, kycStep1Schema } from "../validation/kycSchemas";
 
 export const Step1Screen = () => {
   const [isDocTypeModalVisible, setDocTypeModalVisible] = useState(false);

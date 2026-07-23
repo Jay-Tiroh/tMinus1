@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Colors } from "@/constants/Colors";
 import { GeneralStyles } from "@/constants/themes";
 import { useWatchlist } from "@/features/markets";
-import CoinList from "@/features/markets/components/CoinList";
+import { CoinList } from "@/features/markets/components/CoinList";
 import { useSafeBottom } from "@/shared/hooks/useSafeBottom";
 import { vs } from "@/shared/utils/responsive";
 import { WatchlistFooter } from "../components/WatchlistFooter";

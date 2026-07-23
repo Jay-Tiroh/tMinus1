@@ -1,11 +1,11 @@
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
-import { formatAmount } from "@/shared/utils/formatCurrency";
-import { AssetPickerModal } from "@/shared/components/AssetPicker";
+import { AssetPickerModal } from "@/features/markets";
 import { Spacer } from "@/shared/components/Spacer";
 import Template from "@/shared/components/Template";
 import { ThemedText } from "@/shared/components/ThemedText";
+import { formatAmount } from "@/shared/utils/formatCurrency";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import React from "react";
 import { Pressable, TextInput, View } from "react-native";

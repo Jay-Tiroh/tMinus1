@@ -1,13 +1,11 @@
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
-import { ConfigType } from "@/features/trades/screens/QuoteScreen";
-import { useAssetRoute } from "@/features/trades/hooks/useAssetRoute";
-import useTrade from "@/hooks/useTrade";
 import Template from "@/shared/components/Template";
 import { ms } from "@/shared/utils/responsive";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useRef, useState } from "react";
 import { Keyboard, View } from "react-native";
+import { useAssetRoute } from "../hooks/useAssetRoute";
 
 // Import new boundary dependencies
 import {
@@ -15,6 +13,8 @@ import {
   ExecuteConfirm,
   ExecuteFailed,
 } from "../components/ExecuteBlocks";
+import useTrade from "../hooks/useTrade";
+import { ConfigType } from "../screens/QuoteScreen";
 
 type ScreenState = "confirm" | "completed" | "failed";
 

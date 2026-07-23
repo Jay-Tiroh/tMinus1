@@ -1,4 +1,4 @@
-import QuoteScreen from "@/features/trades/screens/QuoteScreen";
+import { QuoteScreen } from "@/features/trades";
 
 export default function Quote() {
   return <QuoteScreen />;

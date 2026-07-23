@@ -1,10 +1,10 @@
+import { baseApi } from "@/core/store/baseApi";
 import {
   DeleteDeviceResponse,
   DevicesResponse,
   RegisterDeviceRequest,
   RegisterDeviceResponse,
 } from "@/features/user/types/devices";
-import { baseApi } from "@/core/store/services/baseApi";
 
 const devicesApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({

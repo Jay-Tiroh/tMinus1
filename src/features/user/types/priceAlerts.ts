@@ -1,5 +1,3 @@
-import { RequireAtLeastOne } from "@/types/utility";
-
 export interface AlertAsset {
   symbol: string;
   name: string;
@@ -39,8 +37,7 @@ interface UpdatePriceAlertRequestData {
   isActive: boolean;
 }
 
-export type UpdatePriceAlertRequest =
-  RequireAtLeastOne<UpdatePriceAlertRequestData>;
+export type UpdatePriceAlertRequest = Partial<UpdatePriceAlertRequestData>;
 
 export interface UpdatedPriceAlert {
   id: string;
