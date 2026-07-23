@@ -7,7 +7,7 @@ import walletsReducer from "../features/wallets/storage/walletsSlice";
 import { baseApi } from "./services/baseApi";
 import bottomSheetReducer from "./slices/BottomSheetSlice";
 import menuReducer from "./slices/MenuSlice";
-import authReducer from "./slices/authSlice";
+import authReducer from "../features/auth/storage/authSlice";
 import userReducer from "./slices/userSlice";
 export const store = configureStore({
   reducer: {

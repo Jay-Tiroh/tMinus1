@@ -1,18 +1,14 @@
 import { Colors } from "@/constants/Colors";
 import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
-import { showErrorToast, showSuccessToast } from "@/shared/hooks/showToast";
-import { useBiometrics } from "@/shared/hooks/useBiometrics";
-import { useLogout } from "@/shared/hooks/useLogout";
 import { Spacer } from "@/shared/components/Spacer";
 import Template from "@/shared/components/Template";
 import { ThemedButton } from "@/shared/components/ThemedButton";
 import { ThemedText } from "@/shared/components/ThemedText";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { useLoginMutation } from "@/store/services/authApi";
-import { setCredentials, unlockSession } from "@/store/slices/authSlice";
+import { useBiometrics } from "@/shared/hooks/useBiometrics";
+import { useLogout } from "@/shared/hooks/useLogout";
+import { useAppSelector } from "@/store/hooks";
 import { ms, s, vs } from "@/utils/responsive";
-import { saveToken } from "@/utils/secureStore";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -23,15 +19,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-
-const isTwoFactorResponse = (
-  data: unknown,
-): data is {
-  requiresTwoFactor: true;
-  challengeId: string;
-  expiresAt: string;
-  attemptsRemaining: number;
-} => typeof data === "object" && data !== null && "requiresTwoFactor" in data;
+import { useWelcomeBackFlow } from "../hooks/useWelcomeBackFlow";
 
 const WelcomeBackScreen = () => {
   const [password, setPassword] = useState("");
@@ -39,8 +27,6 @@ const WelcomeBackScreen = () => {
   const [passwordError, setPasswordError] = useState("");
 
   const router = useRouter();
-  const dispatch = useAppDispatch();
-
   const user = useAppSelector((state) => state.auth.user);
 
   const initials =
@@ -52,12 +38,9 @@ const WelcomeBackScreen = () => {
       .toUpperCase() ?? "U";
 
   const { isSupported, isEnrolled, authenticate } = useBiometrics();
-
-  const [login, { isLoading: isLoginLoading }] = useLoginMutation();
-
   const { performLogout, isLoading: isLoggingOut } = useLogout();
-
-  const handleNotYou = performLogout;
+  const { handleSignIn, handleBiometrics, isLoginLoading } =
+    useWelcomeBackFlow();
 
   useEffect(() => {
     if (!user) {
@@ -89,66 +72,14 @@ const WelcomeBackScreen = () => {
     if (passwordError) validatePassword(text);
   };
 
-  const handleSignIn = async () => {
-    if (!user) return;
+  const onSignInPress = () => {
     if (!validatePassword(password)) return;
-
-    try {
-      const result = await login({
-        loginType: "email",
-        identifier: user.email,
-        password,
-      }).unwrap();
-
-      if (isTwoFactorResponse(result)) {
-        router.replace({
-          pathname: "/verify-2fa",
-          params: {
-            challengeId: result.challengeId,
-            expiresAt: result.expiresAt,
-            attemptsRemaining: String(result.attemptsRemaining),
-          },
-        });
-        return;
-      }
-
-      dispatch(
-        setCredentials({
-          user: result.user,
-          token: result.accessToken,
-          refreshToken: result.refreshToken,
-        }),
-      );
-      dispatch(unlockSession());
-      await saveToken("SESSION_LOCKED", "false");
-
-      router.replace("/(tabs)/home");
-    } catch {
-      showErrorToast({
-        title: "Authentication Failed",
-        message: "Incorrect password",
-      });
-    }
+    handleSignIn(user, password);
   };
 
-  const handleBiometrics = async () => {
+  const onBiometricsPress = () => {
     if (!user?.settings.biometricEnabled || !isSupported || !isEnrolled) return;
-
-    const result = await authenticate(`Unlock ${user.fullName}`);
-
-    if (!result.success) {
-      showErrorToast({
-        title: "Authentication Failed",
-        message: "Biometric authentication failed.",
-      });
-      return;
-    }
-
-    dispatch(unlockSession());
-    await saveToken("SESSION_LOCKED", "false");
-
-    showSuccessToast({ title: "Welcome Back" });
-    router.replace("/(tabs)/home");
+    handleBiometrics(user, authenticate);
   };
 
   const isPasswordValid = password.length >= 8;
@@ -162,7 +93,7 @@ const WelcomeBackScreen = () => {
       ctaProps={{
         title: "Sign in",
         variant: "primary",
-        onPress: handleSignIn,
+        onPress: onSignInPress,
         disabled: !isPasswordValid || isLoginLoading,
       }}
       ctaFooter={
@@ -171,13 +102,13 @@ const WelcomeBackScreen = () => {
             <ThemedButton
               title="Use Biometric Authentication"
               variant="default"
-              onPress={handleBiometrics}
+              onPress={onBiometricsPress}
               style={styles.secondaryButton}
             />
           )}
 
           <TouchableOpacity
-            onPress={handleNotYou}
+            onPress={performLogout}
             activeOpacity={0.7}
             style={styles.notYouCta}
             disabled={isLoggingOut}

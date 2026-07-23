@@ -1,7 +1,10 @@
 import type { RootState } from "@/store";
-import { clearCredentials, setCredentials } from "@/store/slices/authSlice";
+import {
+  clearCredentials,
+  setCredentials,
+} from "@/features/auth/storage/authSlice";
 import { saveToken, clearTokens } from "@/utils/secureStore";
-import type { RefreshResponse } from "@/types/auth";
+import type { RefreshResponse } from "@/features/auth/types/auth";
 import type {
   BaseQueryFn,
   FetchArgs,

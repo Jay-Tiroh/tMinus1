@@ -1,7 +1,7 @@
 import Facebook from "@/assets/icons/facebook.svg";
 import Google from "@/assets/icons/google.svg";
-import { ThemedButton } from "@/shared/components/ThemedButton";
 import { Colors } from "@/constants/Colors";
+import { ThemedButton } from "@/shared/components/ThemedButton";
 import { ms, s, vs } from "@/utils/responsive";
 import React from "react";
 import {
@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { ThemedText } from "../../shared/components/ThemedText";
+import { ThemedText } from "../../../shared/components/ThemedText";
 
 const CTA = ({
   onPress,

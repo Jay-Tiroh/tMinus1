@@ -8,7 +8,7 @@ import {
 } from "@/features/user/types/profile";
 import { showErrorToast, showSuccessToast } from "@/shared/hooks/showToast";
 import { useAppDispatch } from "@/store/hooks";
-import { updateUserSettings } from "@/store/slices/authSlice";
+import { updateUserSettings } from "@/features/auth/storage/authSlice";
 import { getErrorMessage } from "@/utils/errors";
 import { logger } from "@/utils/logger";
 

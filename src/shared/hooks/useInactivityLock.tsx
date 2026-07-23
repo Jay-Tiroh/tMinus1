@@ -1,6 +1,6 @@
 // hooks/useInactivityLock.ts
 import { useAppDispatch } from "@/store/hooks";
-import { lockSession } from "@/store/slices/authSlice";
+import { lockSession } from "@/features/auth/storage/authSlice";
 import { saveToken } from "@/utils/secureStore";
 import { useRouter } from "expo-router";
 import { useEffect, useRef } from "react";

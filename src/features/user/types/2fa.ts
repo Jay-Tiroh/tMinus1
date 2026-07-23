@@ -1,4 +1,4 @@
-import { AuthResponseData } from "@/types/auth";
+import { AuthResponseData } from "@/features/auth/types/auth";
 
 export interface Setup2FAResponseData {
   secret: string;

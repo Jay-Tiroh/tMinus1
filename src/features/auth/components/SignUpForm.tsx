@@ -1,98 +1,18 @@
-import { ThemedInput } from "@/components/auth/ThemedTextInput";
 import { Colors } from "@/constants/Colors";
 import { formatPhoneInternational } from "@/helpers/functions";
-import { signupSchema } from "@/schemas/authSchemas";
 import { Spacer } from "@/shared/components/Spacer";
 import { ThemedButton } from "@/shared/components/ThemedButton";
 import { ThemedText } from "@/shared/components/ThemedText";
-import { showErrorToast } from "@/shared/hooks/showToast"; // Adjust import path if needed
-import { useValidateSignupMutation } from "@/store/services/authApi"; // Adjust import path if needed
-
 import { ms, vs } from "@/utils/responsive";
 import Feather from "@expo/vector-icons/Feather";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "expo-router";
 import React from "react";
-import { useForm } from "react-hook-form";
 import { StyleSheet, View } from "react-native";
-import { z } from "zod";
-
-// 1. Extend your base schema to handle the confirm password check
-const signUpFormSchema = signupSchema
-  .extend({
-    confirm: z.string().min(1, "Please confirm your password"),
-  })
-  .refine((data) => data.password === data.confirm, {
-    message: "Passwords do not match",
-    path: ["confirm"],
-  });
-
-type SignUpFormValues = z.infer<typeof signUpFormSchema>;
+import { useSignUpFlow } from "../hooks/useSignUpFlow";
+import { ThemedInput } from "./ThemedTextInput";
 
 const SignUpForm = () => {
-  const router = useRouter();
-
-  // 2. Initialize React Hook Form
-  const { control, handleSubmit } = useForm<SignUpFormValues>({
-    resolver: zodResolver(signUpFormSchema),
-    defaultValues: {
-      fullName: "",
-      email: "",
-      phone: "",
-      password: "",
-      confirm: "",
-    },
-    mode: "onChange",
-  });
-
-  // 3. Initialize API Mutations
-  const [validateSignup, { isLoading: isValidating }] =
-    useValidateSignupMutation();
-
-  const isLoading = isValidating;
-
-  // 4. Form Submission Flow
-  const onSubmit = async (data: SignUpFormValues) => {
-    try {
-      // Step A: Validate the details first
-      const validationResult = await validateSignup({
-        email: data.email,
-        phone: data.phone.replace(/\s/g, ""),
-      }).unwrap();
-
-      if (!validationResult.canRegister) {
-        // Extract specific error messages from the backend validation response
-        const emailError = !validationResult.email?.available
-          ? validationResult.email?.message
-          : null;
-        const phoneError = !validationResult.phone?.available
-          ? validationResult.phone?.message
-          : null;
-
-        showErrorToast({
-          title: "Registration Unavailable",
-          message:
-            emailError ||
-            phoneError ||
-            "These details cannot be used to register.",
-        });
-        return;
-      }
-
-      router.replace({
-        pathname: "/verify",
-        params: { email: data.email },
-      });
-    } catch (error: any) {
-      showErrorToast({
-        title: "Registration Failed",
-        message:
-          error?.data?.message ||
-          "An unexpected error occurred. Please try again.",
-      });
-    }
-  };
+  const { control, isLoading, handleSubmit } = useSignUpFlow();
 
   return (
     <View style={{ flex: 1 }}>
@@ -165,7 +85,7 @@ const SignUpForm = () => {
         title={isLoading ? "Signing up..." : "Sign up"}
         variant="primary"
         disabled={isLoading}
-        onPress={handleSubmit(onSubmit)}
+        onPress={handleSubmit}
       />
 
       <Spacer size={40} />

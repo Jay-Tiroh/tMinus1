@@ -5,27 +5,20 @@ import Template from "@/shared/components/Template";
 import TextBlock from "@/shared/components/TextBlock";
 import { ThemedButton } from "@/shared/components/ThemedButton";
 import { ThemedText } from "@/shared/components/ThemedText";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 
-import { ThemedInput } from "@/components/auth/ThemedTextInput";
-import { useVerify2FAMutation } from "@/features/user/api/2faApi";
-import { showErrorToast, showSuccessToast } from "@/shared/hooks/showToast";
-import { useAppDispatch } from "@/store/hooks";
-import { setCredentials } from "@/store/slices/authSlice";
 import { ms, s, vs } from "@/utils/responsive";
-import { saveToken } from "@/utils/secureStore";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import React, { useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { OtpInput, OtpInputRef } from "react-native-otp-entry";
+import { ThemedInput } from "../components/ThemedTextInput";
+import { useVerify2FAFlow } from "../hooks/useVerify2FAFlow";
 
 const OTP_LENGTH = 6;
 const RECOVERY_CODE_LENGTH = 10;
 
 const Verify2FAScreen = () => {
-  const router = useRouter();
-  const dispatch = useAppDispatch();
-
   const { challengeId, attemptsRemaining } = useLocalSearchParams<{
     challengeId: string;
     expiresAt: string;
@@ -35,7 +28,7 @@ const Verify2FAScreen = () => {
   const [code, setCode] = useState("");
   const [recoveryCode, setRecoveryCode] = useState("");
   const [isRecoveryMode, setIsRecoveryMode] = useState(false);
-  const [verify2FA, { isLoading }] = useVerify2FAMutation();
+  const { handleVerify, isLoading } = useVerify2FAFlow();
 
   const otpRef = useRef<OtpInputRef>(null);
 
@@ -44,50 +37,18 @@ const Verify2FAScreen = () => {
     isRecoveryMode && recoveryCode.length === RECOVERY_CODE_LENGTH;
   const canSubmit = isOtpReady || isRecoveryReady;
 
-  const handleVerify = async () => {
-    if (!canSubmit) return;
+  const onSubmit = () => {
+    if (!canSubmit || !challengeId) return;
 
-    try {
-      const payload = isRecoveryMode
-        ? { challengeId, recoveryCode }
-        : { challengeId, code };
-
-      const result = await verify2FA(payload).unwrap();
-
-      dispatch(
-        setCredentials({
-          user: result.user,
-          token: result.accessToken,
-          refreshToken: result.refreshToken,
-        }),
-      );
-
-      await saveToken("ACCESS_TOKEN", result.accessToken);
-      await saveToken("REFRESH_TOKEN", result.refreshToken);
-      await saveToken(
-        "BIOMETRIC_ENABLED",
-        String(result.user.settings.biometricEnabled),
-      );
-
-      showSuccessToast({
-        title: "Verification Successful",
-        message: "Welcome back!",
-      });
-
-      router.replace("/(tabs)/home");
-    } catch (error: any) {
-      showErrorToast({
-        title: "Verification Failed",
-        message: error?.data?.message ?? "Invalid code",
-      });
-
-      if (isRecoveryMode) {
-        setRecoveryCode("");
-      } else {
-        setCode("");
-        otpRef.current?.clear();
-      }
-    }
+    handleVerify({
+      challengeId,
+      code,
+      recoveryCode,
+      isRecoveryMode,
+      setCode,
+      setRecoveryCode,
+      otpRef,
+    });
   };
 
   const handleToggleMode = () => {
@@ -96,34 +57,6 @@ const Verify2FAScreen = () => {
     otpRef.current?.clear();
     setIsRecoveryMode((prev) => !prev);
   };
-
-  const CtaFooter = () => (
-    <View style={{ width: "100%", gap: vs(24) }}>
-      <ThemedButton
-        title={
-          isRecoveryMode
-            ? "Use authenticator app instead"
-            : "Use recovery code instead"
-        }
-        variant="default"
-        onPress={handleToggleMode}
-      />
-      <Spacer size={16} />
-      <View style={styles.protectedBox}>
-        <View style={styles.iconCircle}>
-          <ThemedText color={Colors.primaryClean} weight="bold">
-            ✓
-          </ThemedText>
-        </View>
-        <TextBlock
-          title="Protected account"
-          body="This extra step protects your trading balance and saved devices."
-          titleStyle={{ fontSize: ms(16), color: Colors.snowGray }}
-          bodyStyle={{ fontSize: ms(12), color: Colors.textMidGray }}
-        />
-      </View>
-    </View>
-  );
 
   return (
     <Template
@@ -137,9 +70,35 @@ const Verify2FAScreen = () => {
         title: isLoading ? "Verifying..." : "Continue",
         variant: "primary",
         disabled: !canSubmit || isLoading,
-        onPress: handleVerify,
+        onPress: onSubmit,
       }}
-      ctaFooter={<CtaFooter />}
+      ctaFooter={
+        <View style={{ width: "100%", gap: vs(24) }}>
+          <ThemedButton
+            title={
+              isRecoveryMode
+                ? "Use authenticator app instead"
+                : "Use recovery code instead"
+            }
+            variant="default"
+            onPress={handleToggleMode}
+          />
+          <Spacer size={16} />
+          <View style={styles.protectedBox}>
+            <View style={styles.iconCircle}>
+              <ThemedText color={Colors.primaryClean} weight="bold">
+                ✓
+              </ThemedText>
+            </View>
+            <TextBlock
+              title="Protected account"
+              body="This extra step protects your trading balance and saved devices."
+              titleStyle={{ fontSize: ms(16), color: Colors.snowGray }}
+              bodyStyle={{ fontSize: ms(12), color: Colors.textMidGray }}
+            />
+          </View>
+        </View>
+      }
     >
       <View style={GeneralStyles.wrapper}>
         <View style={styles.visualContainer}>

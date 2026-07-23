@@ -1,10 +1,10 @@
 import Ill from "@/assets/images/auth-success.svg";
+import { Colors } from "@/constants/Colors";
+import { Spacing } from "@/constants/Spacing";
 import { Spacer } from "@/shared/components/Spacer";
 import { ThemedButton } from "@/shared/components/ThemedButton";
 import { ThemedText } from "@/shared/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
-import { Colors } from "@/constants/Colors";
-import { Spacing } from "@/constants/Spacing";
+import { ThemedView } from "@/shared/components/ThemedView";
 import { s, vs } from "@/utils/responsive";
 import { useRouter } from "expo-router";
 import { ImageBackground, StyleSheet, View } from "react-native";

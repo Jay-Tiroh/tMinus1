@@ -1,11 +1,11 @@
-import NavHeader from "@/components/auth/NavHeader";
-import SignUpForm from "@/components/auth/SignUpForm";
-import { ThemedView } from "@/components/ThemedView";
 import { Spacing } from "@/constants/Spacing";
+import { ThemedView } from "@/shared/components/ThemedView";
 import { vs } from "@/utils/responsive";
 import React from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import NavHeader from "../components/NavHeader";
+import SignUpForm from "../components/SignUpForm";
 
 const SignUpScreen = () => {
   const insets = useSafeAreaInsets();

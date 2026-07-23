@@ -4,7 +4,10 @@ import { Fonts } from "@/constants/Fonts";
 import { GeneralStyles } from "@/constants/themes";
 import Template from "@/features/kyc/components/Template";
 import { setStep1Data } from "@/features/kyc/store/kycSlice";
-import { KycStep1FormValues, kycStep1Schema } from "@/schemas/kycSchemas";
+import {
+  KycStep1FormValues,
+  kycStep1Schema,
+} from "@/features/kyc/validation/kycSchemas";
 import { Spacer } from "@/shared/components/Spacer";
 import TextBlock from "@/shared/components/TextBlock";
 import { ThemedText } from "@/shared/components/ThemedText";

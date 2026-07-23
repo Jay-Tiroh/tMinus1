@@ -1,11 +1,12 @@
-import SignInForm from "@/components/auth/SignInForm";
-import SignUpForm from "@/components/auth/SignUpForm";
 import { Spacer } from "@/shared/components/Spacer";
 import TextBlock from "@/shared/components/TextBlock";
 import { ThemedText } from "@/shared/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
+import SignInForm from "../components/SignInForm";
+import SignUpForm from "../components/SignUpForm";
+
 import { Colors } from "@/constants/Colors";
 import { Spacing } from "@/constants/Spacing";
+import { ThemedView } from "@/shared/components/ThemedView";
 import { ms, s, vs } from "@/utils/responsive";
 import React, { useRef, useState } from "react";
 import {

@@ -1,4 +1,4 @@
-// authApi.ts
+import { baseApi } from "@/store/services/baseApi";
 import {
   LoginRequest,
   LoginResponse,
@@ -21,8 +21,7 @@ import {
   VerifyOTPRequest,
   VerifyOTPResponse,
   VerifyOTPResponseData,
-} from "@/types/auth";
-import { baseApi } from "./baseApi";
+} from "../types/auth";
 
 export const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({

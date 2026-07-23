@@ -1,19 +1,14 @@
-import { InfoBanner } from "@/components/auth/InfoBanner";
+import { Colors } from "@/constants/Colors";
+import { Spacing } from "@/constants/Spacing";
 import { Spacer } from "@/shared/components/Spacer";
 import TextBlock from "@/shared/components/TextBlock";
 import { ThemedButton } from "@/shared/components/ThemedButton";
 import { ThemedText } from "@/shared/components/ThemedText";
-import { Colors } from "@/constants/Colors";
-import { Spacing } from "@/constants/Spacing";
 import {
   showErrorToast,
   showInfoToast,
   showSuccessToast,
 } from "@/shared/hooks/showToast";
-import {
-  useRequestOTPMutation,
-  useVerifyOTPMutation,
-} from "@/store/services/authApi";
 import { ms, s, vs } from "@/utils/responsive";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -27,6 +22,8 @@ import {
 } from "react-native";
 import { OtpInput, OtpInputRef } from "react-native-otp-entry";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useRequestOTPMutation, useVerifyOTPMutation } from "../api/authApi";
+import { InfoBanner } from "../components/InfoBanner";
 
 const OTP_LENGTH = 6;
 const RESEND_COOLDOWN = 30;
@@ -72,7 +69,6 @@ export default function VerifyScreen() {
     }
   }, [email, requestOtp]);
 
-  // Fire once on mount / when email becomes available — not every time countdown hits 0
   const hasSentRef = useRef(false);
 
   useEffect(() => {
@@ -81,6 +77,7 @@ export default function VerifyScreen() {
       handleRequestOtp();
     }
   }, [email, handleRequestOtp]);
+
   const handleVerify = async (submitCode?: string) => {
     const finalCode = submitCode ?? code;
     if (finalCode.length !== OTP_LENGTH || !email) return;
