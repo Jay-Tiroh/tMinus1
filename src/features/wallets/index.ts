@@ -16,6 +16,11 @@ export { useTransactionById } from "./hooks/useTransactionById";
 export { useTransactions } from "./hooks/useTransactions";
 export { default as useWallet } from "./hooks/useWallet";
 
+// ─── Components (Consumed by other features) ──
+
+export { default as BalanceComponent } from "./components/Balance";
+export { default as CryptoAssetItem } from "./components/CryptoAssetItem";
+
 // ─── Domain Models (Consumed by cross-feature types and props) ──────
 export type {
   Balance,

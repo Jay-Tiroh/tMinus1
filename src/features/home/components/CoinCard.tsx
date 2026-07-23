@@ -1,11 +1,11 @@
 import { Colors } from "@/constants/Colors";
+import { useAssetChart } from "@/features/markets";
 import Chart from "@/features/markets/components/LineChart";
 import { Asset } from "@/features/markets/types/assets";
 import { formatCurrency } from "@/helpers/functions";
-import { useAssetChart } from "@/hooks/useAssetChart";
-import useFiat from "@/shared/hooks/useFiat";
 import { CryptoIcon } from "@/shared/components/CryptoIcon";
 import { ThemedText } from "@/shared/components/ThemedText";
+import useFiat from "@/shared/hooks/useFiat";
 import { ms, s, vs } from "@/utils/responsive";
 import { memo, useState } from "react";
 import { StyleSheet, View } from "react-native";
@@ -19,6 +19,7 @@ export const CoinCard = memo(function CoinCard({ coin }: CoinCardProps) {
   const isPositive = coin.change24h > 0;
   const [chartVisible, setChartVisible] = useState(false);
   const { symbol, convertFromUSD, fiat } = useFiat();
+
   return (
     <View style={styles.card} onLayout={() => setChartVisible(true)}>
       <View style={styles.top}>
@@ -63,7 +64,6 @@ export const CoinCard = memo(function CoinCard({ coin }: CoinCardProps) {
 const styles = StyleSheet.create({
   card: {
     width: s(163),
-    // height: 118,
     borderRadius: ms(16),
     padding: s(12),
     justifyContent: "space-between",

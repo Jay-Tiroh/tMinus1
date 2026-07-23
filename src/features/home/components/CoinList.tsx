@@ -1,12 +1,8 @@
-import { CoinCard } from "@/components/home/CoinCard";
-import CoinCardsSkeleton from "@/components/home/CoinCardSkeleton";
-import { Colors } from "@/constants/Colors";
-import { useAllAssets } from "@/features/markets";
 import { Asset } from "@/features/markets/types/assets";
-import { useTrendingAssets } from "@/hooks/useTrendingAssets";
-import { ThemedText } from "@/shared/components/ThemedText";
 import { memo, useCallback } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
+import { CoinCard } from "./CoinCard";
+import { CoinCardsSkeleton } from "./CoinCardsSkeleton";
 
 const SKELETON_KEYS = [0, 1, 2, 3];
 
@@ -64,65 +60,7 @@ export const CoinList = memo(function CoinList({
   );
 });
 
-export const Coins = () => {
-  const {
-    coins,
-    isSearching: coinsLoading,
-    isUninitialized,
-  } = useAllAssets(undefined, 10000);
-  const {
-    trending,
-    isLoading: trendingLoading,
-    isUninitialized: trendingUninitialized,
-  } = useTrendingAssets(undefined, 10000);
-
-  return (
-    <View style={styles.container}>
-      <View style={styles.wrapper}>
-        <ThemedText
-          weight="bold"
-          size={18}
-          letterSpacing={2.64}
-          style={{ color: Colors.surface }}
-        >
-          Recent Coins
-        </ThemedText>
-        <CoinList
-          data={coins}
-          isLoading={coinsLoading}
-          isUninitialized={isUninitialized}
-        />
-
-        <ThemedText
-          weight="bold"
-          size={18}
-          letterSpacing={2.64}
-          style={{ color: Colors.surface }}
-        >
-          Top Coins
-        </ThemedText>
-        <CoinList
-          data={trending}
-          isLoading={trendingLoading}
-          isUninitialized={trendingUninitialized}
-        />
-      </View>
-    </View>
-  );
-};
-
-export default Coins;
-
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: "100%",
-    padding: 20,
-  },
-  wrapper: {
-    flex: 1,
-    justifyContent: "flex-start",
-  },
   scrollView: {
     flexGrow: 0,
   },

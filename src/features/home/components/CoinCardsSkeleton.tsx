@@ -1,10 +1,8 @@
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useEffect, useRef } from "react";
-import { Animated,  Easing, StyleSheet, View } from "react-native";
+import { Animated, Easing, StyleSheet, View } from "react-native";
 
-
-
-const CoinCardsSkeleton = () => {
+export const CoinCardsSkeleton = () => {
   return (
     <>
       {Array.from({ length: 3 }).map((_, index) => (
@@ -86,8 +84,6 @@ const SkeletonCard = () => {
   );
 };
 
-export default CoinCardsSkeleton;
-
 const styles = StyleSheet.create({
   card: {
     width: 163,
@@ -99,7 +95,6 @@ const styles = StyleSheet.create({
     gap: 8,
     boxShadow: "0px 16px 50px rgba(22, 28, 34, 0.08)",
   },
-
   shimmerWrapper: {
     position: "absolute",
     top: -40,
@@ -108,56 +103,46 @@ const styles = StyleSheet.create({
     height: 220,
     zIndex: 20,
   },
-
   shimmer: {
     width: "100%",
     height: "100%",
   },
-
   block: {
     backgroundColor: "#E5E7EB",
   },
-
   top: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
   },
-
   middle: {
     flexDirection: "row",
     alignItems: "center",
     gap: 12,
   },
-
   bottom: {
     marginTop: 8,
   },
-
   price: {
     width: 120,
     height: 20,
     borderRadius: 8,
   },
-
   icon: {
     width: 24,
     height: 24,
     borderRadius: 999,
   },
-
   pair: {
     width: 60,
     height: 8,
     borderRadius: 6,
   },
-
   change: {
     width: 60,
     height: 8,
     borderRadius: 6,
   },
-
   chart: {
     width: "100%",
     height: 30,
