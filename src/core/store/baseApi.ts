@@ -107,6 +107,7 @@ const baseQueryWithReauth: BaseQueryFn<
 };
 
 export const baseApi = createApi({
+  refetchOnReconnect: true,
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,
   tagTypes: [

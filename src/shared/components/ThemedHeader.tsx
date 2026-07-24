@@ -1,14 +1,8 @@
 import Back from "@/assets/icons/back.svg";
-import Bell from "@/assets/icons/bell.svg";
-import Candle from "@/assets/icons/candle.svg";
-import DollarCircle from "@/assets/icons/dollar-circle.svg";
-import Scanner from "@/assets/icons/scanner.svg";
-import Star from "@/assets/icons/star.svg";
 import { Colors } from "@/constants/Colors";
 import { ThemedText } from "@/shared/components/ThemedText";
 import { ThemedView } from "@/shared/components/ThemedView";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { Href, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import React from "react";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 interface ThemedHeaderProps {
@@ -78,43 +72,7 @@ const ThemedHeader = ({
           </ThemedText>
         )}
       </View>
-
-      {/* headerRight */}
-      {headerRight === "normal" ? (
-        <NormalRight />
-      ) : headerRight === "trade" ? (
-        <TradeRight />
-      ) : null}
     </ThemedView>
-  );
-};
-
-const NormalRight = () => {
-  const router = useRouter();
-  const pushTo = (route: Href) => {
-    router.replace(route);
-  };
-  return (
-    <View style={{ flexDirection: "row", alignItems: "center", gap: 34 }}>
-      <Ionicons
-        name="settings-outline"
-        size={24}
-        color={Colors.profit}
-        hitSlop={10}
-        onPress={() => pushTo("/user/settings")}
-      />
-      <Scanner onPress={() => pushTo("/kyc")} hitSlop={10} />
-      <Bell onPress={() => pushTo("/home/notifications")} hitSlop={10} />
-    </View>
-  );
-};
-const TradeRight = () => {
-  return (
-    <View style={{ flexDirection: "row", alignItems: "center", gap: 34 }}>
-      <Candle hitSlop={10} />
-      <DollarCircle hitSlop={10} />
-      <Star hitSlop={10} />
-    </View>
   );
 };
 

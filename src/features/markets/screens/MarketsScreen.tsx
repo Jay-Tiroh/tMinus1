@@ -29,9 +29,9 @@ export const MarketsScreen = () => {
     (tab: string) => {
       setActiveTab(tab);
       if (tab === "Gainers") {
-        router.replace("/(tabs)/markets/trending");
+        router.navigate("/(tabs)/markets/trending");
       } else if (tab === "Watchlist") {
-        router.replace("/(tabs)/markets/watchlist");
+        router.navigate("/(tabs)/markets/watchlist");
       }
     },
     [router],
