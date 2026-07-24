@@ -30,7 +30,6 @@ export { useLogout } from "./hooks/useLogout";
 // STORAGE & AUTH STATE
 // ==========================================
 export {
-  default as authReducer,
   clearCredentials,
   lockSession,
   setCredentials,

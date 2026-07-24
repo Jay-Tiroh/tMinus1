@@ -1,5 +1,4 @@
 import { baseApi } from "@/core/store/baseApi";
-import { clearCredentials, useLogoutMutation } from "@/features/auth";
 import {
   useDeleteDeviceMutation,
   useLazyGetDevicesQuery,
@@ -8,6 +7,8 @@ import { showSuccessToast } from "@/shared/hooks/showToast";
 import { clearTokens, saveToken } from "@/shared/utils/secureStore";
 import { useRouter } from "expo-router";
 import { useDispatch } from "react-redux";
+import { useLogoutMutation } from "../api/authApi";
+import { clearCredentials } from "../store/authSlice";
 
 export function useLogout() {
   const dispatch = useDispatch();

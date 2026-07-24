@@ -8,5 +8,4 @@ export { KycStatusScreen } from "./screens/KycStatusScreen";
 export { Step1Screen } from "./screens/Step1Screen";
 export { Step2Screen } from "./screens/Step2Screen";
 export { Step3Screen } from "./screens/Step3Screen";
-export { default as kycReducer } from "./store/kycSlice";
 export * from "./types/kyc.types";

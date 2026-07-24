@@ -1,8 +1,8 @@
-import { authReducer } from "@/features/auth";
-import { kycReducer } from "@/features/kyc";
-import { notificationReducer } from "@/features/notifications";
-import { tradesReducer } from "@/features/trades";
-import { walletsReducer } from "@/features/wallets";
+import authReducer from "@/features/auth/store/authSlice";
+import kycReducer from "@/features/kyc/store/kycSlice";
+import notificationReducer from "@/features/notifications/store/notificationSlice";
+import tradesReducer from "@/features/trades/store/tradesSlice";
+import walletsReducer from "@/features/wallets/store/walletsSlice";
 import { configureStore } from "@reduxjs/toolkit";
 import { baseApi } from "./baseApi";
 export const store = configureStore({

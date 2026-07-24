@@ -1,6 +1,5 @@
 // providers/InactivityLockProvider.tsx
 import { useAppDispatch } from "@/core/store/hooks";
-import { lockSession } from "@/features/auth";
 import { saveToken } from "@/shared/utils/secureStore";
 import { useRouter } from "expo-router";
 import React, { useCallback, useEffect, useRef } from "react";
@@ -10,6 +9,7 @@ import {
   GestureResponderEvent,
   View,
 } from "react-native";
+import { lockSession } from "../store/authSlice";
 
 const LOCK_TIMEOUT_MS = 5 * 60 * 1000; // 5 minutes
 

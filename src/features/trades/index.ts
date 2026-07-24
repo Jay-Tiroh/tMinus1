@@ -40,5 +40,3 @@ export type {
   Wallet,
   WalletBalance,
 } from "./types/trades.types";
-
-export { default as tradesReducer } from "./store/tradesSlice";
