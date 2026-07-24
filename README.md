@@ -1,51 +1,48 @@
-
-
 # 🌟 tMinus1
 
 **tMinus1** is a comprehensive mobile application designed to manage cryptocurrency transactions, wallets, and user profiles. It provides a secure and user-friendly interface for users to interact with various cryptocurrencies, including Bitcoin, Ethereum, and more.
 
 ## 🚀 Features
 
-* **Transaction Management**: Seamlessly send, receive, and manage cryptocurrency transactions.
-* **Wallet Creation**: Create and manage multiple wallets for different cryptocurrencies.
-* **Profile Management**: A comprehensive system for user information, settings, and verification status.
-* **Inactivity Lock**: Integrated session security that automatically locks the app after periods of inactivity.
-* **Secure Storage**: Advanced protection for sensitive data, including private keys and wallet information.
+- **Transaction Management**: Seamlessly send, receive, and manage cryptocurrency transactions.
+- **Wallet Creation**: Create and manage multiple wallets for different cryptocurrencies.
+- **Profile Management**: A comprehensive system for user information, settings, and verification status.
+- **Inactivity Lock**: Integrated session security that automatically locks the app after periods of inactivity.
+- **Secure Storage**: Advanced protection for sensitive data, including private keys and wallet information.
 
 ## 🛠️ Tech Stack
 
-* **Frontend**: React Native, Expo
-* **Backend**: Node.js, Express.js (Developed by [chinonsogreat7](https://github.com/chinonsogreat7))
-* **Database**: MongoDB
-* **API**: RESTful API
-* **Security**: SSL/TLS, Secure Storage
+- **Frontend**: React Native, Expo
+- **Backend**: Node.js, Express.js (Developed by [chinonsogreat7](https://github.com/chinonsogreat7))
+- **Database**: MongoDB
+- **API**: RESTful API
+- **Security**: SSL/TLS, Secure Storage
 
 ## 📦 Installation
 
 To install and run **tMinus1** locally, follow these steps:
 
 1. **Clone the repository:**
+
 ```bash
 git clone https://github.com/Jay-Tiroh/tMinus1.git
 cd tMinus1
 
 ```
 
-
 2. **Install dependencies:**
+
 ```bash
 npm install # or yarn install
 
 ```
 
-
 3. **Start the application:**
+
 ```bash
 npm start # or yarn start
 
 ```
-
-
 
 ## 📂 Project Structure
 
@@ -90,24 +87,24 @@ npm start # or yarn start
 
 ## 📸 Screenshots
 
-| Home | Price Alerts | Profile |
-| :---: | :---: | :---: |
+|           Home           |            Price Alerts            |            Profile             |
+| :----------------------: | :--------------------------------: | :----------------------------: |
 | ![Home](images/home.jpg) | ![Alerts](images/price-alerts.jpg) | ![Profile](images/profile.jpg) |
 
-| Swap | Trade | 2FA Setup |
-| :---: | :---: | :---: |
+|           Swap           |           Trade            |            2FA Setup            |
+| :----------------------: | :------------------------: | :-----------------------------: |
 | ![Swap](images/swap.jpg) | ![Trade](images/trade.jpg) | ![2FA](images/two-fa-setup.jpg) |
 
-| Wallets | Withdrawal |
-| :---: | :---: |
+|            Wallets             |              Withdrawal              |
+| :----------------------------: | :----------------------------------: |
 | ![Wallets](images/wallets.jpg) | ![Withdrawal](images/withdrawal.jpg) |
-
 
 ## Firebase config (google-services.json)
 
 This file is gitignored and required for Android builds (Firebase/FCM).
 
 **Local development:**
+
 1. Get the file from Firebase Console → Project Settings → Your apps → Android app → Download `google-services.json`
 2. Place it at `android/app/google-services.json`
 
@@ -116,3 +113,18 @@ The file is stored as an EAS file-type secret (`GOOGLE_SERVICES_JSON`) and injec
 the `eas-build-pre-install` hook in `package.json` — no manual step needed for cloud builds.
 
 See `android/app/google-services.json.example` for the expected file structure.
+
+## 📲 Download (Internal Testing Build)
+
+tMinus1 is currently distributed as an internal EAS build for testing purposes.
+
+**Android APK:** [Download latest build](https://expo.dev/accounts/chizuru_jethro/projects/tMinus1/builds/c24dc60b-7a7d-4b9e-bb00-0525470e2a8a)
+
+> ⚠️ This is an internal distribution build intended for testing only. You may need to enable "Install from unknown sources" on your Android device to install it.
+
+### Installing
+
+1. Tap the link above (or scan the QR code on the build page) on your Android device.
+2. Download and open the APK.
+3. If prompted, allow installation from unknown sources (Settings → Security).
+4. Follow the install prompts.
